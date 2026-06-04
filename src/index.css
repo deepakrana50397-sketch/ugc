@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-bg: #f5f2eb;
+  --color-brand-card: #f7f5f2;
+  --color-brand-text: #1c1816;
+  --color-brand-muted: #605856;
+  --color-brand-border: #ded6ca;
+  --color-brand-terracotta: #b04f32;
+  --color-brand-terracotta-light: #c07a61;
+  
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --animate-spin-slow: spin 18s linear infinite;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-brand-bg);
+    color: var(--color-brand-text);
+    overflow-x: hidden;
+  }
+
+  /* Custom selection style */
+  ::selection {
+    background-color: var(--color-brand-terracotta-light);
+    color: #ffffff;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-brand-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-border);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-muted);
+}
+
+/* Framer-exact bento card layout styling */
+.framer-card {
+  background-color: var(--color-brand-card);
+  border: 1px solid var(--color-brand-border);
+  border-radius: 20px;
+  padding: 2rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.framer-card:hover {
+  border-color: var(--color-brand-terracotta);
+  transform: translateY(-2px);
+}
+
+/* Glassmorphism Navigation */
+.framer-nav {
+  background-color: rgba(245, 242, 235, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--color-brand-border);
+}
+
+/* Ticker loop */
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  display: flex;
+}
+
+.marquee-content {
+  display: inline-flex;
+  min-width: 100%;
+  animation: marquee 35s linear infinite;
+}
+
+.marquee-content:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Smooth layout wrapper override for Vite React default template */
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  border: none;
+  min-height: auto;
+  display: block;
+}
