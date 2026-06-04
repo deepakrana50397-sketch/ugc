@@ -82,85 +82,94 @@ export default function PricingPackages({ onNavigate }: PricingProps) {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
-          {packages.map((pkg, index) => (
-            <div
-              key={index}
-              className={`framer-card flex flex-col justify-between transition-all duration-300 ${
-                pkg.popular 
-                  ? 'border-brand-terracotta/80 shadow-md ring-1 ring-brand-terracotta/20 scale-[1.01] bg-white z-10' 
-                  : 'bg-brand-card border-brand-border'
-              }`}
-            >
-              {/* Popular Badge */}
-              {pkg.popular && (
-                <div className="absolute top-6 right-6 bg-brand-terracotta text-white px-3.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider flex items-center space-x-1 shadow-sm">
-                  <Star className="w-3 h-3 fill-white" />
-                  <span>Best Value</span>
-                </div>
-              )}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto pt-8">
+          {packages.map((pkg, index) => {
+            const rotations = ['rotate-1', '-rotate-1', 'rotate-0.5'];
+            const cardRotation = rotations[index % rotations.length];
+            const tapeClass = index % 2 === 0 ? 'washi-tape-top-left' : 'washi-tape-top-right';
 
-              {/* Package Header */}
-              <div>
-                <h3 className="font-sans font-black text-base uppercase tracking-wider text-brand-text text-left">
-                  {pkg.name}
-                </h3>
-                <p className="text-xs text-brand-muted text-left mt-1 max-w-[200px] leading-relaxed">
-                  {pkg.description}
-                </p>
-
-                {/* Price block */}
-                <div className="my-8 text-left">
-                  <div className="flex items-baseline space-x-1.5">
-                    <span className="font-sans font-black text-4xl md:text-5xl text-brand-text">
-                      {pkg.price}
-                    </span>
-                    <span className="text-xs font-semibold text-brand-muted uppercase tracking-wider">
-                      / {pkg.period}
-                    </span>
-                  </div>
-                  <p className="text-[10px] font-black text-brand-terracotta mt-2 tracking-widest uppercase">
-                    {pkg.total}
-                  </p>
-                </div>
-
-                {/* Direct price comparison */}
-                <div className="bg-brand-bg/50 border border-brand-border p-3.5 rounded-xl text-left text-xs mb-6 flex items-center justify-between">
-                  <span className="text-brand-muted font-sans font-semibold text-[10px] uppercase tracking-wider">Agency Rate:</span>
-                  <div className="text-right text-[10px] font-bold">
-                    <span className="line-through text-brand-muted mr-1.5">{pkg.comparison.agency}</span>
-                    <span className="text-green-700 bg-green-50 px-2 py-0.5 rounded border border-green-200 uppercase tracking-widest">{pkg.comparison.saving}</span>
-                  </div>
-                </div>
-
-                <div className="h-[1px] bg-brand-border my-6"></div>
-
-                {/* Features List */}
-                <ul className="space-y-4 mb-8 text-left">
-                  {pkg.features.map((feature, fIdx) => (
-                    <li key={fIdx} className="flex items-start space-x-3 text-sm text-brand-text">
-                      <div className="w-5 h-5 rounded-full bg-brand-bg border border-brand-border flex items-center justify-center flex-shrink-0 text-brand-terracotta mt-0.5">
-                        <Check className="w-3 h-3 stroke-[3px]" />
-                      </div>
-                      <span className="font-sans leading-tight font-medium text-xs text-brand-muted">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Action Button */}
-              <button
-                onClick={() => onNavigate('creators')}
-                className={`w-full py-4 rounded-full font-sans font-bold text-[10px] tracking-widest uppercase transition-all duration-300 cursor-pointer ${
-                  pkg.popular
-                    ? 'bg-brand-terracotta hover:bg-brand-text text-white shadow-sm'
-                    : 'bg-brand-text hover:bg-brand-terracotta text-brand-bg hover:text-white'
+            return (
+              <div
+                key={index}
+                className={`paper-card p-10 rounded-[32px] flex flex-col justify-between transition-all duration-300 ${cardRotation} ${
+                  pkg.popular 
+                    ? 'border-brand-terracotta/80 shadow-md ring-1 ring-brand-terracotta/20 scale-[1.01] z-10' 
+                    : 'border-brand-border'
                 }`}
               >
-                {pkg.cta}
-              </button>
-            </div>
-          ))}
+                {/* Decorative Washi Tape strip */}
+                <div className={`washi-tape ${tapeClass}`} />
+
+                {/* Popular Badge */}
+                {pkg.popular && (
+                  <div className="absolute top-6 right-6 bg-brand-terracotta text-white px-3.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider flex items-center space-x-1 shadow-sm z-20">
+                    <Star className="w-3 h-3 fill-white" />
+                    <span>Best Value</span>
+                  </div>
+                )}
+
+                {/* Package Header */}
+                <div>
+                  <h3 className="font-sans font-black text-base uppercase tracking-wider text-brand-text text-left">
+                    {pkg.name}
+                  </h3>
+                  <p className="text-xs text-brand-muted text-left mt-1 max-w-[200px] leading-relaxed">
+                    {pkg.description}
+                  </p>
+
+                  {/* Price block */}
+                  <div className="my-8 text-left">
+                    <div className="flex items-baseline space-x-1.5">
+                      <span className="font-sans font-black text-4xl md:text-5xl text-brand-text">
+                        {pkg.price}
+                      </span>
+                      <span className="text-xs font-semibold text-brand-muted uppercase tracking-wider">
+                        / {pkg.period}
+                      </span>
+                    </div>
+                    <p className="text-[10px] font-black text-brand-terracotta mt-2 tracking-widest uppercase">
+                      {pkg.total}
+                    </p>
+                  </div>
+
+                  {/* Direct price comparison */}
+                  <div className="bg-brand-bg/50 border border-brand-border p-3.5 rounded-xl text-left text-xs mb-6 flex items-center justify-between">
+                    <span className="text-brand-muted font-sans font-semibold text-[10px] uppercase tracking-wider">Agency Rate:</span>
+                    <div className="text-right text-[10px] font-bold">
+                      <span className="line-through text-brand-muted mr-1.5">{pkg.comparison.agency}</span>
+                      <span className="text-green-700 bg-green-50 px-2 py-0.5 rounded border border-green-200 uppercase tracking-widest">{pkg.comparison.saving}</span>
+                    </div>
+                  </div>
+
+                  <div className="h-[1px] bg-brand-border my-6"></div>
+
+                  {/* Features List */}
+                  <ul className="space-y-4 mb-8 text-left">
+                    {pkg.features.map((feature, fIdx) => (
+                      <li key={fIdx} className="flex items-start space-x-3 text-sm text-brand-text">
+                        <div className="w-5 h-5 rounded-full bg-brand-bg border border-brand-border flex items-center justify-center flex-shrink-0 text-brand-terracotta mt-0.5">
+                          <Check className="w-3 h-3 stroke-[3px]" />
+                        </div>
+                        <span className="font-sans leading-tight font-medium text-xs text-brand-muted">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Action Button */}
+                <button
+                  onClick={() => onNavigate('creators')}
+                  className={`w-full py-4 rounded-full font-sans font-bold text-[10px] tracking-widest uppercase transition-all duration-300 cursor-pointer ${
+                    pkg.popular
+                      ? 'bg-brand-terracotta hover:bg-brand-text text-white shadow-sm'
+                      : 'bg-brand-text hover:bg-brand-terracotta text-brand-bg hover:text-white'
+                  }`}
+                >
+                  {pkg.cta}
+                </button>
+              </div>
+            );
+          })}
         </div>
 
         {/* Pricing Trust Guarantee */}

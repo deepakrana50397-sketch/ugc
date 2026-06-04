@@ -262,92 +262,105 @@ export default function InfluencerCatalog() {
           </div>
         </div>
 
-        {/* Creators Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-          {filteredCreators.map((creator) => (
-            <div 
-              key={creator.id}
-              className="framer-card flex flex-col justify-between hover:scale-[1.01] transition-transform duration-300"
-            >
-              <div>
-                {/* Profile Pic Header */}
-                <div className="relative w-24 h-24 mx-auto mb-5 rounded-full overflow-hidden border border-brand-border shadow-sm">
-                  <img
-                    src={creator.avatar}
-                    alt={creator.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <span className="absolute bottom-1 right-2 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full flex items-center justify-center">
-                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
-                  </span>
-                </div>
+        {/* Creators Dossier List */}
+        <div className="max-w-7xl mx-auto space-y-4 pt-6">
+          {/* Header Row (Desktop Only) */}
+          <div className="hidden lg:grid grid-cols-12 gap-4 px-8 py-4 font-mono text-[9px] font-black uppercase text-brand-muted tracking-widest border-b border-brand-border/60">
+            <div className="col-span-4 text-left">CREATOR DETAILS</div>
+            <div className="col-span-2 text-left">LOCATION</div>
+            <div className="col-span-2 text-left">NICHE & AUDIENCE</div>
+            <div className="col-span-2 text-center">METRICS (FOLL. / ENG.)</div>
+            <div className="col-span-2 text-right">DIRECT RATE & BOOKING</div>
+          </div>
 
-                {/* Profile Titles */}
-                <div className="text-center mb-5">
-                  <h3 className="font-sans font-black text-[15px] tracking-wide text-brand-text leading-tight uppercase">
-                    {creator.name}
-                  </h3>
-                  <p className="text-[10px] text-brand-muted font-bold uppercase tracking-wider mt-1">{creator.location}</p>
-                  <p className="text-[11px] font-semibold text-brand-terracotta mt-1.5 tracking-wider">{creator.handle}</p>
-                </div>
+          {/* Creators Rows */}
+          {filteredCreators.map((creator, idx) => {
+            const rotations = ['rotate-0.5', '-rotate-0.5', 'rotate-[0.25deg]', '-rotate-[0.25deg]'];
+            const cardRotation = rotations[idx % rotations.length];
+            return (
+              <div 
+                key={creator.id}
+                className={`paper-card px-6 py-5 md:px-8 md:py-6 rounded-[32px] transition-all duration-300 hover:scale-[1.015] hover:z-20 grid grid-cols-1 lg:grid-cols-12 gap-4 items-center text-left ${cardRotation}`}
+              >
+                {/* Washi Tape Accent */}
+                <div className="washi-tape washi-tape-top-left opacity-30 scale-75 -left-4 -top-3" />
 
-                <div className="h-[1px] bg-brand-border my-4"></div>
-
-                {/* Follower Stats */}
-                <div className="bg-brand-bg/50 border border-brand-border/40 p-4 rounded-[16px] grid grid-cols-2 gap-3 text-center mb-5 items-center">
-                  <div>
-                    <p className="text-[9px] font-bold text-brand-muted uppercase tracking-wider">Followers</p>
-                    <p className="text-sm font-sans font-black text-brand-text mt-0.5">{creator.followers}</p>
+                {/* Col 1: Creator Bio & Name */}
+                <div className="col-span-1 lg:col-span-4 flex items-center space-x-4">
+                  <div className="relative w-14 h-14 rounded-full overflow-hidden border border-brand-border flex-shrink-0 shadow-xs">
+                    <img
+                      src={creator.avatar}
+                      alt={creator.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  
-                  {/* Circular SVG Engagement ring */}
-                  <div className="flex flex-col items-center justify-center relative">
-                    <svg className="w-10 h-10 transform -rotate-90">
-                      <circle cx="20" cy="20" r="16" className="stroke-brand-bg fill-none" strokeWidth="2.5" />
-                      <circle 
-                        cx="20" 
-                        cy="20" 
-                        r="16" 
-                        className="stroke-brand-terracotta fill-none" 
-                        strokeWidth="2.5" 
-                        strokeDasharray="100.5" 
-                        strokeDashoffset={100.5 - (100.5 * creator.engagement) / 10} 
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-[9px] font-sans font-black text-brand-text translate-y-0.5">
-                      {creator.engagement}%
+                  <div className="space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <h3 className="font-sans font-black text-sm md:text-base text-brand-text uppercase leading-none">
+                        {creator.name}
+                      </h3>
+                      <span className="bg-brand-card text-brand-terracotta font-mono text-[7px] font-black px-1 py-0.25 rounded border border-brand-border">
+                        {creator.tier.split(' ')[0].toUpperCase()}
+                      </span>
                     </div>
-                    <p className="text-[7px] font-bold text-brand-muted uppercase mt-0.5">Engage</p>
+                    <p className="text-[11px] font-mono font-bold text-brand-terracotta leading-none">{creator.handle}</p>
+                    <p className="text-xs text-brand-muted font-sans leading-relaxed line-clamp-1 max-w-xs pt-1 hidden md:block">
+                      {creator.bio}
+                    </p>
                   </div>
                 </div>
 
-                <p className="text-xs text-brand-muted leading-relaxed line-clamp-3 text-left mb-5">
-                  {creator.bio}
-                </p>
-
-                {/* Audience demo metadata */}
-                <div className="mb-5 bg-brand-bg/25 border border-brand-border/30 p-2.5 rounded-xl text-[10px] text-left font-sans flex justify-between">
-                  <span className="font-semibold text-brand-muted">Top Aud:</span>
-                  <span className="font-bold text-brand-text">{creator.audience}</span>
+                {/* Col 2: Location */}
+                <div className="col-span-1 lg:col-span-2">
+                  <span className="text-[9px] font-mono text-brand-muted block lg:hidden uppercase tracking-wider">[LOCATION]:</span>
+                  <p className="text-xs font-bold text-brand-text uppercase tracking-wide">
+                    {creator.location}
+                  </p>
                 </div>
-              </div>
 
-              {/* Action rates & CTAs */}
-              <div className="pt-4 border-t border-brand-border">
-                <div className="flex justify-between items-baseline mb-4 text-left">
-                  <span className="text-[9px] font-bold text-brand-muted uppercase tracking-wider">Rate:</span>
-                  <span className="text-[15px] font-sans font-black text-brand-text">${creator.rate} <span className="text-[10px] font-sans font-semibold text-brand-muted">/ video</span></span>
+                {/* Col 3: Niche & Audience */}
+                <div className="col-span-1 lg:col-span-2 space-y-1 text-left">
+                  <span className="text-[9px] font-mono text-brand-muted block lg:hidden uppercase tracking-wider">[NICHE & AUDIENCE]:</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="bg-brand-bg px-2 py-0.5 border border-brand-border rounded text-[9px] font-mono font-black uppercase text-brand-text">
+                      {creator.niche}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-brand-muted font-sans leading-none">
+                    Audience: <span className="font-semibold text-brand-text">{creator.audience.split(' ')[0]}</span>
+                  </p>
                 </div>
-                <button
-                  onClick={() => { setSelectedCreator(creator); setBookingStep(1); }}
-                  className="w-full py-3 rounded-full bg-brand-text text-brand-bg hover:bg-brand-terracotta hover:text-white font-sans font-bold text-[10px] tracking-widest uppercase transition-colors duration-300 flex items-center justify-center space-x-1.5 group cursor-pointer"
-                >
-                  <span>Hire Directly</span>
-                  <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
-                </button>
+
+                {/* Col 4: Metrics */}
+                <div className="col-span-1 lg:col-span-2 flex items-center justify-between lg:justify-around py-2 lg:py-0 border-y lg:border-none border-brand-border/40">
+                  <div>
+                    <span className="text-[9px] font-mono text-brand-muted block uppercase tracking-wider">Followers:</span>
+                    <span className="text-xs font-sans font-black text-brand-text">{creator.followers}</span>
+                  </div>
+                  <div className="text-right lg:text-center">
+                    <span className="text-[9px] font-mono text-brand-muted block uppercase tracking-wider">Engagement:</span>
+                    <span className="text-xs font-mono font-black text-brand-terracotta">{creator.engagement}%</span>
+                  </div>
+                </div>
+
+                {/* Col 5: Rate & CTA */}
+                <div className="col-span-1 lg:col-span-2 flex items-center justify-between lg:justify-end gap-4 text-right">
+                  <div className="text-left lg:text-right">
+                    <span className="text-[9px] font-mono text-brand-muted block uppercase tracking-wider">DIRECT RATE:</span>
+                    <span className="text-sm font-sans font-black text-brand-text">${creator.rate} <span className="text-[9px] font-sans font-normal text-brand-muted">/ video</span></span>
+                  </div>
+                  <button
+                    onClick={() => { setSelectedCreator(creator); setBookingStep(1); }}
+                    className="px-5 py-3 rounded-full bg-brand-text text-brand-bg hover:bg-brand-terracotta hover:text-white font-sans font-bold text-[9px] tracking-wider uppercase transition-colors duration-300 flex items-center justify-center space-x-1.5 cursor-pointer"
+                  >
+                    <span>Hire</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Sliding Booking Drawer Panel */}

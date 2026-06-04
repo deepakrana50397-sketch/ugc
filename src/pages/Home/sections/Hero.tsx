@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import gsap from 'gsap';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, ArrowDownRight, Compass, Heart, ArrowRight } from 'lucide-react';
 
 export default function Hero() {
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
@@ -13,6 +14,12 @@ export default function Hero() {
     'https://framerusercontent.com/assets/TR9SXrUqMBTLyfoDFBPUh4qvHfE.mp4',
   ];
 
+  const storyDetails = [
+    { name: 'jessicasu', role: 'College Creator', match: '98%', time: '6h', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop' },
+    { name: 'marcus.tech', role: 'Tech Influencer', match: '95%', time: '2h', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' },
+    { name: 'elena.style', role: 'Fashion / Housewife', match: '92%', time: '1d', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop' },
+  ];
+
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.load();
@@ -21,45 +28,6 @@ export default function Hero() {
       });
     }
   }, [currentStoryIndex]);
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const visualsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Fade-in text elements
-      gsap.from('.hero-fade-in', {
-        opacity: 0,
-        y: 35,
-        duration: 0.9,
-        stagger: 0.12,
-        ease: 'power3.out',
-      });
-
-      // Float visuals column
-      gsap.from(visualsRef.current, {
-        opacity: 0,
-        x: 40,
-        y: 20,
-        duration: 1.3,
-        ease: 'power3.out',
-        delay: 0.2,
-      });
-
-      // Float micro badges
-      gsap.from('.hero-badge', {
-        opacity: 0,
-        scale: 0.9,
-        duration: 0.6,
-        stagger: 0.15,
-        delay: 0.6,
-        ease: 'back.out(1.4)',
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
 
   const handleTimeUpdate = () => {
     if (videoRef.current) {
@@ -79,30 +47,22 @@ export default function Hero() {
     setProgress(0);
   };
 
-  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const width = rect.width;
-
-    if (clickX < width * 0.35) {
-      // Prev story
-      if (currentStoryIndex > 0) {
-        setCurrentStoryIndex((prev) => prev - 1);
-      } else {
-        if (videoRef.current) {
-          videoRef.current.currentTime = 0;
-        }
-        setProgress(0);
-      }
+  const handleNextStory = () => {
+    if (currentStoryIndex < stories.length - 1) {
+      setCurrentStoryIndex((prev) => prev + 1);
     } else {
-      // Next story
-      if (currentStoryIndex < stories.length - 1) {
-        setCurrentStoryIndex((prev) => prev + 1);
-      } else {
-        setCurrentStoryIndex(0);
-      }
-      setProgress(0);
+      setCurrentStoryIndex(0);
     }
+    setProgress(0);
+  };
+
+  const handlePrevStory = () => {
+    if (currentStoryIndex > 0) {
+      setCurrentStoryIndex((prev) => prev - 1);
+    } else {
+      setCurrentStoryIndex(stories.length - 1);
+    }
+    setProgress(0);
   };
 
   const brands = [
@@ -118,74 +78,154 @@ export default function Hero() {
 
   return (
     <section
-      ref={containerRef}
       id="hero"
-      className="relative min-h-screen pt-36 pb-24 px-6 md:px-12 flex flex-col justify-between overflow-hidden bg-brand-bg border-b border-brand-border"
+      className="relative min-h-screen pt-32 pb-20 px-6 md:px-12 flex flex-col justify-between overflow-hidden bg-brand-bg"
     >
-      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center z-10 flex-grow py-8">
+      {/* Decorative Grid Overlay / Lines (Bespoke organic grid) */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
+        <div className="absolute top-0 left-1/4 w-[1px] h-full border-l border-dashed border-brand-border/60" />
+        <div className="absolute top-0 left-2/3 w-[1px] h-full border-l border-dashed border-brand-border/60" />
+        <div className="absolute top-1/3 left-0 w-full h-[1px] border-t border-dashed border-brand-border/60" />
+      </div>
+
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-center z-10 flex-grow py-8 relative">
+        
         {/* Left Column: Headings & Copy */}
-        <div ref={textRef} className="lg:col-span-7 flex flex-col space-y-7 text-left pr-4">
-          {/* Social Icons Badge (Viral Style) */}
-          <div className="hero-fade-in inline-flex items-center space-x-3 bg-black/[0.04] px-4 py-2.5 rounded-[7px] w-fit shadow-sm">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-brand-text">
-              Direct-Matching UGC Platform
+        <div className="lg:col-span-7 flex flex-col space-y-8 text-left pr-4">
+          
+          {/* Social Tag / Badge (Viral Style) */}
+          <div className="inline-flex items-center space-x-2 bg-brand-card border border-brand-border/80 px-4 py-2 rounded-full w-fit shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-brand-terracotta animate-pulse" />
+            <span className="text-[10px] font-mono font-black uppercase tracking-widest text-brand-text">
+              [ DIRECT UGC MATCHMAKING ]
             </span>
           </div>
 
-          {/* Heading */}
-          <h1 className="hero-fade-in font-sans font-extrabold text-5xl sm:text-6xl md:text-7xl lg:text-[70px] text-brand-text leading-[1.0] tracking-tight">
+          {/* Heading with organic underlines & accents */}
+          <h1 className="font-sans font-black text-5xl sm:text-6xl md:text-7xl lg:text-[76px] text-brand-text leading-[0.95] tracking-tight relative">
             High-converting UGC, <br />
-            done <span className="font-serif italic font-normal text-brand-text">directly.</span>
+            done{' '}
+            <span className="relative inline-block px-1">
+              <span className="relative z-10 font-serif italic font-normal text-brand-dark-green">
+                directly.
+              </span>
+              {/* Hand-drawn underline SVG */}
+              <svg
+                className="absolute bottom-[-6px] left-0 w-full h-4 text-brand-terracotta z-0"
+                viewBox="0 0 100 10"
+                preserveAspectRatio="none"
+                fill="none"
+              >
+                <path
+                  d="M0,7 C30,10 70,4 100,6 C75,8 25,9 0,7"
+                  stroke="currentColor"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
           </h1>
 
           {/* Subtext */}
-          <p className="hero-fade-in text-base md:text-[18px] text-[#605856] max-w-xl font-sans leading-relaxed">
-            Part-time UGC gigs for college students, housewives, and influencers. Custom conversion scripting, positioning, and editing services for high-growth brands.
-          </p>
+          <div className="relative max-w-xl">
+            <p className="text-base md:text-lg text-brand-muted font-sans leading-relaxed">
+              We connect brands directly with vetted college students, housewives, and micro-influencers. 
+              No agency markups. Complete scripting, positioning, and mobile-native editing included.
+            </p>
+            {/* Tiny organic hand-drawn heart element */}
+            <div className="absolute right-[-40px] top-0 hidden md:block text-brand-terracotta rotate-12">
+              <Heart className="w-5 h-5 fill-brand-terracotta/10" />
+            </div>
+          </div>
+
+          {/* Value props bullets (Editorial Style) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div className="flex items-start space-x-3">
+              <span className="font-mono text-xs text-brand-terracotta font-bold mt-1">[01]</span>
+              <div>
+                <h4 className="font-sans font-black text-[12px] uppercase tracking-wider text-brand-text">Zero Agency Retainers</h4>
+                <p className="text-xs text-brand-muted">Pay creators directly at their exact rate.</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3">
+              <span className="font-mono text-xs text-brand-terracotta font-bold mt-1">[02]</span>
+              <div>
+                <h4 className="font-sans font-black text-[12px] uppercase tracking-wider text-brand-text">Vetted in-house quality</h4>
+                <p className="text-xs text-brand-muted">Only the top 8% of video content applicants matched.</p>
+              </div>
+            </div>
+          </div>
 
           {/* CTA Buttons */}
-          <div className="hero-fade-in pt-1 flex flex-wrap gap-4">
+          <div className="pt-4 flex flex-wrap gap-4 items-center">
             <Link
               to="/creators"
-              className="px-8.5 py-4 rounded-full bg-brand-terracotta hover:bg-brand-terracotta-light text-white font-sans font-bold text-[13px] uppercase tracking-wider transition-all duration-300 shadow-md cursor-pointer"
+              className="group px-8 py-4.5 rounded-full bg-brand-terracotta hover:bg-brand-dark-green text-white font-sans font-bold text-[12px] uppercase tracking-wider transition-all duration-300 shadow-md cursor-pointer flex items-center space-x-2"
             >
-              Apply as Creator
+              <span>Apply as Creator</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
               to="/brands"
-              className="px-8.5 py-4 rounded-full bg-black hover:bg-black/85 text-white font-sans font-bold text-[13px] uppercase tracking-wider transition-all duration-300 shadow-md cursor-pointer"
+              className="px-8 py-4.5 rounded-full bg-brand-dark-green hover:bg-brand-dark-green/90 text-white font-sans font-bold text-[12px] uppercase tracking-wider transition-all duration-300 shadow-md cursor-pointer flex items-center space-x-2"
             >
-              Hire Creators & Post Gigs
+              <span>Hire Creators & Post Gigs</span>
             </Link>
           </div>
         </div>
 
-        {/* Right Column: Single Portrait Card representing user story */}
-        <div ref={visualsRef} className="lg:col-span-5 flex justify-center lg:justify-end relative pt-6 lg:pt-0">
-          <div
-            onClick={handleCardClick}
-            className="relative w-[320px] sm:w-[340px] aspect-[9/16] border-[12px] border-white rounded-[40px] shadow-2xl bg-black overflow-hidden flex-shrink-0 cursor-pointer select-none group"
+        {/* Right Column: Tactile Overlapping Cards */}
+        <div className="lg:col-span-5 flex justify-center lg:justify-end relative pt-12 lg:pt-0">
+          
+          {/* Card 1: The Dark Green Backing Card (Overlapping layout) */}
+          <motion.div
+            initial={{ opacity: 0, rotate: -6, x: -10 }}
+            animate={{ opacity: 1, rotate: -4, x: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.15 }}
+            className="absolute -rotate-4 translate-x-[-12px] translate-y-[8px] w-[310px] sm:w-[330px] aspect-[9/16] bg-brand-dark-green rounded-[40px] p-8 flex flex-col justify-between text-white border border-brand-moss/40 shadow-xl z-0"
           >
-            {/* Story video */}
-            <video
-              ref={videoRef}
-              src={stories[currentStoryIndex]}
-              className="w-full h-full object-cover"
-              autoPlay
-              muted
-              loop={false}
-              playsInline
-              onTimeUpdate={handleTimeUpdate}
-              onEnded={handleVideoEnded}
-            />
+            <div className="flex justify-between items-start">
+              <span className="font-mono text-[9px] tracking-widest text-brand-border/60 uppercase">[ MATCH ENGINE ]</span>
+              <Sparkles className="w-4.5 h-4.5 text-brand-terracotta" />
+            </div>
 
-            {/* Dark gradient overlay at top */}
-            <div className="absolute top-0 left-0 w-full h-22 bg-gradient-to-b from-black/55 to-transparent pointer-events-none z-10" />
+            <div className="space-y-4 text-left">
+              <div className="inline-block px-2.5 py-1 bg-brand-moss rounded-md border border-brand-border/10 font-mono text-[8px] tracking-wider uppercase">
+                CRITERIA: COLLEGE STUDENT
+              </div>
+              <h3 className="font-serif text-3xl font-medium leading-tight">
+                Authentic voices, <br />
+                no actor vibes.
+              </h3>
+              <p className="text-xs text-brand-bg/85 leading-relaxed font-sans">
+                Our database filters by life stage. Get real UGC videos from college dorms, busy kitchen counters, and native daily vlogs.
+              </p>
+            </div>
 
-            {/* Story progress indicators */}
-            <div className="absolute top-5 left-4.5 right-4.5 flex space-x-1.5 z-20 pointer-events-none">
+            <div className="flex justify-between items-center pt-4 border-t border-brand-border/10">
+              <span className="font-mono text-[9px] text-[#ded6ca]/70">UGC-DIRECT.COM</span>
+              <span className="text-[10px] font-bold text-brand-terracotta flex items-center space-x-1">
+                <span>Vetted catalog</span>
+                <ArrowDownRight className="w-3.5 h-3.5" />
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Card 2: Interactive Polaroid Video Card (Front Overlapping Card) */}
+          <motion.div
+            initial={{ opacity: 0, rotate: 3, y: 15 }}
+            animate={{ opacity: 1, rotate: 2, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            whileHover={{ rotate: 0, scale: 1.02 }}
+            className="relative w-[310px] sm:w-[330px] aspect-[9/16] bg-white border border-brand-border rounded-[40px] shadow-2xl overflow-hidden flex-shrink-0 cursor-pointer z-10 group"
+          >
+            {/* Washi Tape (Decorative Accent) */}
+            <div className="washi-tape washi-tape-top-left" />
+
+            {/* Stories progress indicators */}
+            <div className="absolute top-5 left-5 right-5 flex space-x-1.5 z-20 pointer-events-none">
               {stories.map((_, index) => (
-                <div key={index} className="h-0.5 flex-1 bg-white/30 rounded-full overflow-hidden relative">
+                <div key={index} className="h-0.75 flex-1 bg-white/30 rounded-full overflow-hidden relative">
                   {index < currentStoryIndex && (
                     <div className="absolute inset-0 bg-white" />
                   )}
@@ -199,66 +239,102 @@ export default function Hero() {
               ))}
             </div>
 
-            {/* User details header */}
-            <div className="absolute top-8.5 left-4.5 right-4.5 flex items-center justify-between z-20 pointer-events-none">
-              <div className="flex items-center space-x-2">
+            {/* Creator details header */}
+            <div className="absolute top-9.5 left-5 right-5 flex items-center justify-between z-20 pointer-events-none text-left">
+              <div className="flex items-center space-x-2.5">
                 <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop"
-                  className="w-5 h-5 rounded-full border border-white/50 object-cover"
-                  alt="Jessica avatar"
+                  src={storyDetails[currentStoryIndex].avatar}
+                  className="w-7 h-7 rounded-full border border-white/80 object-cover shadow-sm"
+                  alt="creator avatar"
                 />
-                <span className="text-white text-[12px] font-semibold tracking-tight">jessicasu</span>
-                <span className="text-white/70 text-[12px]">6h</span>
+                <div>
+                  <div className="flex items-center space-x-1.5">
+                    <span className="text-white text-[11px] font-bold tracking-tight">
+                      {storyDetails[currentStoryIndex].name}
+                    </span>
+                    <span className="bg-brand-terracotta text-white font-mono text-[7px] font-bold px-1 py-0.25 rounded">
+                      {storyDetails[currentStoryIndex].match} MATCH
+                    </span>
+                  </div>
+                  <span className="text-white/80 text-[9px] font-sans block leading-none mt-0.5">
+                    {storyDetails[currentStoryIndex].role}
+                  </span>
+                </div>
               </div>
+              <span className="text-white/70 text-[10px] font-mono">{storyDetails[currentStoryIndex].time}</span>
             </div>
+
+            {/* Story video */}
+            <video
+              ref={videoRef}
+              src={stories[currentStoryIndex]}
+              className="w-full h-full object-cover bg-neutral-950"
+              autoPlay
+              muted
+              loop={false}
+              playsInline
+              onTimeUpdate={handleTimeUpdate}
+              onEnded={handleVideoEnded}
+            />
+
+            {/* Dark gradient overlays */}
+            <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-black/60 to-transparent pointer-events-none z-10" />
+            <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none z-10" />
 
             {/* Hover overlay navigation helpers */}
-            <div className="absolute inset-0 z-30 pointer-events-none flex items-center justify-between opacity-0 group-hover:opacity-100 bg-black/15 transition-opacity duration-300">
-              <div className="w-[35%] h-full flex items-center justify-start pl-4 cursor-pointer pointer-events-auto">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 opacity-75">
-                  <polyline points="15 18 9 12 15 6" />
-                </svg>
+            <div className="absolute inset-0 z-30 pointer-events-none flex items-center justify-between opacity-0 group-hover:opacity-100 bg-black/10 transition-opacity duration-300">
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevStory();
+                }}
+                className="w-[30%] h-full flex items-center justify-start pl-3 cursor-pointer pointer-events-auto"
+              >
+                <div className="w-8 h-8 rounded-full bg-white/90 shadow flex items-center justify-center text-brand-text">
+                  ‹
+                </div>
               </div>
-              <div className="w-[35%] h-full flex items-center justify-end pr-4 cursor-pointer pointer-events-auto">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 opacity-75">
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNextStory();
+                }}
+                className="w-[30%] h-full flex items-center justify-end pr-3 cursor-pointer pointer-events-auto"
+              >
+                <div className="w-8 h-8 rounded-full bg-white/90 shadow flex items-center justify-center text-brand-text">
+                  ›
+                </div>
               </div>
             </div>
 
-            {/* Interactive black dot on cheek (Visual accent) */}
-            <div className="absolute left-[44%] top-[58%] z-20 cursor-pointer pointer-events-none">
-              <div className="w-3.5 h-3.5 bg-black rounded-full shadow-md"></div>
-            </div>
-
-            {/* Asterisk/Flower bottom badge overlapping bottom border */}
-            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
-              <div className="w-15 h-15 bg-black rounded-[18px] flex items-center justify-center shadow-lg border-[3.5px] border-[#f5f2eb]">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.8" strokeLinecap="round" className="w-6 h-6 animate-spin-slow">
-                  <line x1="12" y1="4" x2="12" y2="20" />
-                  <line x1="4" y1="12" x2="20" y2="12" />
-                  <line x1="6.34" y1="6.34" x2="17.66" y2="17.66" />
-                  <line x1="6.34" y1="17.66" x2="17.66" y2="6.34" />
-                </svg>
+            {/* Interactive check badge */}
+            <div className="absolute right-5 bottom-5 z-20 pointer-events-none">
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg border border-brand-border">
+                <Compass className="w-5 h-5 text-brand-terracotta" />
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* Brand logo Marquee */}
-      <div className="max-w-7xl mx-auto w-full pt-16 border-t border-brand-border z-10 mt-auto">
-        <p className="text-center text-[10px] font-bold uppercase tracking-widest text-brand-muted mb-8">
-          UGC produced for scaling brands
+      {/* Brand logo Marquee with Physical Paper Tape strip background */}
+      <div className="max-w-7xl mx-auto w-full pt-12 border-t border-brand-border/60 z-10 mt-auto relative">
+        
+        {/* Paper Tape Ticker Label */}
+        <p className="text-center font-mono text-[9px] font-bold uppercase tracking-widest text-brand-muted mb-6">
+          [ BRAND ENGAGEMENT LOGS ]
         </p>
-        <div className="marquee-container relative w-full overflow-hidden py-3">
+
+        {/* Marquee ticker style */}
+        <div className="marquee-container relative w-full overflow-hidden py-4 border-y border-brand-border bg-brand-card rounded-md shadow-xs">
           <div className="marquee-content flex space-x-20 select-none">
             {brands.concat(brands).map((brand, idx) => (
               <span
                 key={idx}
-                className="text-2xl md:text-3xl font-serif font-medium text-brand-muted/30 hover:text-brand-terracotta/60 transition-colors duration-300 cursor-default tracking-tight"
+                className="text-xl md:text-2xl font-serif font-medium text-brand-muted/40 hover:text-brand-terracotta/70 transition-colors duration-300 cursor-default tracking-tight flex items-center space-x-2"
               >
-                {brand}
+                <span>{brand}</span>
+                <span className="text-[10px] text-brand-border">✦</span>
               </span>
             ))}
           </div>

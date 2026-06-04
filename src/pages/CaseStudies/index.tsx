@@ -63,7 +63,7 @@ export default function CaseStudiesPage() {
         { label: 'Female 25-34', percentage: 25 },
         { label: 'Others', percentage: 10 }
       ],
-      videoUrl: 'https://res.cloudinary.com/demo/video/upload/c_fill,h_640,w_360/dog.mp4',
+      videoUrl: 'https://framerusercontent.com/assets/SCuqi0qyfpukKLtZm0jURfE.mp4',
       title: 'Dry Skin Routine Hook'
     },
     {
@@ -86,7 +86,7 @@ export default function CaseStudiesPage() {
         { label: 'Male 25-34', percentage: 30 },
         { label: 'Others', percentage: 15 }
       ],
-      videoUrl: 'https://res.cloudinary.com/demo/video/upload/c_scale,h_640,w_360/cld_rubik.mp4',
+      videoUrl: 'https://framerusercontent.com/assets/0oniLdlZhN2RUR1zCzsqMbMHfQ8.mp4',
       title: 'ASMR Tech Unboxing'
     },
     {
@@ -109,7 +109,7 @@ export default function CaseStudiesPage() {
         { label: 'Female 25-34', percentage: 20 },
         { label: 'Others', percentage: 10 }
       ],
-      videoUrl: 'https://res.cloudinary.com/demo/video/upload/c_fill,h_640,w_360/dog.mp4',
+      videoUrl: 'https://framerusercontent.com/assets/TR9SXrUqMBTLyfoDFBPUh4qvHfE.mp4',
       title: 'Summer Fitting Transitions'
     },
     {
@@ -132,7 +132,7 @@ export default function CaseStudiesPage() {
         { label: 'Male 18-24', percentage: 35 },
         { label: 'Others', percentage: 25 }
       ],
-      videoUrl: 'https://res.cloudinary.com/demo/video/upload/c_scale,h_640,w_360/cld_rubik.mp4',
+      videoUrl: 'https://framerusercontent.com/assets/u0e0HQVXrB8r4Av9RYEjAmZ7rw.mp4',
       title: 'Protein Bowl Recipe Hook'
     },
     {
@@ -155,7 +155,7 @@ export default function CaseStudiesPage() {
         { label: 'Female 25-34', percentage: 30 },
         { label: 'Others', percentage: 10 }
       ],
-      videoUrl: 'https://res.cloudinary.com/demo/video/upload/c_fill,h_640,w_360/dog.mp4',
+      videoUrl: 'https://framerusercontent.com/assets/9BKR8n5yij6np4F4fhXpbwixLWI.mp4',
       title: 'Serum Glow Split Screen'
     },
     {
@@ -178,7 +178,7 @@ export default function CaseStudiesPage() {
         { label: 'Male 18-24', percentage: 35 },
         { label: 'Others', percentage: 15 }
       ],
-      videoUrl: 'https://res.cloudinary.com/demo/video/upload/c_scale,h_640,w_360/cld_rubik.mp4',
+      videoUrl: 'https://framerusercontent.com/assets/64ZMhO5aQtuzPw6cPEGQKIEos.mp4',
       title: 'Workspace Magnetic Organizer'
     }
   ];
@@ -254,8 +254,7 @@ export default function CaseStudiesPage() {
                 onClick={() => setSelectedVideo(item)}
                 className="group cursor-pointer flex flex-col items-center w-full"
               >
-                <div className="relative w-full aspect-[9/16] rounded-[40px] border-[10px] border-brand-text bg-zinc-950 shadow-md group-hover:scale-[1.02] group-hover:shadow-xl transition-all duration-500 overflow-hidden ring-1 ring-brand-border/40">
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-28 h-5 bg-brand-text rounded-b-xl z-20"></div>
+                <div className="relative w-full aspect-[9/16] rounded-[24px] overflow-hidden bg-zinc-950 shadow-md group-hover:scale-[1.02] group-hover:shadow-xl transition-all duration-500 ring-1 ring-brand-border/10">
                   <video
                     ref={(el) => { videoRefs.current[item.id] = el; }}
                     src={item.videoUrl}
@@ -313,7 +312,7 @@ export default function CaseStudiesPage() {
                   <X className="w-5 h-5" />
                 </button>
                 <div className="lg:col-span-5 bg-zinc-950 flex items-center justify-center relative p-8 border-r border-brand-border">
-                  <div className="relative w-full max-w-[280px] aspect-[9/16] rounded-[40px] border-[10px] border-zinc-800 overflow-hidden bg-black shadow-2xl">
+                  <div className="relative w-full max-w-[280px] aspect-[9/16] rounded-[24px] overflow-hidden bg-black shadow-2xl border border-white/10">
                     <video
                       src={selectedVideo.videoUrl}
                       className="w-full h-full object-cover"
