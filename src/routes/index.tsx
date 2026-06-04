@@ -4,6 +4,9 @@ import Home from '../pages/Home';
 import ServicesPage from '../pages/Services';
 import CaseStudiesPage from '../pages/CaseStudies';
 import ContactPage from '../pages/Contact';
+import GigsPage from '../pages/Gigs';
+import BrandsPage from '../pages/Brands';
+import CreatorsPage from '../pages/Creators';
 
 interface AppRoutesProps {
   onNavigate: (sectionId: string) => void;
@@ -36,6 +39,9 @@ export default function AppRoutes({ onNavigate }: AppRoutesProps) {
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/case-studies" element={<CaseStudiesPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/gigs" element={<GigsPage />} />
+        <Route path="/brands" element={<BrandsPage />} />
+        <Route path="/creators" element={<CreatorsPage />} />
         {/* Fallback to home */}
         <Route path="*" element={<Home onNavigate={onNavigate} />} />
       </Routes>

@@ -21,9 +21,10 @@ export default function Navbar() {
 
   const navLinks = [
     { label: 'Home', path: '/' },
-    { label: 'Services', path: '/services' },
+    { label: 'Gigs Board', path: '/gigs' },
+    { label: 'For Brands', path: '/brands' },
+    { label: 'For Creators', path: '/creators' },
     { label: 'Case Studies', path: '/case-studies' },
-    { label: 'Contact', path: '/contact' },
   ];
 
   const handleLinkClick = () => {
@@ -85,13 +86,13 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Book a call CTA */}
+        {/* Post a Gig CTA */}
         <div className="hidden md:flex items-center">
           <Link
-            to="/contact"
+            to="/brands#post-gig"
             className="px-5 py-2.5 rounded-full bg-black hover:bg-black/85 text-white font-sans font-bold text-[13px] tracking-normal transition-all duration-300 shadow-sm cursor-pointer"
           >
-            Book a call
+            Post a Gig
           </Link>
         </div>
 
@@ -132,11 +133,11 @@ export default function Navbar() {
         })}
         <div className="h-[1px] bg-brand-border my-6"></div>
         <Link
-          to="/contact"
+          to="/brands#post-gig"
           onClick={handleLinkClick}
           className="w-full py-3.5 rounded-full bg-black text-white font-sans font-bold text-sm tracking-normal text-center hover:bg-black/90 transition-colors duration-300"
         >
-          Book a call
+          Post a Gig
         </Link>
       </div>
     </header>

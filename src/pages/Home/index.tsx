@@ -3,6 +3,7 @@ import JsonLd from '../../components/seo/JsonLd';
 import { homeSeo } from './seo';
 
 import Hero from './sections/Hero';
+import GigsBoard from './sections/GigsBoard';
 import Services from './sections/Services';
 import UgcProcess from './sections/UgcProcess';
 import VideoPortfolio from './sections/VideoPortfolio';
@@ -25,7 +26,8 @@ export default function Home({ onNavigate }: HomeProps) {
       <JsonLd data={homeSeo.schema} />
       <JsonLd data={homeSeo.faqSchema} />
 
-      <Hero onNavigate={onNavigate} />
+      <Hero />
+      <GigsBoard />
       <Services />
       <UgcProcess />
       <VideoPortfolio />

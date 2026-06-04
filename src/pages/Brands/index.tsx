@@ -3,7 +3,7 @@ import SEO from '../../components/seo/SEO';
 import JsonLd from '../../components/seo/JsonLd';
 import Breadcrumb from '../../components/seo/Breadcrumb';
 import { brandsSeo } from './seo';
-import { ArrowRight, CheckCircle2, TrendingUp, ShieldAlert, Sparkles, Send } from 'lucide-react';
+import { CheckCircle2, TrendingUp, ShieldAlert, Sparkles, Send } from 'lucide-react';
 
 export default function BrandsPage() {
   const [formData, setFormData] = useState({

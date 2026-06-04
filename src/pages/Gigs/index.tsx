@@ -4,7 +4,7 @@ import SEO from '../../components/seo/SEO';
 import JsonLd from '../../components/seo/JsonLd';
 import Breadcrumb from '../../components/seo/Breadcrumb';
 import { gigsSeo } from './seo';
-import { ugcGigs, UgcGig } from '../../content/gigs';
+import { ugcGigs, type UgcGig } from '../../content/gigs';
 import { DollarSign, Briefcase, Users, CheckCircle, Send, CheckCircle2, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -16,7 +16,6 @@ export default function GigsPage() {
   const [applyEmail, setApplyEmail] = useState('');
   const [portfolioLink, setPortfolioLink] = useState('');
   const [appliedGigs, setAppliedGigs] = useState<string[]>([]);
-  const [successMsg, setSuccessMsg] = useState(false);
 
   // Handle hash navigation directly to a gig
   useEffect(() => {
@@ -45,9 +44,7 @@ export default function GigsPage() {
   const handleApply = (e: React.FormEvent) => {
     e.preventDefault();
     setAppliedGigs([...appliedGigs, selectedGig.id]);
-    setSuccessMsg(true);
     setTimeout(() => {
-      setSuccessMsg(false);
       setApplyName('');
       setApplyEmail('');
       setPortfolioLink('');
@@ -117,7 +114,6 @@ export default function GigsPage() {
                       exit={{ opacity: 0 }}
                       onClick={() => {
                         setSelectedGig(gig);
-                        setSuccessMsg(false);
                       }}
                       className={`cursor-pointer rounded-[24px] p-6 text-left border transition-all duration-300 ${
                         isSelected
