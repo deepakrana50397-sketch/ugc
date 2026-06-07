@@ -1,11 +1,14 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,7 +45,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
         {/* Logo */}
         <Link
-          to="/"
+          href="/"
           onClick={handleLinkClick}
           className="flex items-center space-x-2 text-brand-text group cursor-pointer"
         >
@@ -69,11 +72,11 @@ export default function Navbar() {
         {/* Desktop Nav Items */}
         <nav className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => {
-            const isActive = location.pathname === link.path;
+            const isActive = pathname === link.path;
             return (
               <Link
                 key={link.path}
-                to={link.path}
+                href={link.path}
                 className={`text-[14px] font-medium transition-colors duration-200 font-sans cursor-pointer ${
                   isActive
                     ? 'text-brand-terracotta font-bold'
@@ -89,7 +92,7 @@ export default function Navbar() {
         {/* Post a Gig CTA */}
         <div className="hidden md:flex items-center">
           <Link
-            to="/brands#post-gig"
+            href="/brands#post-gig"
             className="px-5 py-2.5 rounded-full bg-black hover:bg-black/85 text-white font-sans font-bold text-[13px] tracking-normal transition-all duration-300 shadow-sm cursor-pointer"
           >
             Post a Gig
@@ -115,11 +118,11 @@ export default function Navbar() {
         }`}
       >
         {navLinks.map((link) => {
-          const isActive = location.pathname === link.path;
+          const isActive = pathname === link.path;
           return (
             <Link
               key={link.path}
-              to={link.path}
+              href={link.path}
               onClick={handleLinkClick}
               className={`text-left font-sans text-lg tracking-normal cursor-pointer ${
                 isActive
@@ -133,7 +136,7 @@ export default function Navbar() {
         })}
         <div className="h-[1px] bg-brand-border my-6"></div>
         <Link
-          to="/brands#post-gig"
+          href="/brands#post-gig"
           onClick={handleLinkClick}
           className="w-full py-3.5 rounded-full bg-black text-white font-sans font-bold text-sm tracking-normal text-center hover:bg-black/90 transition-colors duration-300"
         >

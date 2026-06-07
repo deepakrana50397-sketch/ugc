@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[97367,["/_next/static/chunks/11wkc900rc-y1.js","/_next/static/chunks/14mrh2-p_w84d.js"],"ViewportBoundary"]
+3:I[97367,["/_next/static/chunks/11wkc900rc-y1.js","/_next/static/chunks/14mrh2-p_w84d.js"],"MetadataBoundary"]
+4:"$Sreact.suspense"
+5:I[27201,["/_next/static/chunks/11wkc900rc-y1.js","/_next/static/chunks/14mrh2-p_w84d.js"],"IconMark"]
+0:{"rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Active UGC Gigs | Apply for Part-Time Creator Roles"}],["$","meta","1",{"name":"description","content":"Browse active UGC video campaigns and gigs for college students, housewives, and micro-influencers. Apply directly and get paid by DTC brands."}],["$","meta","2",{"name":"keywords","content":"UGC gigs, part time creator jobs, content creator opportunities, student side hustle, housewife remote work, video gig board"}],["$","link","3",{"rel":"icon","href":"/favicon.svg"}],["$","$L5","4",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"WD7bL6-6ns2Ka-Gu2edR1"}

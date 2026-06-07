@@ -1,4 +1,7 @@
-import { Link } from 'react-router-dom';
+"use client";
+
+import Link from 'next/link';
+import manFixedClean from '../assets/man_fixed_clean.svg';
 
 export default function Footer() {
   const menuItems = [
@@ -11,7 +14,15 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-brand-text text-brand-bg py-24 px-6 md:px-12 border-t border-brand-border/10 text-left relative overflow-hidden">
+    <footer 
+      className="text-brand-bg py-24 px-6 md:px-12 text-left relative overflow-hidden z-10"
+      style={{
+        background: 'radial-gradient(circle at 15% 10%, rgba(99, 102, 241, 0.05) 0%, transparent 50%), radial-gradient(circle at 85% 90%, rgba(99, 102, 241, 0.03) 0%, transparent 50%), linear-gradient(to bottom, #090b11 0%, #050609 100%)',
+      }}
+    >
+      {/* Top fine gradient accent border line */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-brand-terracotta/20 to-transparent pointer-events-none" />
+
       {/* Decorative subtle background gradient */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-brand-terracotta/5 rounded-full filter blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-brand-terracotta/5 rounded-full filter blur-[100px] pointer-events-none" />
@@ -21,7 +32,7 @@ export default function Footer() {
         <div className="lg:col-span-5 flex flex-col space-y-8">
           <div className="space-y-4">
             <Link
-              to="/"
+              href="/"
               className="inline-flex items-center space-x-2 text-white font-serif italic text-4xl tracking-tight group cursor-pointer"
             >
               <span>igigster.</span>
@@ -32,6 +43,16 @@ export default function Footer() {
             </p>
           </div>
 
+          {/* Organic Sketch Illustration */}
+          <div className="relative h-44 w-full max-w-[280px] overflow-hidden rounded-2xl border border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent p-4 flex items-center justify-center group shadow-inner">
+            {/* Subtle glow background */}
+            <div className="absolute inset-0 bg-brand-terracotta/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl pointer-events-none" />
+            <img 
+              src={manFixedClean} 
+              alt="iGigster Creative Partner" 
+              className="h-full w-auto object-contain opacity-35 group-hover:opacity-65 transition-all duration-500 transform group-hover:scale-105 filter drop-shadow-[0_0_8px_rgba(99,102,241,0.1)] select-none pointer-events-none" 
+            />
+          </div>
 
           {/* Social Icons */}
           <div className="flex space-x-3.5 pt-2">
@@ -85,7 +106,7 @@ export default function Footer() {
               {menuItems.map((item) => (
                 <Link
                   key={item.target}
-                  to={item.target}
+                  href={item.target}
                   className="group flex items-center justify-between py-4.5 border-b border-white/10 hover:border-white/30 transition-colors cursor-pointer"
                 >
                   <span className="font-mono text-xs text-white/30 group-hover:text-brand-terracotta transition-colors">
@@ -163,6 +184,15 @@ export default function Footer() {
       {/* Massive Brand Watermark Typography at bottom (Anubi Style) */}
       <div className="text-[14vw] font-black uppercase tracking-tighter text-white [-webkit-text-stroke:1px_rgba(255,255,255,0.03)] text-center select-none leading-none select-none mt-16 mb-4 font-sans select-none">
         iGigster
+      </div>
+
+      {/* Subtle background watermark illustration */}
+      <div className="absolute right-[-5%] bottom-[-5%] w-[320px] md:w-[420px] opacity-[0.04] pointer-events-none z-0 select-none mix-blend-screen overflow-hidden">
+        <img 
+          src={manFixedClean} 
+          alt="" 
+          className="w-full h-auto object-cover transform rotate-[5deg] scale-110" 
+        />
       </div>
 
       {/* Copyright Line */}

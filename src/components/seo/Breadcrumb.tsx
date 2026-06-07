@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ChevronRight, Home } from 'lucide-react';
 
 interface BreadcrumbItem {
@@ -14,7 +14,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
   return (
     <nav aria-label="Breadcrumb" className="py-4 flex items-center space-x-2 text-[11px] font-bold uppercase tracking-widest text-brand-muted/80">
       <Link
-        to="/"
+        href="/"
         className="flex items-center space-x-1 hover:text-brand-terracotta transition-colors duration-200"
       >
         <Home className="w-3.5 h-3.5" />
@@ -33,7 +33,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
               </span>
             ) : (
               <Link
-                to={item.path}
+                href={item.path}
                 className="hover:text-brand-terracotta transition-colors duration-200"
               >
                 {item.label}
