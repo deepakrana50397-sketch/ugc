@@ -19,7 +19,7 @@ export default function SEO({
   ogImage = '/og-image.png', // Default OG image path
   twitterCard = 'summary_large_image',
 }: SEOProps) {
-  const siteTitle = `${title} | UGC-Direct`;
+  const siteTitle = `${title} | iGigster`;
   const currentUrl = canonicalUrl || window.location.href;
 
   return (

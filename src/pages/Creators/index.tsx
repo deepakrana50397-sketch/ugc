@@ -47,10 +47,8 @@ export default function CreatorsPage() {
                 paid <span className="font-serif italic font-normal text-brand-terracotta">directly.</span>
               </h1>
               <p className="text-base md:text-lg text-brand-muted max-w-xl leading-relaxed">
-                Whether you are a college student, housewife, or micro-influencer, brands on UGC-Direct want your real, raw style. Receive brief storyboards, shoot content on your mobile phone, and get paid 100% of your rate with zero agency markup fees.
-              </p>
-
-              {/* Creator Categories Bento Highlights */}
+                Whether you are a college student, housewife, or micro-influencer, brands on iGigster want your real, raw style. Receive brief storyboards, shoot content on your mobile phone, and get paid 100% of your rate with zero agency markup fees.
+              </p>              {/* Creator Categories Bento Highlights */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
                 <div className="bg-brand-card border border-brand-border p-5 rounded-2xl">
                   <GraduationCap className="w-6 h-6 text-brand-terracotta mb-2" />

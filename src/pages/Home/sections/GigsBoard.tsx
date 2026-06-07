@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ugcGigs } from '../../../content/gigs';
-import { ArrowRight, DollarSign, Briefcase, Sparkles, Pin } from 'lucide-react';
+import { ArrowRight, DollarSign, Briefcase, Sparkles } from 'lucide-react';
 
 export default function GigsBoard() {
   const [filter, setFilter] = useState<'All' | 'College Student' | 'Housewife' | 'Influencer'>('All');

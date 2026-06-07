@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Play, Volume2, VolumeX, X, BarChart3, TrendingUp, Users2, ChevronLeft, ChevronRight, Eye, RefreshCw } from 'lucide-react';
+import { Play, Volume2, VolumeX, X, BarChart3, TrendingUp, Users2, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface PortfolioItem {

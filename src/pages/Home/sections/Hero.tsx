@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Sparkles, ArrowDownRight, Compass, Heart, ArrowRight } from 'lucide-react';
 
 export default function Hero() {
@@ -203,7 +203,7 @@ export default function Hero() {
             </div>
 
             <div className="flex justify-between items-center pt-4 border-t border-brand-border/10">
-              <span className="font-mono text-[9px] text-[#ded6ca]/70">UGC-DIRECT.COM</span>
+              <span className="font-mono text-[9px] text-[#ded6ca]/70">IGIGSTER.COM</span>
               <span className="text-[10px] font-bold text-brand-terracotta flex items-center space-x-1">
                 <span>Vetted catalog</span>
                 <ArrowDownRight className="w-3.5 h-3.5" />

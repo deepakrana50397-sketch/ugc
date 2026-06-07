@@ -10,6 +10,6 @@ export const gigsSeo = {
     name: 'Active UGC Gigs Board',
     description:
       'List of active content creation campaigns and gigs offering part-time payout for micro-creators.',
-    url: 'https://ugc-direct.com/gigs',
+    url: 'https://igigster.com/gigs',
   },
 };

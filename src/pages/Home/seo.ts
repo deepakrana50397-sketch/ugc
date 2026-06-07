@@ -7,11 +7,11 @@ export const homeSeo = {
   schema: {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'UGC-Direct',
-    url: 'https://ugc-direct.com', // Placeholder for actual domain
+    name: 'iGigster',
+    url: 'https://igigster.com', // Placeholder for actual domain
     potentialAction: {
       '@type': 'SearchAction',
-      target: 'https://ugc-direct.com/search?q={search_term_string}',
+      target: 'https://igigster.com/search?q={search_term_string}',
       'query-input': 'required name=search_term_string',
     },
   },
@@ -21,10 +21,10 @@ export const homeSeo = {
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'What makes UGC-Direct different from traditional agencies?',
+        name: 'What makes iGigster different from traditional agencies?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Traditional agencies act as middlemen—they buy video content from creators for $150 and sell it to you for $400, pocketing a large markup. UGC-Direct is a direct-hiring directory. You pay creators their exact, affordable rates directly. We only charge a small flat booking fee ($19) to coordinate, script, and edit the final videos, saving you up to 60% on your content budget.',
+          text: 'Traditional agencies act as middlemen—they buy video content from creators for $150 and sell it to you for $400, pocketing a large markup. iGigster is a direct-hiring directory. You pay creators their exact, affordable rates directly. We only charge a small flat booking fee ($19) to coordinate, script, and edit the final videos, saving you up to 60% on your content budget.',
         },
       },
       {

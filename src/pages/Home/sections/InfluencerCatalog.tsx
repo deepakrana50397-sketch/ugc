@@ -551,7 +551,7 @@ export default function InfluencerCatalog() {
                         <span className="font-bold text-brand-text">${selectedCreator.rate * formData.videoQuantity}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-brand-muted font-sans font-medium">UGC-Direct Processing Fee</span>
+                        <span className="text-brand-muted font-sans font-medium">iGigster Processing Fee</span>
                         <span className="font-bold text-brand-text">$19</span>
                       </div>
                       <div className="h-[1px] bg-brand-border my-2"></div>

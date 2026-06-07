@@ -11,8 +11,8 @@ export default function FAQ() {
 
   const faqs: FaqItem[] = [
     {
-      question: 'What makes UGC-Direct different from traditional agencies?',
-      answer: 'Traditional agencies act as middlemen—they buy video content from creators for $150 and sell it to you for $400, pocketing a large markup. UGC-Direct is a direct-hiring directory. You pay creators their exact, affordable rates directly. We only charge a small flat booking fee ($19) to coordinate, script, and edit the final videos, saving you up to 60% on your content budget.'
+      question: 'What makes iGigster different from traditional agencies?',
+      answer: 'Traditional agencies act as middlemen—they buy video content from creators for $150 and sell it to you for $400, pocketing a large markup. iGigster is a direct-hiring directory. You pay creators their exact, affordable rates directly. We only charge a small flat booking fee ($19) to coordinate, script, and edit the final videos, saving you up to 60% on your content budget.'
     },
     {
       question: 'How do you vet creators on your website?',

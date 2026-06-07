@@ -7,9 +7,9 @@ export const brandsSeo = {
   schema: {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'UGC-Direct Solutions for Brands',
+    name: 'iGigster Solutions for Brands',
     description:
       'Direct creator sourcing, direct rates, conversion scripting, and editing services for e-commerce and DTC brands.',
-    url: 'https://ugc-direct.com/brands',
+    url: 'https://igigster.com/brands',
   },
 };

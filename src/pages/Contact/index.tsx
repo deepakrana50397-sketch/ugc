@@ -58,7 +58,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="text-[9px] font-bold text-brand-muted uppercase tracking-wider">Email Address</p>
-                    <p className="text-xs font-sans font-bold text-brand-text mt-0.5">hello@ugc-direct.com</p>
+                    <p className="text-xs font-sans font-bold text-brand-text mt-0.5">hello@igigster.com</p>
                   </div>
                 </div>
 

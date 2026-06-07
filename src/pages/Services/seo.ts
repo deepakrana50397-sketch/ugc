@@ -10,7 +10,7 @@ export const servicesSeo = {
     serviceType: 'UGC Content Creation & Ads Management',
     provider: {
       '@type': 'LocalBusiness',
-      name: 'UGC-Direct',
+      name: 'iGigster',
       image: '/og-image.png',
       address: {
         '@type': 'PostalAddress',

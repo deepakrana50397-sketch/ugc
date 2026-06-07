@@ -62,7 +62,7 @@ export default function Navbar() {
             </svg>
           </div>
           <span className="text-xl font-extrabold tracking-tight text-brand-text lowercase font-sans">
-            viral
+            igigster
           </span>
         </Link>
 

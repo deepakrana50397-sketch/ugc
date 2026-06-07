@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, Search, PencilLine, PenTool, Tv, Video, Share2, Sparkles, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Compass, Search, PencilLine, PenTool, Tv, Video, Share2, Sparkles } from 'lucide-react';
 
 interface ProcessStep {
   id: string;
