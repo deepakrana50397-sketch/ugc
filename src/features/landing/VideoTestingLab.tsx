@@ -34,6 +34,7 @@ export default function VideoTestingLab() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [selectedVideo, setSelectedVideo] = useState<PortfolioItem | null>(null);
   const [isMuted, setIsMuted] = useState(true);
+  const [hoveredVideoId, setHoveredVideoId] = useState<string | null>(null);
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 
   const categories = [
@@ -172,6 +173,7 @@ export default function VideoTestingLab() {
     : portfolioItems.filter(item => item.category === activeCategory);
 
   const handleHoverStart = (id: string) => {
+    setHoveredVideoId(id);
     const video = videoRefs.current[id];
     if (video) {
       video.play().catch(() => {});
@@ -179,6 +181,7 @@ export default function VideoTestingLab() {
   };
 
   const handleHoverEnd = (id: string) => {
+    setHoveredVideoId(null);
     const video = videoRefs.current[id];
     if (video) {
       video.pause();
@@ -334,11 +337,13 @@ export default function VideoTestingLab() {
                   loop
                   playsInline
                 />
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.05)' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1c1917', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
-                    <Play size={16} fill="#1c1917" style={{ marginLeft: '2px' }} />
+                {hoveredVideoId !== item.id && (
+                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.05)' }}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1c1917', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
+                      <Play size={16} fill="#1c1917" style={{ marginLeft: '2px' }} />
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Hook snippet */}

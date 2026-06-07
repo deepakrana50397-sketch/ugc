@@ -292,6 +292,7 @@ export default function CreatorCategories() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.4 }}
+                style={{ height: '100%' }}
               >
                 <GlowCard
                   glowColor="rgba(219, 39, 119, 0.06)"

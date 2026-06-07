@@ -343,6 +343,7 @@ export default function PricingPreview() {
                       <Link
                         href={pkg.ctaLink}
                         style={{
+                          display: 'block',
                           width: '100%',
                           textAlign: 'center',
                           padding: '14px 28px',
@@ -450,6 +451,7 @@ export default function PricingPreview() {
                     <Link
                       href={plan.ctaLink}
                       style={{
+                        display: 'block',
                         width: '100%',
                         textAlign: 'center',
                         padding: '14px 28px',

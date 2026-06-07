@@ -56,7 +56,7 @@ export default function TextReveal({
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-10%' }}
-        style={{ display: 'inline-flex', flexWrap: 'wrap', overflow: 'hidden' }}
+        style={{ display: 'inline-flex', flexWrap: 'wrap', overflow: 'visible' }}
       >
         {items.map((item, index) => (
           <span
@@ -65,7 +65,11 @@ export default function TextReveal({
               display: 'inline-block',
               overflow: 'hidden',
               marginRight: mode === 'words' ? '0.25em' : '0em',
-              lineHeight: 1.15,
+              lineHeight: 1.3,
+              paddingTop: '0.15em',
+              paddingBottom: '0.15em',
+              marginTop: '-0.15em',
+              marginBottom: '-0.15em',
             }}
           >
             <motion.span

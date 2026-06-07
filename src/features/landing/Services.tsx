@@ -214,7 +214,7 @@ export default function Services() {
                       borderRadius: '4px',
                     }}
                   >
-                    [{module.tag}]
+                    {module.tag}
                   </span>
                   <div
                     style={{
@@ -251,7 +251,7 @@ export default function Services() {
                     aspectRatio: '4 / 3', 
                     borderRadius: '16px', 
                     overflow: 'hidden', 
-                    backgroundColor: '#0c0a09',
+                    backgroundColor: 'transparent',
                     border: '1px solid var(--border)',
                   }}
                 >
