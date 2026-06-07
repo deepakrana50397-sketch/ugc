@@ -4,6 +4,7 @@ import Hero from '@/features/landing/Hero';
 import TrustedBrands from '@/features/landing/TrustedBrands';
 import Services from '@/features/landing/Services';
 import HowItWorks from '@/features/landing/HowItWorks';
+import VideoTestingLab from '@/features/landing/VideoTestingLab';
 import Stats from '@/features/landing/Stats';
 import ClientResults from '@/features/landing/ClientResults';
 import QuoteTestimonial from '@/features/landing/QuoteTestimonial';
@@ -43,6 +44,9 @@ export default function Home() {
 
       {/* 4. How it works */}
       <HowItWorks />
+
+      {/* 4.5. Video Testing Lab */}
+      <VideoTestingLab />
 
       {/* 5. Stats / Results */}
       <Stats />

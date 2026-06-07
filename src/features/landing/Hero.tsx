@@ -1,17 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Play, ArrowRight, Sparkles, Users, Video, Award, Star } from 'lucide-react';
+import { Sparkles, ArrowDownRight, Compass, Heart, ArrowRight, Video, Star, Award } from 'lucide-react';
 import { landingPageContent } from '@/data/landing';
 import TextReveal from '@/components/animation/TextReveal';
 import Magnetic from '@/components/animation/Magnetic';
 import GlowCard from '@/components/animation/GlowCard';
 
 export default function Hero() {
-  const { hero, niches } = landingPageContent;
-  const [isPlaying, setIsPlaying] = useState(false);
+  const { niches } = landingPageContent;
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   // Scroll Parallax effect
@@ -19,7 +18,7 @@ export default function Hero() {
   const yParallax = useTransform(scrollY, [0, 500], [0, -60]);
   const opacityParallax = useTransform(scrollY, [0, 400], [1, 0.4]);
 
-  // Track mouse coordinates for subtle grid movement
+  // Track mouse coordinates for grid movement
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
@@ -31,16 +30,78 @@ export default function Hero() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  // Stories State & Logic (from origin/main)
+  const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const stories = [
+    'https://framerusercontent.com/assets/9BKR8n5yij6np4F4fhXpbwixLWI.mp4',
+    'https://framerusercontent.com/assets/0oniLdlZhN2RUR1zCzsqMbMHfQ8.mp4',
+    'https://framerusercontent.com/assets/TR9SXrUqMBTLyfoDFBPUh4qvHfE.mp4',
+  ];
+
+  const storyDetails = [
+    { name: 'jessicasu', role: 'College Creator', match: '98%', time: '6h', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop' },
+    { name: 'marcus.tech', role: 'Tech Influencer', match: '95%', time: '2h', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' },
+    { name: 'elena.style', role: 'Fashion / Housewife', match: '92%', time: '1d', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop' },
+  ];
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().catch((err) => {
+        console.log('Autoplay play promise failed/interrupted:', err);
+      });
+    }
+  }, [currentStoryIndex]);
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      const percentage = videoRef.current.duration
+        ? (videoRef.current.currentTime / videoRef.current.duration) * 100
+        : 0;
+      setProgress(percentage);
+    }
+  };
+
+  const handleVideoEnded = () => {
+    if (currentStoryIndex < stories.length - 1) {
+      setCurrentStoryIndex((prev) => prev + 1);
+    } else {
+      setCurrentStoryIndex(0);
+    }
+    setProgress(0);
+  };
+
+  const handleNextStory = () => {
+    if (currentStoryIndex < stories.length - 1) {
+      setCurrentStoryIndex((prev) => prev + 1);
+    } else {
+      setCurrentStoryIndex(0);
+    }
+    setProgress(0);
+  };
+
+  const handlePrevStory = () => {
+    if (currentStoryIndex > 0) {
+      setCurrentStoryIndex((prev) => prev - 1);
+    } else {
+      setCurrentStoryIndex(stories.length - 1);
+    }
+    setProgress(0);
+  };
+
   return (
     <section 
       style={{
         position: 'relative',
-        padding: '160px 24px 100px 24px',
+        padding: '160px 24px 120px 24px',
         backgroundColor: 'var(--background)',
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
-        minHeight: '95vh',
+        minHeight: '98vh',
       }}
     >
       {/* Premium Ambient Light Glow Blobs */}
@@ -90,7 +151,7 @@ export default function Hero() {
         }}
       />
 
-      {/* Custom Vector Art - Floating Geometric Orbits */}
+      {/* Custom Floating Orbit lines */}
       <svg 
         style={{
           position: 'absolute',
@@ -114,25 +175,11 @@ export default function Hero() {
           animate={{ pathLength: 1 }}
           transition={{ duration: 3, ease: "easeOut" }}
         />
-        <motion.path 
-          d="M-50,200 C250,550 500,-50 850,450 C1050,150 1150,250 1300,50" 
-          stroke="url(#hero-gradient-line-2)" 
-          strokeWidth="1.5"
-          strokeDasharray="8 6"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 4, ease: "easeOut", delay: 0.5 }}
-        />
         <defs>
           <linearGradient id="hero-gradient-line-1" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="rgb(79, 70, 229)" />
             <stop offset="50%" stopColor="rgb(219, 39, 119)" />
             <stop offset="100%" stopColor="rgb(13, 148, 136)" />
-          </linearGradient>
-          <linearGradient id="hero-gradient-line-2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgb(13, 148, 136)" />
-            <stop offset="50%" stopColor="rgb(79, 70, 229)" />
-            <stop offset="100%" stopColor="rgb(219, 39, 119)" />
           </linearGradient>
         </defs>
       </svg>
@@ -140,7 +187,7 @@ export default function Hero() {
       <div 
         style={{
           width: '100%',
-          maxWidth: '1280px',
+          maxWidth: '1200px',
           margin: '0 auto',
           position: 'relative',
           zIndex: 1,
@@ -150,14 +197,14 @@ export default function Hero() {
           className="hero-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: '1.1fr 0.9fr',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
             gap: '64px',
             alignItems: 'center',
           }}
         >
-          {/* Left Content */}
+          {/* Left Column: Headings & copy */}
           <motion.div 
-            style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -174,77 +221,147 @@ export default function Hero() {
                 borderRadius: '20px',
                 alignSelf: 'flex-start',
                 color: 'rgb(79, 70, 229)',
-                fontSize: '13px',
-                fontWeight: 600,
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
               }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >
-              <Sparkles size={14} className="text-secondary" />
-              <span>{hero.badge}</span>
+              <Sparkles size={13} className="text-secondary" />
+              <span style={{ textTransform: 'uppercase' }}>[ Direct UGC Matchmaking ]</span>
             </motion.div>
 
-            {/* Character Reveal Heading */}
-            <TextReveal 
-              text={hero.title} 
-              tag="h1" 
-              className="text-foreground"
-              mode="words"
+            {/* Title with hand-drawn underline SVG */}
+            <h1 
               style={{
-                fontSize: 'clamp(40px, 5.5vw, 64px)', 
-                lineHeight: 1.1,
+                fontSize: 'clamp(38px, 5.5vw, 68px)', 
+                lineHeight: 1.05,
                 fontWeight: 800,
                 letterSpacing: '-0.04em',
+                color: 'var(--foreground)',
+                fontFamily: 'var(--font-display)',
               }}
-            />
+            >
+              High-converting UGC, <br />
+              done{' '}
+              <span style={{ position: 'relative', display: 'inline-block', padding: '0 4px' }}>
+                <span 
+                  style={{ 
+                    fontFamily: "'Playfair Display', serif", 
+                    fontStyle: 'italic', 
+                    fontWeight: 500,
+                    color: 'rgb(79, 70, 229)',
+                  }}
+                >
+                  directly.
+                </span>
+                {/* Underline SVG */}
+                <svg
+                  style={{
+                    position: 'absolute',
+                    bottom: '-8px',
+                    left: 0,
+                    width: '100%',
+                    height: '14px',
+                    color: 'rgb(219, 39, 119)',
+                    zIndex: 0,
+                  }}
+                  viewBox="0 0 100 10"
+                  preserveAspectRatio="none"
+                  fill="none"
+                >
+                  <path
+                    d="M0,7 C30,10 70,4 100,6 C75,8 25,9 0,7"
+                    stroke="currentColor"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
+            </h1>
 
-            {/* Subheading anim */}
-            <motion.p 
+            {/* Subtext */}
+            <div style={{ position: 'relative' }}>
+              <p 
+                style={{ 
+                  fontSize: '17px', 
+                  color: 'var(--muted)', 
+                  lineHeight: 1.6, 
+                  maxWidth: '560px',
+                  fontFamily: 'var(--font-sans)',
+                }}
+              >
+                We connect brands directly with vetted college students, housewives, and micro-influencers. 
+                No agency markups. Complete scripting, positioning, and mobile-native editing included.
+              </p>
+              {/* Hand-drawn heart element */}
+              <div 
+                style={{ 
+                  position: 'absolute', 
+                  right: '-40px', 
+                  top: 0, 
+                  color: 'rgb(219, 39, 119)', 
+                  transform: 'rotate(12deg)' 
+                }}
+                className="hidden md:block"
+              >
+                <Heart size={20} fill="rgba(219, 39, 119, 0.1)" />
+              </div>
+            </div>
+
+            {/* Value Props */}
+            <div 
               style={{ 
-                fontSize: '18px', 
-                color: 'var(--muted)', 
-                lineHeight: 1.6, 
-                maxWidth: '560px' 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
+                gap: '20px', 
+                paddingTop: '8px' 
               }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
             >
-              {hero.subtitle}
-            </motion.p>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <span style={{ fontSize: '12px', fontFamily: 'monospace', fontWeight: 'bold', color: 'rgb(219, 39, 119)', marginTop: '2px' }}>[01]</span>
+                <div>
+                  <h4 style={{ fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--foreground)', fontFamily: 'var(--font-display)' }}>Zero Agency Retainers</h4>
+                  <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '2px' }}>Pay creators directly at their exact rate.</p>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <span style={{ fontSize: '12px', fontFamily: 'monospace', fontWeight: 'bold', color: 'rgb(219, 39, 119)', marginTop: '2px' }}>[02]</span>
+                <div>
+                  <h4 style={{ fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--foreground)', fontFamily: 'var(--font-display)' }}>Direct Communication</h4>
+                  <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '2px' }}>Chat, brief, and revise directly in the portal.</p>
+                </div>
+              </div>
+            </div>
 
-            {/* CTA Buttons with Magnetic effect */}
-            <motion.div 
-              style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'center' }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-            >
-              <Magnetic strength={0.2}>
+            {/* CTA Buttons */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'center', marginTop: '12px' }}>
+              <Magnetic strength={0.15}>
                 <Link
-                  href={hero.primaryLink}
+                  href="/brand/post-gig"
                   style={{
                     backgroundColor: 'rgb(79, 70, 229)',
                     color: '#ffffff',
                     padding: '16px 32px',
                     borderRadius: '30px',
                     fontSize: '15px',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    boxShadow: '0 4px 20px rgba(79, 70, 229, 0.25)',
+                    boxShadow: '0 8px 20px -6px rgba(79, 70, 229, 0.4)',
                   }}
                   className="glow-button"
                 >
-                  <span>{hero.primaryCta}</span>
+                  <span>Post a Gig (Free)</span>
                   <ArrowRight size={16} />
                 </Link>
               </Magnetic>
 
-              <Magnetic strength={0.25}>
+              <Magnetic strength={0.2}>
                 <Link
-                  href={hero.secondaryLink}
+                  href="/register?role=creator"
                   style={{
                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
                     border: '1px solid rgba(28, 25, 22, 0.1)',
@@ -252,7 +369,7 @@ export default function Hero() {
                     padding: '16px 32px',
                     borderRadius: '30px',
                     fontSize: '15px',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
@@ -260,27 +377,22 @@ export default function Hero() {
                   }}
                   className="premium-btn-secondary"
                 >
-                  <span>{hero.secondaryCta}</span>
+                  <span>Apply as Creator</span>
                 </Link>
               </Magnetic>
-            </motion.div>
+            </div>
 
-            {/* Micro-indicator */}
-            <motion.div 
-              style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--muted)', fontSize: '13px' }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-            >
+            {/* Active Creators indicators */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--muted)', fontSize: '13.5px', marginTop: '4px' }}>
               <div style={{ display: 'flex', position: 'relative', width: '36px', height: '20px' }}>
                 <div style={{ position: 'absolute', left: 0, width: '20px', height: '20px', borderRadius: '50%', background: '#fb7185', border: '2px solid var(--background)' }} />
                 <div style={{ position: 'absolute', left: '12px', width: '20px', height: '20px', borderRadius: '50%', background: '#60a5fa', border: '2px solid var(--background)' }} />
               </div>
-              <span>Active Creators: <strong style={{ color: 'var(--foreground)' }}>1,200+ vetted profile rate cards</strong> online now.</span>
-            </motion.div>
+              <span>Active: <strong style={{ color: 'var(--foreground)' }}>1,200+ vetted profile rate cards</strong> online.</span>
+            </div>
           </motion.div>
 
-          {/* Right Media / Creator Mockup (3D & Parallax) */}
+          {/* Right Column: Polaroid Story Video Card Stack (remixed from origin/main) */}
           <motion.div 
             style={{ 
               display: 'flex', 
@@ -294,146 +406,213 @@ export default function Hero() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            {/* Custom 3D GlowCard */}
-            <GlowCard 
+            {/* Card 1: Match Engine Description (Back Card) */}
+            <motion.div
+              initial={{ opacity: 0, rotate: -6, x: -15 }}
+              animate={{ opacity: 1, rotate: -4, x: 0 }}
+              transition={{ duration: 0.8, ease: 'easeOut', delay: 0.15 }}
               style={{
-                padding: '20px',
-                width: '100%',
-                maxWidth: '430px',
-                boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.08), var(--shadow-glow)',
-                border: '1px solid rgba(231, 229, 228, 0.8)',
+                position: 'absolute',
+                transform: 'rotate(-4deg)',
+                width: '310px',
+                aspectRatio: '9 / 16',
+                backgroundColor: '#1c1917', // Elegant neutral warm black
+                borderRadius: '32px',
+                padding: '28px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'between',
+                color: '#ffffff',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+                zIndex: 0,
               }}
             >
-              {/* Creator Card Header */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ position: 'relative' }}>
-                    <img 
-                      src={hero.videoThumbnail} 
-                      alt="Creator Avatar" 
-                      style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgb(79, 70, 229)' }}
-                    />
-                    <span style={{ position: 'absolute', bottom: 0, right: 0, width: '12px', height: '12px', borderRadius: '50%', background: '#10b981', border: '2px solid white' }} />
-                  </div>
-                  <div>
-                    <h4 style={{ color: 'var(--foreground)', fontSize: '15px', fontWeight: 600 }}>Tanya R.</h4>
-                    <p style={{ color: 'var(--muted)', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <Video size={12} /> Skincare UGC Expert • ₹6,000/vid
-                    </p>
-                  </div>
-                </div>
-                
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', backgroundColor: 'rgba(16, 185, 129, 0.08)', color: '#059669', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 600 }}>
-                  <Star size={12} fill="#059669" />
-                  <span>Top Vetted</span>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                <span style={{ fontSize: '9px', fontFamily: 'monospace', letterSpacing: '0.15em', opacity: 0.6 }}>[ MATCH ENGINE ]</span>
+                <Sparkles size={16} style={{ color: 'rgb(219, 39, 119)' }} />
               </div>
 
-              {/* Video Player Mockup with Hover Trigger */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', margin: 'auto 0' }}>
+                <div style={{ display: 'inline-flex', padding: '4px 10px', backgroundColor: 'rgba(255, 255, 255, 0.08)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.08)', fontSize: '8px', fontFamily: 'monospace', letterSpacing: '0.08em', width: 'fit-content' }}>
+                  CRITERIA: COLLEGE STUDENT
+                </div>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '26px', fontWeight: 500, lineHeight: 1.25, color: '#ffffff' }}>
+                  Authentic voices, <br />
+                  no actor vibes.
+                </h3>
+                <p style={{ fontSize: '12px', color: '#a8a29e', lineHeight: 1.5 }}>
+                  Our database filters by life stage. Get real UGC videos from college dorms, busy kitchen counters, and native daily vlogs.
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                <span style={{ fontSize: '9px', opacity: 0.5 }}>IGIGSTER.COM</span>
+                <span style={{ fontSize: '10px', fontWeight: 'bold', color: 'rgb(219, 39, 119)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span>Vetted catalog</span>
+                  <ArrowDownRight size={12} />
+                </span>
+              </div>
+            </motion.div>
+
+            {/* Card 2: Interactive Polaroid Video Card (Front Overlapping Card) */}
+            <motion.div
+              initial={{ opacity: 0, rotate: 3, y: 15 }}
+              animate={{ opacity: 1, rotate: 2, y: 0 }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              whileHover={{ rotate: 0, scale: 1.02 }}
+              style={{
+                position: 'relative',
+                width: '310px',
+                aspectRatio: '9 / 16',
+                backgroundColor: '#ffffff',
+                border: '1px solid rgba(28, 25, 22, 0.08)',
+                borderRadius: '32px',
+                boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.12), var(--shadow-glow)',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                zIndex: 10,
+              }}
+              className="group"
+            >
+              {/* Progress Indicator Bars */}
               <div 
-                style={{
-                  position: 'relative',
-                  width: '100%',
-                  height: '400px',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  backgroundColor: '#1c1917',
+                style={{ 
+                  position: 'absolute', 
+                  top: '20px', 
+                  left: '20px', 
+                  right: '20px', 
+                  display: 'flex', 
+                  gap: '6px', 
+                  zIndex: 20, 
+                  pointerEvents: 'none' 
                 }}
-                onClick={() => setIsPlaying(!isPlaying)}
               >
-                {isPlaying ? (
-                  <video
-                    src="https://www.w3schools.com/html/mov_bbb.mp4"
-                    autoPlay
-                    controls
-                    loop
-                    muted
-                    playsInline
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                {stories.map((_, index) => (
+                  <div key={index} style={{ height: '3px', flex: 1, backgroundColor: 'rgba(255, 255, 255, 0.3)', borderRadius: '9999px', overflow: 'hidden', position: 'relative' }}>
+                    {index < currentStoryIndex && (
+                      <div style={{ position: 'absolute', inset: 0, backgroundColor: '#ffffff' }} />
+                    )}
+                    {index === currentStoryIndex && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: 0,
+                          top: 0,
+                          bottom: 0,
+                          backgroundColor: '#ffffff',
+                          width: `${progress}%`,
+                        }}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Creator details header */}
+              <div 
+                style={{ 
+                  position: 'absolute', 
+                  top: '38px', 
+                  left: '20px', 
+                  right: '20px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between', 
+                  zIndex: 20, 
+                  pointerEvents: 'none',
+                  textAlign: 'left'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <img
+                    src={storyDetails[currentStoryIndex].avatar}
+                    style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.8)', objectFit: 'cover' }}
+                    alt="avatar"
                   />
-                ) : (
-                  <>
-                    <img 
-                      src={hero.videoThumbnail} 
-                      alt="Video Thumbnail" 
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.75)' }}
-                    />
-                    
-                    {/* Glowing Pulsing Play Button */}
-                    <div 
-                      style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: '72px',
-                        height: '72px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(79, 70, 229, 0.95)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#ffffff',
-                        boxShadow: '0 0 30px rgba(79, 70, 229, 0.6)',
-                        transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                      }}
-                      className="play-btn"
-                    >
-                      <Play size={30} fill="#ffffff" style={{ marginLeft: '4px' }} />
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ color: '#ffffff', fontSize: '11px', fontWeight: 'bold' }}>
+                        {storyDetails[currentStoryIndex].name}
+                      </span>
+                      <span style={{ backgroundColor: 'rgb(219, 39, 119)', color: '#ffffff', fontSize: '7px', fontWeight: 'bold', padding: '1px 4px', borderRadius: '4px' }}>
+                        {storyDetails[currentStoryIndex].match} MATCH
+                      </span>
                     </div>
-
-                    <div
-                      style={{
-                        position: 'absolute',
-                        bottom: '0',
-                        left: '0',
-                        right: '0',
-                        padding: '24px 20px 20px 20px',
-                        background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)',
-                        color: '#ffffff',
-                      }}
-                    >
-                      <p style={{ fontSize: '14px', fontWeight: 500, fontStyle: 'italic', opacity: 0.9 }}>
-                        "This serum completely cleared my acne marks in 2 weeks. The conversion lift was insane!"
-                      </p>
-                    </div>
-                  </>
-                )}
+                    <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '9px', display: 'block', marginTop: '2px' }}>
+                      {storyDetails[currentStoryIndex].role}
+                    </span>
+                  </div>
+                </div>
+                <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '10px', fontFamily: 'monospace' }}>{storyDetails[currentStoryIndex].time}</span>
               </div>
 
-              {/* Floating micro stats block */}
+              {/* Video Player */}
+              <video
+                ref={videoRef}
+                src={stories[currentStoryIndex]}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', backgroundColor: '#0c0a09' }}
+                autoPlay
+                muted
+                playsInline
+                onTimeUpdate={handleTimeUpdate}
+                onEnded={handleVideoEnded}
+              />
+
+              {/* Gradients */}
+              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '96px', backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%)', pointerEvents: 'none', zIndex: 10 }} />
+              <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '96px', backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%)', pointerEvents: 'none', zIndex: 10 }} />
+
+              {/* Hover Navigation Triggers */}
               <div 
-                style={{
-                  position: 'absolute',
-                  top: '120px',
-                  left: '-30px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  border: '1px solid rgba(231, 229, 228, 0.8)',
-                  borderRadius: '12px',
-                  padding: '10px 14px',
-                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.05)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  zIndex: 10,
-                  backdropFilter: 'blur(8px)',
+                style={{ 
+                  position: 'absolute', 
+                  inset: 0, 
+                  zIndex: 30, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between',
+                  backgroundColor: 'rgba(0,0,0,0.05)',
+                  transition: 'opacity 0.3s ease',
                 }}
+                className="opacity-0 group-hover:opacity-100"
               >
-                <div style={{ backgroundColor: 'rgba(219, 39, 119, 0.1)', color: 'rgb(219, 39, 119)', padding: '6px', borderRadius: '8px' }}>
-                  <Award size={16} />
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePrevStory();
+                  }}
+                  style={{ width: '30%', height: '100%', display: 'flex', alignItems: 'center', paddingLeft: '12px', cursor: 'pointer' }}
+                >
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.9)', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1c1917', fontWeight: 'bold' }}>
+                    ‹
+                  </div>
                 </div>
-                <div>
-                  <div style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 500 }}>CTR INCREASE</div>
-                  <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--foreground)' }}>+340%</div>
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleNextStory();
+                  }}
+                  style={{ width: '30%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: '12px', cursor: 'pointer' }}
+                >
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.9)', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1c1917', fontWeight: 'bold' }}>
+                    ›
+                  </div>
                 </div>
               </div>
-            </GlowCard>
+
+              {/* Bottom Badge overlay */}
+              <div style={{ position: 'absolute', right: '20px', bottom: '20px', zIndex: 20, pointerEvents: 'none' }}>
+                <div style={{ width: '48px', height: '48px', backgroundColor: '#ffffff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 16px rgba(0,0,0,0.08)', border: '1px solid rgba(28,25,22,0.08)' }}>
+                  <Compass size={20} style={{ color: 'rgb(219, 39, 119)' }} />
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
 
-      {/* Floating Niche Tags Slider (Interactive bottom) */}
+      {/* Interactive Bottom Niches Tags */}
       <div 
         style={{
           position: 'absolute',
@@ -446,7 +625,7 @@ export default function Hero() {
       >
         <div 
           style={{
-            maxWidth: '1280px',
+            maxWidth: '1200px',
             margin: '0 auto',
             padding: '0 24px',
             display: 'flex',
