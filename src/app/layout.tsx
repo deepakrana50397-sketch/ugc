@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import SmoothScrollProvider from "@/components/ui/smooth-scroll-provider";
 import "../index.css"; // Global styles
 
 const inter = Inter({
@@ -34,13 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.variable} ${sourceSerif.variable} min-h-screen bg-brand-bg flex flex-col justify-between overflow-x-hidden font-sans`}>
-        <SmoothScrollProvider>
-          <Navbar />
-          <main className="flex-grow pt-[80px]">
-            {children}
-          </main>
-          <Footer />
-        </SmoothScrollProvider>
+        {children}
       </body>
     </html>
   );
