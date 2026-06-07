@@ -227,7 +227,7 @@ export default function VideoTestingLab() {
             }}
           >
             <Sparkles size={13} style={{ color: 'rgb(79, 70, 229)' }} />
-            <span>[ Video Testing Lab ]</span>
+            <span>Video Testing Lab</span>
           </div>
 
           <TextReveal

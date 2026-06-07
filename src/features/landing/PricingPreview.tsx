@@ -139,7 +139,7 @@ export default function PricingPreview() {
               textTransform: 'uppercase',
             }}
           >
-            <span>[ Pricing Matrix ]</span>
+            <span>Pricing Matrix</span>
           </div>
 
           <TextReveal

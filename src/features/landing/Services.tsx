@@ -129,7 +129,7 @@ export default function Services() {
             }}
           >
             <Sparkles size={13} className="text-secondary" />
-            <span>[ Conversion Mechanics ]</span>
+            <span>Conversion Mechanics</span>
           </div>
 
           <TextReveal

@@ -229,7 +229,7 @@ export default function Hero() {
               whileTap={{ scale: 0.98 }}
             >
               <Sparkles size={13} className="text-secondary" />
-              <span style={{ textTransform: 'uppercase' }}>[ Direct UGC Matchmaking ]</span>
+              <span style={{ textTransform: 'uppercase' }}>Direct UGC Matchmaking</span>
             </motion.div>
 
             {/* Title with hand-drawn underline SVG */}
@@ -320,14 +320,14 @@ export default function Hero() {
               }}
             >
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                <span style={{ fontSize: '12px', fontFamily: 'monospace', fontWeight: 'bold', color: 'rgb(219, 39, 119)', marginTop: '2px' }}>[01]</span>
+                <span style={{ fontSize: '12px', fontFamily: 'monospace', fontWeight: 'bold', color: 'rgb(219, 39, 119)', marginTop: '2px' }}>01</span>
                 <div>
                   <h4 style={{ fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--foreground)', fontFamily: 'var(--font-display)' }}>Zero Agency Retainers</h4>
                   <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '2px' }}>Pay creators directly at their exact rate.</p>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                <span style={{ fontSize: '12px', fontFamily: 'monospace', fontWeight: 'bold', color: 'rgb(219, 39, 119)', marginTop: '2px' }}>[02]</span>
+                <span style={{ fontSize: '12px', fontFamily: 'monospace', fontWeight: 'bold', color: 'rgb(219, 39, 119)', marginTop: '2px' }}>02</span>
                 <div>
                   <h4 style={{ fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--foreground)', fontFamily: 'var(--font-display)' }}>Direct Communication</h4>
                   <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '2px' }}>Chat, brief, and revise directly in the portal.</p>
@@ -429,7 +429,7 @@ export default function Hero() {
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                <span style={{ fontSize: '9px', fontFamily: 'monospace', letterSpacing: '0.15em', opacity: 0.6 }}>[ MATCH ENGINE ]</span>
+                <span style={{ fontSize: '9px', fontFamily: 'monospace', letterSpacing: '0.15em', opacity: 0.6 }}>MATCH ENGINE</span>
                 <Sparkles size={16} style={{ color: 'rgb(219, 39, 119)' }} />
               </div>
 

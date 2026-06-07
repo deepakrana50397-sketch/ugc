@@ -194,7 +194,7 @@ export default function CreatorCategories() {
             }}
           >
             <ShieldCheck size={13} style={{ color: 'rgb(219, 39, 119)' }} />
-            <span>[ Direct Hiring Panel ]</span>
+            <span>Direct Hiring Panel</span>
           </div>
 
           <TextReveal

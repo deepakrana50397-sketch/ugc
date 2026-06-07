@@ -91,7 +91,7 @@ export default function FeaturedGigs() {
             }}
           >
             <Briefcase size={13} style={{ color: 'rgb(79, 70, 229)' }} />
-            <span>[ Open Gig Directory ]</span>
+            <span>Open Gig Directory</span>
           </div>
 
           <TextReveal
