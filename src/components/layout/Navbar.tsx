@@ -4,18 +4,29 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X, LogOut, LayoutDashboard, UserCheck } from 'lucide-react';
-import { navItems } from '@/data/navigation';
-import CurrencyToggle from '../ui/CurrencyToggle';
 import { getCurrentUser, logoutUser } from '@/lib/services';
 import { User } from '@/types/common';
 import Magnetic from '../animation/Magnetic';
+
+// Stylized gradient logo icon matching the image
+const LogoIcon = () => (
+  <svg width="34" height="24" viewBox="0 0 38 26" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+    <rect width="38" height="26" rx="13" fill="url(#igigster-logo-grad)" />
+    <path d="M13 17.5C13.5 15.5 15.5 14.5 18 14.5C20.5 14.5 23 13.5 23 11C23 8.5 20 8 18 8C15 8 13.5 9.5 13 11.5M23 8.5C22.5 10.5 20.5 11.5 18 11.5C15.5 11.5 13 12.5 13 15C13 17.5 16 18 18 18C21 18 22.5 16.5 23 14.5" stroke="white" strokeWidth="3" strokeLinecap="round" />
+    <defs>
+      <linearGradient id="igigster-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#db2777" />
+        <stop offset="100%" stopColor="#7c3aed" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
 
   // Monitor user state inside browser
   useEffect(() => {
@@ -23,26 +34,13 @@ export default function Navbar() {
       setUser(getCurrentUser());
     };
     checkUser();
-    
+
     // Listen for custom login/logout events to sync navbar
     window.addEventListener('auth-change', checkUser);
     return () => {
       window.removeEventListener('auth-change', checkUser);
     };
   }, [pathname]);
-
-  // Monitor scroll progress for top indicator bar
-  useEffect(() => {
-    const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalHeight > 0) {
-        const progress = (window.scrollY / totalHeight) * 100;
-        setScrollProgress(progress);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const handleLogout = () => {
     logoutUser();
@@ -51,84 +49,70 @@ export default function Navbar() {
     router.push('/');
   };
 
+  const navLinks = [
+    { label: 'Projects', href: '/brands' },
+    { label: 'About Us', href: '/about' },
+    { label: 'Blog', href: '/blog' },
+    { label: 'Contact', href: '/contact' },
+  ];
+
   return (
-    <header 
+    <header
       style={{
         position: 'sticky',
-        top: 0,
+        top: '20px',
         zIndex: 100,
-        width: '100%',
-        borderBottom: '1px solid rgba(231, 229, 228, 0.7)',
-        backgroundColor: 'rgba(250, 250, 249, 0.8)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        color: 'var(--foreground)',
-        transition: 'background-color 0.3s ease',
+        width: 'calc(100% - 32px)',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        borderRadius: '9999px',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        backgroundColor: '#0c0a09', // Deep off-black matches the image
+        color: '#ffffff',
+        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.12)',
+        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
     >
-      {/* Scroll Progress Indicator Bar */}
-      <div 
+      <div
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: `${scrollProgress}%`,
-          height: '3px',
-          background: 'linear-gradient(to right, rgb(79, 70, 229), rgb(219, 39, 119))',
-          transition: 'width 0.1s ease-out',
-        }}
-      />
-
-      <div 
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
           padding: '0 24px',
-          height: '76px',
+          height: '64px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
-        {/* Logo */}
-        <Link 
-          href="/" 
-          style={{ 
-            fontSize: '24px', 
-            fontWeight: 800, 
-            fontFamily: 'var(--font-display)',
-            letterSpacing: '-0.04em',
+        {/* Logo (Left) */}
+        <Link
+          href="/"
+          style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '8px'
+            gap: '10px'
           }}
         >
-          <span 
-            style={{ 
-              background: 'linear-gradient(135deg, rgb(79, 70, 229) 0%, rgb(219, 39, 119) 100%)',
-              color: '#ffffff',
-              padding: '4px 10px',
-              borderRadius: '8px',
-              fontSize: '18px',
-              fontWeight: 800,
-              boxShadow: '0 4px 12px rgba(79, 70, 229, 0.2)',
-            }}
-          >
-            iG
+          <LogoIcon />
+          <span style={{
+            color: '#ffffff',
+            fontSize: '20px',
+            fontWeight: 800,
+            fontFamily: 'var(--font-display)',
+            letterSpacing: '-0.03em'
+          }}>
+            iGigster.
           </span>
-          <span className="accent-gradient-text" style={{ fontWeight: 800 }}>igigster</span>
         </Link>
 
-        {/* Desktop Links */}
-        <nav 
+        {/* Desktop Links (Middle) */}
+        <nav
           style={{
             display: 'none',
             alignItems: 'center',
-            gap: '36px',
+            gap: '32px',
           }}
           className="desktop-nav-links"
         >
-          {navItems.map((item) => {
+          {navLinks.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
@@ -136,25 +120,25 @@ export default function Navbar() {
                 href={item.href}
                 style={{
                   fontSize: '14px',
-                  fontWeight: isActive ? 700 : 500,
-                  color: isActive ? 'rgb(79, 70, 229)' : 'var(--muted)',
-                  transition: 'color 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                  fontWeight: 500,
+                  color: isActive ? '#ffffff' : '#a8a29e',
+                  transition: 'color 0.2s ease',
                   position: 'relative',
                   padding: '6px 0',
                 }}
-                className="nav-link-item"
               >
                 {item.label}
                 {isActive && (
-                  <span 
+                  <span
                     style={{
                       position: 'absolute',
                       bottom: '-2px',
-                      left: 0,
-                      width: '100%',
-                      height: '2px',
-                      backgroundColor: 'rgb(79, 70, 229)',
-                      borderRadius: '2px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: '4px',
+                      height: '4px',
+                      backgroundColor: '#db2777',
+                      borderRadius: '50%',
                     }}
                   />
                 )}
@@ -163,100 +147,84 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Desktop Actions */}
-        <div 
+        {/* Actions (Right) */}
+        <div
           style={{
             display: 'none',
             alignItems: 'center',
-            gap: '20px',
+            gap: '16px',
           }}
           className="desktop-nav-actions"
         >
-          <CurrencyToggle />
-
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <Magnetic strength={0.15}>
-                <Link
-                  href={
-                    user.role === 'creator'
-                      ? '/creator/dashboard'
-                      : user.role === 'brand'
+              <Link
+                href={
+                  user.role === 'creator'
+                    ? '/creator/dashboard'
+                    : user.role === 'brand'
                       ? '/brand/dashboard'
                       : '/admin/dashboard'
-                  }
-                  style={{
-                    fontSize: '13.5px',
-                    fontWeight: 700,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    backgroundColor: 'rgba(28, 25, 22, 0.05)',
-                    padding: '10px 20px',
-                    borderRadius: '30px',
-                    border: '1px solid rgba(28, 25, 22, 0.08)',
-                    color: 'var(--foreground)',
-                    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                  }}
-                  className="premium-btn-secondary"
-                >
-                  <LayoutDashboard size={14} style={{ color: 'rgb(79, 70, 229)' }} />
-                  Dashboard
-                </Link>
-              </Magnetic>
+                }
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: '#a8a29e',
+                  transition: 'color 0.2s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                <LayoutDashboard size={14} />
+                Dashboard
+              </Link>
               <button
                 onClick={handleLogout}
                 style={{
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  color: 'rgb(220, 38, 38)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '13.5px',
+                  color: '#ef4444',
+                  fontSize: '13px',
                   fontWeight: 600,
-                  padding: '8px 12px',
                 }}
               >
-                <LogOut size={14} />
                 Sign Out
               </button>
             </div>
           ) : (
-            <>
-              <Link
-                href="/login"
-                style={{
-                  fontSize: '14.5px',
-                  fontWeight: 600,
-                  color: 'var(--foreground)',
-                  padding: '8px 16px',
-                  transition: 'color 0.2s',
-                }}
-                className="hover-color-accent"
-              >
-                Log In
-              </Link>
-              <Magnetic strength={0.15}>
-                <Link
-                  href="/register"
-                  style={{
-                    fontSize: '14px',
-                    fontWeight: 700,
-                    backgroundColor: 'rgb(79, 70, 229)',
-                    color: '#ffffff',
-                    padding: '10px 22px',
-                    borderRadius: '30px',
-                    boxShadow: '0 8px 16px -6px rgba(79, 70, 229, 0.3)',
-                  }}
-                  className="glow-button"
-                >
-                  Get Started
-                </Link>
-              </Magnetic>
-            </>
+            <Link
+              href="/login"
+              style={{
+                fontSize: '14px',
+                fontWeight: 500,
+                color: '#a8a29e',
+                padding: '6px 12px',
+                transition: 'color 0.2s',
+              }}
+            >
+              Log In
+            </Link>
           )}
+
+          <Magnetic strength={0.15}>
+            <Link
+              href="/contact"
+              style={{
+                fontSize: '14px',
+                fontWeight: 600,
+                backgroundColor: '#ffffff',
+                color: '#0c0a09',
+                padding: '10px 20px',
+                borderRadius: '9999px',
+                transition: 'all 0.2s ease',
+              }}
+              className="hover:bg-stone-100"
+            >
+              Book a Call
+            </Link>
+          </Magnetic>
         </div>
 
         {/* Mobile menu trigger */}
@@ -266,85 +234,75 @@ export default function Navbar() {
             display: 'block',
             background: 'none',
             border: 'none',
-            color: 'var(--foreground)',
+            color: '#ffffff',
             cursor: 'pointer',
             padding: '4px',
           }}
           className="mobile-toggle-btn"
           aria-label="Toggle menu"
         >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
+          {isOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Drawer */}
       {isOpen && (
         <div
           style={{
             position: 'absolute',
-            top: '76px',
+            top: '72px',
             left: 0,
             width: '100%',
-            backgroundColor: 'var(--background)',
-            borderBottom: '1px solid rgba(231, 229, 228, 0.8)',
-            padding: '30px 24px',
+            backgroundColor: '#0c0a09',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '24px',
+            padding: '24px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '24px',
+            gap: '18px',
             zIndex: 90,
-            boxShadow: '0 20px 30px rgba(0,0,0,0.02)',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '14px', color: 'var(--muted)', fontWeight: 500 }}>Currency Selection:</span>
-            <CurrencyToggle />
-          </div>
-
-          <hr style={{ borderColor: 'rgba(28, 25, 22, 0.06)' }} />
-
-          {navItems.map((item) => (
+          {navLinks.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setIsOpen(false)}
               style={{
-                fontSize: '16px',
-                fontWeight: pathname === item.href ? 700 : 500,
-                color: pathname === item.href ? 'rgb(79, 70, 229)' : 'var(--foreground)',
+                fontSize: '15px',
+                fontWeight: 500,
+                color: pathname === item.href ? '#ffffff' : '#a8a29e',
+                padding: '4px 0',
               }}
             >
               {item.label}
             </Link>
           ))}
 
-          <hr style={{ borderColor: 'rgba(28, 25, 22, 0.06)' }} />
+          <hr style={{ borderColor: 'rgba(255, 255, 255, 0.08)' }} />
 
           {user ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--muted)', fontSize: '13.5px' }}>
-                <UserCheck size={16} style={{ color: 'rgb(79, 70, 229)' }} /> Active: {user.name} ({user.role})
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <Link
                 href={
                   user.role === 'creator'
                     ? '/creator/dashboard'
                     : user.role === 'brand'
-                    ? '/brand/dashboard'
-                    : '/admin/dashboard'
+                      ? '/brand/dashboard'
+                      : '/admin/dashboard'
                 }
                 onClick={() => setIsOpen(false)}
                 style={{
-                  fontSize: '15px',
-                  fontWeight: 700,
-                  backgroundColor: 'rgba(28, 25, 22, 0.04)',
-                  padding: '14px',
-                  borderRadius: '30px',
-                  textAlign: 'center',
-                  border: '1px solid rgba(28, 25, 22, 0.08)',
-                  color: 'var(--foreground)',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
                 }}
               >
-                Go to Dashboard
+                <LayoutDashboard size={16} /> Go to Dashboard
               </Link>
               <button
                 onClick={() => {
@@ -352,53 +310,50 @@ export default function Navbar() {
                   setIsOpen(false);
                 }}
                 style={{
-                  backgroundColor: 'rgba(220, 38, 38, 0.08)',
-                  color: 'rgb(220, 38, 38)',
-                  border: '1px solid rgba(220, 38, 38, 0.15)',
-                  borderRadius: '30px',
-                  padding: '14px',
-                  fontSize: '15px',
+                  background: 'none',
+                  border: 'none',
+                  color: '#ef4444',
+                  fontSize: '14px',
                   fontWeight: 600,
+                  textAlign: 'left',
                   cursor: 'pointer',
-                  width: '100%',
+                  padding: '4px 0',
                 }}
               >
                 Sign Out
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <Link
-                href="/login"
-                onClick={() => setIsOpen(false)}
-                style={{
-                  fontSize: '16px',
-                  fontWeight: 600,
-                  color: 'var(--foreground)',
-                  textAlign: 'center',
-                  padding: '10px',
-                }}
-              >
-                Log In
-              </Link>
-              <Link
-                href="/register"
-                onClick={() => setIsOpen(false)}
-                style={{
-                  fontSize: '15px',
-                  fontWeight: 700,
-                  backgroundColor: 'rgb(79, 70, 229)',
-                  color: '#ffffff',
-                  textAlign: 'center',
-                  padding: '14px',
-                  borderRadius: '30px',
-                  boxShadow: '0 8px 16px rgba(79, 70, 229, 0.25)',
-                }}
-              >
-                Get Started
-              </Link>
-            </div>
+            <Link
+              href="/login"
+              onClick={() => setIsOpen(false)}
+              style={{
+                fontSize: '15px',
+                fontWeight: 500,
+                color: '#a8a29e',
+                padding: '4px 0',
+              }}
+            >
+              Log In
+            </Link>
           )}
+
+          <Link
+            href="/contact"
+            onClick={() => setIsOpen(false)}
+            style={{
+              fontSize: '15px',
+              fontWeight: 700,
+              backgroundColor: '#ffffff',
+              color: '#0c0a09',
+              textAlign: 'center',
+              padding: '12px',
+              borderRadius: '9999px',
+              marginTop: '6px',
+            }}
+          >
+            Book a Call
+          </Link>
         </div>
       )}
     </header>
