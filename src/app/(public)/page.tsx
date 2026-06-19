@@ -2,7 +2,11 @@ import React from 'react';
 import { Metadata } from 'next';
 import Hero from '@/features/landing/Hero';
 import TrustedBrands from '@/features/landing/TrustedBrands';
+import ScrollRevealSection from '@/features/landing/ScrollRevealSection';
+import PerformanceSection from '@/features/landing/PerformanceSection';
+import CreatorContentSection from '@/features/landing/CreatorContentSection';
 import Services from '@/features/landing/Services';
+import StackedServices from '@/features/landing/StackedServices';
 import HowItWorks from '@/features/landing/HowItWorks';
 import VideoTestingLab from '@/features/landing/VideoTestingLab';
 import Stats from '@/features/landing/Stats';
@@ -32,15 +36,27 @@ export default function Home() {
     <>
       <JsonLd data={orgSchema} />
       <JsonLd data={webSchema} />
-      
+
       {/* 1. Hero */}
       <Hero />
 
       {/* 2. Trusted by & Niches */}
       <TrustedBrands />
 
-      {/* 3. Services */}
+      {/* 2.5. Scroll Reveal Section */}
+      <ScrollRevealSection />
+
+      {/* 2.6. Combined Performance & Creator Content Section */}
+      <div className="relative w-full overflow-hidden" style={{ backgroundColor: 'rgb(244, 244, 243)' }}>
+        <PerformanceSection />
+        <CreatorContentSection />
+      </div>
+
+      {/* 3. Services (Older Grid Version) */}
       <Services />
+
+      {/* 3.5. Stacked Services (New Cards Version) */}
+      <StackedServices />
 
       {/* 4. How it works */}
       <HowItWorks />
