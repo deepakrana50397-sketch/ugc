@@ -478,24 +478,16 @@ a {
   text-decoration: none;
 }
 
-/* Custom Premium Scrollbar */
+/* Hide scrollbar globally for Chrome, Safari, Opera */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--background);
-}
-
-::-webkit-scrollbar-thumb {
-  background: #e7e5e4;
-  border-radius: 9999px;
-  border: 2px solid var(--background);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #d6d3d1;
+/* Hide scrollbar for IE, Edge and Firefox */
+html,
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 /* ----------------------------------------------------

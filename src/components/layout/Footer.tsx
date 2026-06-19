@@ -84,7 +84,11 @@ export default function Footer() {
       ref={footerRef}
       id="footer-section"
       className="relative w-full lg:h-screen min-h-screen bg-[#ffa8f2] text-[#1c1917] flex flex-col justify-between overflow-hidden z-0 lg:sticky lg:bottom-0 lg:z-0 -mt-12"
-      style={{ padding: '40px' }}
+      style={{
+        padding: '40px',
+        width: '101%',
+        left: '-0.5%',
+      }}
     >
       {/* Growing SVG Winding Line background overlay */}
       <svg
@@ -235,19 +239,46 @@ export default function Footer() {
           <div className="flex flex-col lg:flex-row justify-between items-end gap-12 w-full">
 
             {/* Logo Image */}
-            <div className="w-full lg:w-[60%] select-none max-w-[640px]">
-              <Link href="/">
-                <img
-                  src="https://framerusercontent.com/images/osXTQmLx6RntsX7CfW3A94lUHo.png"
-                  alt="iGigster Logo"
-                  className="w-full h-auto object-contain hover:scale-[1.01] transition-transform duration-300"
-                  loading="lazy"
-                />
+            <div className="w-full lg:w-[65%] select-none max-w-[640px] z-10">
+              <Link href="/" className="block w-full">
+                <div className="flex items-center gap-[4%] select-none hover:scale-[1.01] transition-transform duration-300 w-full">
+                  <svg 
+                    viewBox="0 0 38 26" 
+                    fill="none" 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    className="w-[24%] max-w-[160px] min-w-[60px] h-auto flex-shrink-0"
+                  >
+                    <rect width="38" height="26" rx="13" fill="url(#igigster-footer-logo-grad)" />
+                    <path 
+                      d="M13 17.5C13.5 15.5 15.5 14.5 18 14.5C20.5 14.5 23 13.5 23 11C23 8.5 20 8 18 8C15 8 13.5 9.5 13 11.5M23 8.5C22.5 10.5 20.5 11.5 18 11.5C15.5 11.5 13 12.5 13 15C13 17.5 16 18 18 18C21 18 22.5 16.5 23 14.5" 
+                      stroke="white" 
+                      strokeWidth="3" 
+                      strokeLinecap="round" 
+                    />
+                    <defs>
+                      <linearGradient id="igigster-footer-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#db2777" />
+                        <stop offset="100%" stopColor="#7c3aed" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  
+                  <span 
+                    className="text-[#1c1917] font-black leading-none tracking-tighter"
+                    style={{
+                      fontSize: 'clamp(44px, 8vw, 120px)',
+                      fontFamily: 'var(--font-sans)',
+                      letterSpacing: '-0.04em',
+                    }}
+                  >
+                    iGigster.
+                  </span>
+                </div>
               </Link>
             </div>
 
             {/* Newsletter Card */}
-            <div 
+            <div
               style={{
                 width: '100%',
                 maxWidth: '360px',
@@ -265,7 +296,7 @@ export default function Footer() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <h3
                   className="text-2xl font-bold tracking-tight text-[#1c1917]"
-                  style={{ 
+                  style={{
                     fontFamily: 'var(--font-display)',
                     fontSize: '28px',
                     fontWeight: 900,
@@ -345,7 +376,7 @@ export default function Footer() {
           </div>
 
           {/* Copyright details and designer credits */}
-          <div 
+          <div
             style={{
               paddingTop: '24px',
               paddingBottom: '8px',
@@ -359,7 +390,7 @@ export default function Footer() {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               {/* Small mini logo icon */}
-              <div 
+              <div
                 style={{
                   width: '24px',
                   height: '24px',
@@ -397,16 +428,16 @@ export default function Footer() {
                 className="hover:border-black group"
               >
                 <span>x10cify</span>
-                <svg 
-                  width="10" 
-                  height="10" 
-                  viewBox="0 0 10 10" 
-                  fill="none" 
-                  xmlns="http://www.w3.org/2000/svg" 
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 10 10"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
                   style={{ transition: 'transform 0.2s' }}
                   className="group-hover:translate-x-[1px] group-hover:-translate-y-[1px]"
                 >
-                  <path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
             </div>
