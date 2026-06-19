@@ -7,6 +7,7 @@ import PerformanceSection from '@/features/landing/PerformanceSection';
 import CreatorContentSection from '@/features/landing/CreatorContentSection';
 import Services from '@/features/landing/Services';
 import StackedServices from '@/features/landing/StackedServices';
+import DontSettle from '@/features/landing/DontSettle';
 import HowItWorks from '@/features/landing/HowItWorks';
 import VideoTestingLab from '@/features/landing/VideoTestingLab';
 import Stats from '@/features/landing/Stats';
@@ -57,6 +58,9 @@ export default function Home() {
 
       {/* 3.5. Stacked Services (New Cards Version) */}
       <StackedServices />
+
+      {/* 3.6. Comparison Section */}
+      <DontSettle />
 
       {/* 4. How it works */}
       <HowItWorks />
