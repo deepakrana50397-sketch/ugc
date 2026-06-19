@@ -61,7 +61,7 @@ export default function StackedServices() {
     const cards = document.querySelectorAll('.scroll-stack-card');
     const card = cards[index] as HTMLElement;
     if (card) {
-      const stackPositionPx = 120; // Pins at 120px sticky offset
+      const stackPositionPx = 164; // Pins at 164px sticky offset (120px tab sticky + 44px tab height)
       const itemStackDistance = 0; // Stacks exactly flush
       
       const rect = card.getBoundingClientRect();
@@ -143,34 +143,20 @@ export default function StackedServices() {
           </p>
         </div>
 
-        {/* ScrollStack Component Integration */}
-        <ScrollStack
-          className="w-full"
-          useWindowScroll={true}
-          itemDistance={320}      // Spacing margin between cards in flow
-          itemScale={0.04}        // Incremental scale difference per layer
-          itemStackDistance={0}   // Card bodies stack exactly flush
-          stackPosition={120}     // Pins cards at 120px sticky top
-          scaleEndPosition={60}   // End scale threshold
-          baseScale={0.88}        // Initial scale of the bottom card
-          rotationAmount={0}      // Keep cards flat/unrotated
-          blurAmount={0}          // Keep text crisp/unblurred
-        >
-          {servicesData.map((service, index) => (
-            <ScrollStackItem
-              key={service.id}
-              itemClassName="pointer-events-none"
-              style={{
-                height: 'auto',
-                boxShadow: 'none',
-                margin: 0,
-                borderRadius: 0,
-                padding: 0,
-              }}
-            >
-              {/* Folder Tab: Renders the tab, always visible at the top, horizontally offset */}
-              <div className="w-full relative h-[44px] pointer-events-none">
+        {/* Combined Tab Bar and ScrollStack Wrapper */}
+        <div className="w-full flex flex-col gap-0 items-center">
+          {/* Sticky Tab Bar - Always visible and lined up at top: 120px */}
+          <div 
+            className="sticky z-30 w-full select-none pointer-events-none"
+            style={{
+              top: '120px',
+              height: '44px',
+            }}
+          >
+            <div className="w-full relative h-[44px]">
+              {servicesData.map((service, index) => (
                 <button
+                  key={service.id}
                   onClick={() => handleTabClick(index)}
                   className="absolute bottom-0 h-[44px] flex items-center justify-center font-bold tracking-wider select-none w-[64px] text-[10px] md:w-[208px] md:text-xs md:tracking-widest cursor-pointer pointer-events-auto hover:brightness-95 transition-all border-none outline-none rounded-t-xl md:rounded-t-2xl"
                   style={{
@@ -183,19 +169,46 @@ export default function StackedServices() {
                   <span className="hidden md:inline">{service.tabTitle}</span>
                   <span className="inline md:hidden">{service.mobileTabTitle}</span>
                 </button>
-              </div>
+              ))}
+            </div>
+          </div>
 
-              {/* Card Body */}
-              <div
+          {/* ScrollStack Component Integration */}
+          <ScrollStack
+            className="w-full"
+            useWindowScroll={true}
+            itemDistance={320}      // Spacing margin between cards in flow
+            itemScale={0.04}        // Incremental scale difference per layer
+            itemStackDistance={0}   // Card bodies stack exactly flush
+            stackPosition={164}     // Pins card bodies at 164px (120px tab sticky + 44px tab height)
+            scaleEndPosition={60}   // End scale threshold
+            baseScale={0.88}        // Initial scale of the bottom card
+            rotationAmount={0}      // Keep cards flat/unrotated
+            blurAmount={0}          // Keep text crisp/unblurred
+          >
+            {servicesData.map((service, index) => (
+              <ScrollStackItem
+                key={service.id}
+                itemClassName="pointer-events-none"
                 style={{
-                  backgroundColor: service.bgColor,
-                  color: service.textColor,
-                  borderRadius: '32px',
-                  padding: '32px',
-                  minHeight: 'var(--card-height)',
+                  height: 'auto',
+                  boxShadow: 'none',
+                  margin: 0,
+                  borderRadius: 0,
+                  padding: 0,
                 }}
-                className="pointer-events-auto w-full shadow-[0_25px_60px_rgba(0,0,0,0.08)] grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center overflow-hidden"
               >
+                {/* Card Body */}
+                <div
+                  style={{
+                    backgroundColor: service.bgColor,
+                    color: service.textColor,
+                    borderRadius: '32px',
+                    padding: '32px',
+                    minHeight: 'var(--card-height)',
+                  }}
+                  className="pointer-events-auto w-full shadow-[0_25px_60px_rgba(0,0,0,0.08)] grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center overflow-hidden"
+                >
                 {/* Left Side: Copy & Large Stat */}
                 <div className="flex flex-col h-full justify-between gap-12 lg:gap-16 text-left">
                   <div className="flex flex-col gap-6 md:gap-8">
@@ -243,6 +256,7 @@ export default function StackedServices() {
             </ScrollStackItem>
           ))}
         </ScrollStack>
+      </div>
 
       </div>
     </section>
