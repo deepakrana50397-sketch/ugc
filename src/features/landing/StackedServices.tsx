@@ -172,14 +172,12 @@ export default function StackedServices() {
               <div className="w-full relative h-[44px] pointer-events-none">
                 <button
                   onClick={() => handleTabClick(index)}
-                  className="absolute bottom-0 h-[44px] flex items-center justify-center font-bold tracking-wider select-none w-[70px] text-[10px] md:w-[216px] md:text-xs md:tracking-widest cursor-pointer pointer-events-auto hover:brightness-95 transition-all border-none outline-none"
+                  className="absolute bottom-0 h-[44px] flex items-center justify-center font-bold tracking-wider select-none w-[64px] text-[10px] md:w-[208px] md:text-xs md:tracking-widest cursor-pointer pointer-events-auto hover:brightness-95 transition-all border-none outline-none rounded-t-xl md:rounded-t-2xl"
                   style={{
                     backgroundColor: service.bgColor,
                     color: service.textColor,
                     fontFamily: 'var(--font-display)',
                     left: `calc(var(--tab-start) + var(--tab-offset) * ${index})`,
-                    borderTopLeftRadius: '32px',
-                    borderTopRightRadius: '32px',
                   }}
                 >
                   <span className="hidden md:inline">{service.tabTitle}</span>
