@@ -96,8 +96,7 @@ export default function DontSettle() {
         paddingBottom: '160px',
         paddingLeft: '20px',
         paddingRight: '20px',
-        backgroundColor: '#fafaf9',
-        borderBottom: '1px solid var(--border)'
+        backgroundColor: '#fafaf9'
       }}
     >
       {/* Decorative Radial Background Accent */}

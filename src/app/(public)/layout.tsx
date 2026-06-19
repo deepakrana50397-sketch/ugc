@@ -12,7 +12,7 @@ export default function PublicLayout({
     <>
       <ScrollRevealInitializer />
       <Navbar />
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 10 }}>
         {children}
       </main>
       <Footer />

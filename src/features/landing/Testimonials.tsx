@@ -179,61 +179,170 @@ export default function Testimonials() {
               <div
                 key={`${t.id}-${idx}`}
                 style={{
-                  minWidth: '340px',
-                  width: '400px',
+                  minWidth: t.video ? 'min(100%, 480px)' : 'min(100%, 320px)',
+                  width: t.video ? 'min(100%, 580px)' : 'min(100%, 380px)',
                   flexShrink: 0,
                 }}
               >
                 <GlowCard
                   glowColor={filterType === 'brand' ? 'rgba(79, 70, 229, 0.08)' : 'rgba(219, 39, 119, 0.08)'}
                   style={{
-                    padding: '36px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '24px',
+                    padding: '24px',
                     height: '100%',
-                    border: '1px solid rgba(231, 229, 228, 0.8)',
+                    backgroundColor: '#ffffff',
+                    borderRadius: '32px',
+                    border: '1px solid rgba(229, 225, 222, 0.6)',
+                    boxShadow: '0 20px 45px rgba(0, 0, 0, 0.04)',
                     position: 'relative',
                   }}
                   tiltActive={false}
                 >
-                  <Quote 
-                    size={36} 
-                    style={{ 
-                      position: 'absolute', 
-                      top: '24px', 
-                      right: '24px', 
-                      color: 'rgba(79, 70, 229, 0.06)',
-                      transform: 'rotate(180deg)' 
-                    }} 
-                  />
+                  {t.video ? (
+                    /* Card Design 1: Video Review */
+                    <div className="flex flex-col md:flex-row gap-5 w-full h-full text-left">
+                      {/* Left: Video Thumbnail */}
+                      <div className="w-full md:w-[210px] shrink-0">
+                        <div 
+                          style={{
+                            position: 'relative',
+                            width: '100%',
+                            aspectRatio: '3/4',
+                            borderRadius: '16px',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          <img 
+                            src={t.video} 
+                            alt={t.name}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/10 hover:bg-black/20 transition-colors cursor-pointer">
+                            <div 
+                              style={{
+                                width: '56px',
+                                height: '56px',
+                                borderRadius: '50%',
+                                backgroundColor: 'rgba(28, 25, 23, 0.75)',
+                                backdropFilter: 'blur(2px)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#ffffff',
+                                transition: 'transform 0.3s ease',
+                              }}
+                              className="hover:scale-110"
+                            >
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: '2px' }}>
+                                <path d="M8 5v14l11-7z" />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                  {/* Rating */}
-                  <div style={{ display: 'flex', gap: '4px' }}>
-                    {[...Array(t.rating)].map((_, i) => (
-                      <Star key={i} size={15} fill="#d97706" color="#d97706" />
-                    ))}
-                  </div>
+                      {/* Right: Content details */}
+                      <div className="flex flex-col justify-between flex-grow text-left">
+                        <div>
+                          {/* Rating */}
+                          <div style={{ display: 'flex', gap: '4px', marginBottom: '14px' }}>
+                            {[...Array(t.rating)].map((_, i) => (
+                              <Star key={i} size={15} fill="#f97316" color="#f97316" />
+                            ))}
+                          </div>
+                          
+                          {t.title && (
+                            <h3 style={{
+                              fontSize: '20px',
+                              fontWeight: 800,
+                              color: '#1c1917',
+                              lineHeight: '1.25',
+                              letterSpacing: '-0.02em',
+                              marginBottom: '10px',
+                              fontFamily: 'var(--font-sans)',
+                            }}>
+                              {t.title}
+                            </h3>
+                          )}
 
-                  {/* Quote Text */}
-                  <p style={{ color: 'var(--foreground)', fontSize: '15px', lineHeight: 1.6, fontStyle: 'italic', fontWeight: 400, flexGrow: 1 }}>
-                    "{t.text}"
-                  </p>
+                          <p style={{
+                            fontSize: '14px',
+                            fontWeight: 500,
+                            color: '#44403c',
+                            lineHeight: '1.6',
+                            marginBottom: '16px',
+                            fontFamily: 'var(--font-sans)',
+                          }}>
+                            "{t.text}"
+                          </p>
+                        </div>
 
-                  {/* Author Info */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: 'auto' }}>
-                    <img
-                      src={t.avatar}
-                      alt={t.name}
-                      style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid var(--border)' }}
-                    />
-                    <div>
-                      <h4 style={{ color: 'var(--foreground)', fontSize: '15px', fontWeight: 700, letterSpacing: '-0.01em' }}>{t.name}</h4>
-                      <p style={{ color: 'var(--muted)', fontSize: '12.5px' }}>
-                        {t.role} {t.company ? `at ${t.company}` : ''}
-                      </p>
+                        {/* Author Info (Without small avatar) */}
+                        <div style={{ marginTop: 'auto', paddingTop: '8px' }}>
+                          <h4 style={{ color: '#1c1917', fontSize: '15px', fontWeight: 800, letterSpacing: '-0.01em', marginBottom: '2px' }}>
+                            {t.name}
+                          </h4>
+                          <p style={{ color: '#78716c', fontSize: '12.5px', fontWeight: 500 }}>
+                            {t.role} {t.company ? `at ${t.company}` : ''}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    /* Card Design 2: Text-Only Review */
+                    <div className="flex flex-col justify-between w-full h-full text-left" style={{ gap: '20px' }}>
+                      <div>
+                        {/* Rating */}
+                        <div style={{ display: 'flex', gap: '4px', marginBottom: '14px' }}>
+                          {[...Array(t.rating)].map((_, i) => (
+                            <Star key={i} size={15} fill="#f97316" color="#f97316" />
+                          ))}
+                        </div>
+                        
+                        {t.title && (
+                          <h3 style={{
+                            fontSize: '20px',
+                            fontWeight: 800,
+                            color: '#1c1917',
+                            lineHeight: '1.25',
+                            letterSpacing: '-0.02em',
+                            marginBottom: '10px',
+                            fontFamily: 'var(--font-sans)',
+                            marginTop: '4px',
+                          }}>
+                            {t.title}
+                          </h3>
+                        )}
+
+                        <p style={{
+                          fontSize: '14px',
+                          fontWeight: 500,
+                          color: '#44403c',
+                          lineHeight: '1.6',
+                          marginBottom: '16px',
+                          fontFamily: 'var(--font-sans)',
+                        }}>
+                          "{t.text}"
+                        </p>
+                      </div>
+
+                      {/* Author Info (With small avatar) */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: 'auto' }}>
+                        <img
+                          src={t.avatar}
+                          alt={t.name}
+                          style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid var(--border)' }}
+                        />
+                        <div>
+                          <h4 style={{ color: '#1c1917', fontSize: '15.5px', fontWeight: 800, letterSpacing: '-0.01em' }}>
+                            {t.name}
+                          </h4>
+                          <p style={{ color: '#78716c', fontSize: '12.5px', fontWeight: 500 }}>
+                            {t.role} {t.company ? `at ${t.company}` : ''}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </GlowCard>
               </div>
             ))}

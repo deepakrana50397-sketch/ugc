@@ -59,7 +59,6 @@ export default function GlowCard({
       onClick={onClick}
       className={`glow-card ${className}`}
       style={{
-        ...style,
         position: 'relative',
         borderRadius: '16px',
         border: '1px solid rgba(226, 232, 240, 0.7)',
@@ -72,6 +71,7 @@ export default function GlowCard({
           : '0 4px 20px rgba(99, 102, 241, 0.02)',
         overflow: 'hidden',
         cursor: onClick ? 'pointer' : 'default',
+        ...style,
       }}
     >
       {/* Glow effect background layer */}

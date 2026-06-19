@@ -40,7 +40,7 @@ const FooterLogoIcon = () => (
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
-  
+
   // Track scroll position of the footer
   const { scrollYProgress } = useScroll({
     target: footerRef,
@@ -80,26 +80,30 @@ export default function Footer() {
   ];
 
   return (
-    <footer 
+    <footer
       ref={footerRef}
       id="footer-section"
-      className="relative w-full lg:h-screen min-h-screen bg-[#ffa8f2] text-[#1c1917] px-6 md:px-12 lg:px-20 py-8 lg:py-12 flex flex-col justify-between overflow-hidden z-10"
+      className="relative w-full lg:h-screen min-h-screen bg-[#ffa8f2] text-[#1c1917] flex flex-col justify-between overflow-hidden z-0 lg:sticky lg:bottom-0 lg:z-0 -mt-12"
+      style={{ padding: '40px' }}
     >
       {/* Growing SVG Winding Line background overlay */}
-      <svg 
-        className="absolute right-[-10%] md:right-[-5%] top-[-25%] w-[600px] h-[600px] md:w-[850px] md:h-[850px] lg:w-[1050px] lg:h-[1050px] pointer-events-none z-0 overflow-visible text-[#ab8bec]"
-        role="presentation" 
+      <svg
+        className="absolute right-[-10%] md:right-[-5%] top-[-25%] w-[600px] h-[600px] md:w-[850px] md:h-[850px] lg:w-[1050px] lg:h-[1050px] pointer-events-none z-0 overflow-visible"
+        role="presentation"
         viewBox="0 0 1170 1170"
+        style={{
+          transform: 'translate(10%, 5%)',
+        }}
       >
-        <motion.path 
-          d="M 1012 0 C 1012 0 685.114 76.915 628.183 300.778 C 592.343 441.706 652.378 586.306 761.118 561.104 C 831.495 544.792 841.921 423.437 796.958 340.577 C 733.921 224.409 506.014 255.052 431.387 459.974 C 299.755 821.429 481.563 1014.553 0 1147" 
-          fill="transparent" 
-          stroke="currentColor" 
-          strokeWidth="30" 
-          strokeLinecap="butt" 
-          strokeLinejoin="miter" 
-          strokeMiterlimit="10" 
-          transform="translate(80 12)" 
+        <motion.path
+          d="M 1012 0 C 1012 0 685.114 76.915 628.183 300.778 C 592.343 441.706 652.378 586.306 761.118 561.104 C 831.495 544.792 841.921 423.437 796.958 340.577 C 733.921 224.409 506.014 255.052 431.387 459.974 C 299.755 821.429 481.563 1014.553 0 1147"
+          fill="transparent"
+          stroke="var(--token-36691d6b-fd51-40c3-90d4-8c2b90652b0a, rgb(170, 148, 255))"
+          strokeWidth="30"
+          strokeLinecap="butt"
+          strokeLinejoin="miter"
+          strokeMiterlimit="10"
+          transform="translate(80 12)"
           style={{
             strokeDasharray: "2475.29 2475.29",
             strokeDashoffset,
@@ -108,34 +112,34 @@ export default function Footer() {
       </svg>
 
       <div className="max-w-[1280px] w-full mx-auto flex flex-col justify-between flex-1 relative z-10 mt-8">
-        
+
         {/* Top Section */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 w-full">
-          
+
           {/* Left Column (Brand title & Contact info) */}
           <div className="lg:col-span-5 flex flex-col gap-12">
             <div>
-              <h2 
+              <h2
                 className="text-4xl md:text-5xl lg:text-[56px] font-extrabold tracking-tight leading-[1.05] text-[#1c1917]"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
                 UGC that grows<br />your brand.
               </h2>
             </div>
-            
+
             <div className="flex flex-col gap-3">
               <span className="text-[10px] tracking-widest uppercase text-[#1c1917]/50 font-bold font-mono">
                 CONTACT
               </span>
               <div className="flex flex-col gap-1">
-                <a 
-                  href="mailto:contact@shinta.com" 
+                <a
+                  href="mailto:contact@iGigster.com"
                   className="text-2xl md:text-3xl font-extrabold hover:opacity-80 transition-opacity tracking-tight"
                 >
-                  contact@shinta.com
+                  contact@iGigster.com
                 </a>
-                <a 
-                  href="tel:+12345678" 
+                <a
+                  href="tel:+12345678"
                   className="text-xl md:text-2xl font-extrabold hover:opacity-80 transition-opacity tracking-tight text-[#1c1917]/80"
                 >
                   +12 345 678
@@ -144,39 +148,41 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Center Column (Navigation & Legal stacked) */}
-          <div className="lg:col-span-4 flex flex-col items-center gap-10">
+          {/* Center Column (Navigation & Legal side-by-side columns) */}
+          <div className="lg:col-span-4 grid grid-cols-2 gap-8 items-start text-left">
             {/* Navigation */}
-            <div className="flex flex-col items-center gap-4 w-full">
-              <span className="text-[10px] tracking-widest uppercase text-[#1c1917]/50 font-bold font-mono text-center">
-                NAVIVGATION
+            <div className="flex flex-col items-start gap-4">
+              <span className="text-[10px] tracking-widest uppercase text-[#1c1917]/50 font-bold font-mono">
+                NAVIGATION
               </span>
-              <div className="flex flex-col items-center gap-2.5 w-full">
+              <div className="flex flex-col items-start gap-3.5">
                 {navLinks.map((link) => (
-                  <Link 
+                  <Link
                     key={link.label}
                     href={link.href}
-                    className="inline-flex border border-[#1c1917] rounded-full px-5 py-2 text-xs md:text-sm font-semibold hover:bg-[#1c1917] hover:text-[#ffa8f2] transition-all duration-300 text-center justify-center min-w-[110px]"
+                    className="text-[#1c1917] text-sm md:text-[15px] font-bold relative group py-0.5"
                   >
-                    {link.label}
+                    <span>{link.label}</span>
+                    <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#1c1917] transition-all duration-300 group-hover:w-full" />
                   </Link>
                 ))}
               </div>
             </div>
 
             {/* Legal */}
-            <div className="flex flex-col items-center gap-4 w-full">
-              <span className="text-[10px] tracking-widest uppercase text-[#1c1917]/50 font-bold font-mono text-center">
+            <div className="flex flex-col items-start gap-4">
+              <span className="text-[10px] tracking-widest uppercase text-[#1c1917]/50 font-bold font-mono">
                 LEGAL
               </span>
-              <div className="flex flex-col items-center gap-2.5 w-full">
+              <div className="flex flex-col items-start gap-3.5">
                 {legalLinks.map((link) => (
-                  <Link 
+                  <Link
                     key={link.label}
                     href={link.href}
-                    className="inline-flex border border-[#1c1917] rounded-full px-5 py-2 text-xs md:text-sm font-semibold hover:bg-[#1c1917] hover:text-[#ffa8f2] transition-all duration-300 text-center justify-center min-w-[145px]"
+                    className="text-[#1c1917] text-sm md:text-[15px] font-bold relative group py-0.5"
                   >
-                    {link.label}
+                    <span>{link.label}</span>
+                    <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#1c1917] transition-all duration-300 group-hover:w-full" />
                   </Link>
                 ))}
               </div>
@@ -190,27 +196,27 @@ export default function Footer() {
                 FOLLOW US
               </span>
               <div className="flex gap-2">
-                <a 
-                  href="https://facebook.com" 
-                  target="_blank" 
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
                   rel="noopener"
                   className="w-10 h-10 rounded-full bg-[#1c1917] text-white flex items-center justify-center hover:scale-105 transition-transform duration-300"
                   aria-label="Facebook"
                 >
                   <FacebookIcon />
                 </a>
-                <a 
-                  href="https://x.com" 
-                  target="_blank" 
+                <a
+                  href="https://x.com"
+                  target="_blank"
                   rel="noopener"
                   className="w-10 h-10 rounded-full bg-[#1c1917] text-white flex items-center justify-center hover:scale-105 transition-transform duration-300"
                   aria-label="X (Twitter)"
                 >
                   <XIcon />
                 </a>
-                <a 
-                  href="https://instagram.com" 
-                  target="_blank" 
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
                   rel="noopener"
                   className="w-10 h-10 rounded-full bg-[#1c1917] text-white flex items-center justify-center hover:scale-105 transition-transform duration-300"
                   aria-label="Instagram"
@@ -225,54 +231,110 @@ export default function Footer() {
 
         {/* Bottom Section (Logo & Newsletter side-by-side) */}
         <div className="flex flex-col gap-12 mt-16 w-full">
-          
+
           <div className="flex flex-col lg:flex-row justify-between items-end gap-12 w-full">
-            
+
             {/* Logo Image */}
             <div className="w-full lg:w-[60%] select-none max-w-[640px]">
               <Link href="/">
-                <img 
-                  src="https://framerusercontent.com/images/osXTQmLx6RntsX7CfW3A94lUHo.png" 
-                  alt="Shinta Logo" 
+                <img
+                  src="https://framerusercontent.com/images/osXTQmLx6RntsX7CfW3A94lUHo.png"
+                  alt="iGigster Logo"
                   className="w-full h-auto object-contain hover:scale-[1.01] transition-transform duration-300"
                   loading="lazy"
                 />
               </Link>
             </div>
 
-            {/* White Newsletter Card */}
-            <div className="w-full max-w-[360px] bg-white rounded-[32px] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06)] flex flex-col gap-6 relative z-20">
-              <div className="flex flex-col gap-2.5">
-                <h3 
+            {/* Newsletter Card */}
+            <div 
+              style={{
+                width: '100%',
+                maxWidth: '360px',
+                backgroundColor: '#f5f5f4', // Warm off-white/light grey matching mockup
+                borderRadius: '32px',
+                padding: '32px',
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.03)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '24px',
+                position: 'relative',
+                zIndex: 20,
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <h3
                   className="text-2xl font-bold tracking-tight text-[#1c1917]"
-                  style={{ fontFamily: 'var(--font-display)' }}
+                  style={{ 
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '28px',
+                    fontWeight: 900,
+                    color: '#1c1917',
+                    letterSpacing: '-0.02em',
+                    lineHeight: 1.1,
+                  }}
                 >
                   Newsletter
                 </h3>
-                <p className="text-stone-500 text-xs md:text-sm leading-relaxed">
+                <p style={{ color: '#78716c', fontSize: '13.5px', lineHeight: 1.5 }}>
                   Sign up for our newsletter to stay up to date with the latest motion design & studio news
                 </p>
               </div>
 
               {subscribed ? (
-                <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200/50 p-4 rounded-2xl text-emerald-700 text-xs font-semibold">
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  backgroundColor: '#ecfdf5',
+                  border: '1px solid #a7f3d0',
+                  padding: '16px',
+                  borderRadius: '16px',
+                  color: '#047857',
+                  fontSize: '13px',
+                  fontWeight: 600
+                }}>
                   <CheckIcon />
                   <span>Subscribed successfully!</span>
                 </div>
               ) : (
-                <form onSubmit={handleSubscribe} className="flex flex-col gap-3">
+                <form onSubmit={handleSubscribe} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <input
                     type="email"
                     placeholder="Email address"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-5 py-3 rounded-full border border-stone-200 text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-[#1c1917] text-xs font-medium bg-stone-50/50"
+                    style={{
+                      width: '100%',
+                      padding: '16px 20px',
+                      borderRadius: '20px',
+                      border: '1px solid rgba(0, 0, 0, 0.04)',
+                      backgroundColor: '#ffffff', // Pure white background
+                      color: '#1c1917',
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      outline: 'none',
+                      boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)',
+                    }}
+                    className="placeholder-stone-400 focus:border-stone-400 transition-colors"
                   />
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 rounded-full bg-[#1c1917] text-white text-xs font-bold hover:bg-[#1c1917]/90 active:scale-[0.98] transition-all duration-200"
+                    style={{
+                      width: '100%',
+                      padding: '16px 24px',
+                      borderRadius: '9999px',
+                      backgroundColor: '#1c1917', // Black background
+                      color: '#ffffff',
+                      fontSize: '14.5px',
+                      fontWeight: 800,
+                      border: 'none',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                    }}
+                    className="hover:bg-black/95 active:scale-[0.98]"
                   >
                     {loading ? 'Subscribing...' : 'Subscribe'}
                   </button>
@@ -283,21 +345,70 @@ export default function Footer() {
           </div>
 
           {/* Copyright details and designer credits */}
-          <div className="flex flex-wrap justify-between items-center gap-4 text-xs font-semibold text-[#1c1917]/60 pt-6 border-t border-[#1c1917]/10 pb-4 w-full">
-            <p>© 2026 Shinta. All Rights Reserved.</p>
-            <div className="flex items-center gap-1.5 font-bold hover:text-[#1c1917] transition-colors">
-              <span className="text-[#1c1917]/50 font-semibold">Made by</span>
-              <a 
-                href="https://veloxthemes.com" 
-                target="_blank" 
-                rel="noopener"
-                className="tracking-wide text-[#1c1917] border-b border-[#1c1917]/20 hover:border-[#1c1917] transition-all"
+          <div 
+            style={{
+              paddingTop: '24px',
+              paddingBottom: '8px',
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: '16px',
+              width: '100%',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              {/* Small mini logo icon */}
+              <div 
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '6px',
+                  backgroundColor: '#1c1917',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#ffa8f2',
+                  fontSize: '11px',
+                  fontWeight: 900,
+                }}
               >
-                Velox Themes
+                iG
+              </div>
+              <p style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(28, 25, 22, 0.6)', margin: 0 }}>
+                © 2026 iGigster. All Rights Reserved.
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 600, color: 'rgba(28, 25, 22, 0.6)' }}>
+              <span>Made by</span>
+              <a
+                href="https://x10cify.com"
+                target="_blank"
+                rel="noopener"
+                style={{
+                  color: '#1c1917',
+                  borderBottom: '1px solid rgba(28, 25, 22, 0.2)',
+                  transition: 'all 0.2s ease',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '2px',
+                }}
+                className="hover:border-black group"
+              >
+                <span>x10cify</span>
+                <svg 
+                  width="10" 
+                  height="10" 
+                  viewBox="0 0 10 10" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  style={{ transition: 'transform 0.2s' }}
+                  className="group-hover:translate-x-[1px] group-hover:-translate-y-[1px]"
+                >
+                  <path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </a>
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#1c1917]/50">
-                <path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
             </div>
           </div>
 

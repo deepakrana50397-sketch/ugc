@@ -8,6 +8,8 @@ import CreatorContentSection from '@/features/landing/CreatorContentSection';
 import Services from '@/features/landing/Services';
 import StackedServices from '@/features/landing/StackedServices';
 import DontSettle from '@/features/landing/DontSettle';
+import OurProcess from '@/features/landing/OurProcess';
+import TalentPool from '@/features/landing/TalentPool';
 import HowItWorks from '@/features/landing/HowItWorks';
 import VideoTestingLab from '@/features/landing/VideoTestingLab';
 import Stats from '@/features/landing/Stats';
@@ -19,6 +21,7 @@ import Testimonials from '@/features/landing/Testimonials';
 import PricingPreview from '@/features/landing/PricingPreview';
 import Faqs from '@/features/landing/Faqs';
 import FinalCta from '@/features/landing/FinalCta';
+import GrowContent from '@/features/landing/GrowContent';
 import JsonLd from '@/components/seo/JsonLd';
 import { getOrganizationSchema, getWebsiteSchema } from '@/lib/seo/schema';
 import { getPageMetadata } from '@/lib/seo/metadata';
@@ -62,6 +65,12 @@ export default function Home() {
       {/* 3.6. Comparison Section */}
       <DontSettle />
 
+      {/* 3.7. Our Process Section */}
+      <OurProcess />
+
+      {/* 3.8. Talent Pool Section */}
+      <TalentPool />
+
       {/* 4. How it works */}
       <HowItWorks />
 
@@ -94,6 +103,9 @@ export default function Home() {
 
       {/* 11. Final CTA */}
       <FinalCta />
+
+      {/* 12. Split CTA Section */}
+      <GrowContent />
     </>
   );
 }
