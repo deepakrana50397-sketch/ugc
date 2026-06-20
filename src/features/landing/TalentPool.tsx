@@ -2,51 +2,19 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Sparkles, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export default function TalentPool() {
-  const talents = [
-    {
-      id: 'p1',
-      name: 'Elena',
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300',
-      rotation: -8,
-      yOffset: -10,
-    },
-    {
-      id: 'p2',
-      name: 'Marcus',
-      image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=300',
-      rotation: 4,
-      yOffset: 15,
-    },
-    {
-      id: 'p3',
-      name: 'Sora',
-      image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=300',
-      rotation: -6,
-      yOffset: -15,
-    },
-    {
-      id: 'p4',
-      name: 'Oliver',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300',
-      rotation: 6,
-      yOffset: 10,
-    },
-    {
-      id: 'p5',
-      name: 'Amara',
-      image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300',
-      rotation: -4,
-      yOffset: -5,
-    },
-    {
-      id: 'p6',
-      name: 'Zion',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300',
-      rotation: 8,
-      yOffset: 20,
-    },
+  const categories = [
+    { name: 'Creators', color: '#db2777', x: '0%', y: '-35%' },
+    { name: 'Influencers', color: '#7c3aed', x: '25%', y: '-25%' },
+    { name: 'Students', color: '#2563eb', x: '35%', y: '0%' },
+    { name: 'Agencies', color: '#10b981', x: '25%', y: '25%' },
+    { name: 'Editors', color: '#f59e0b', x: '0%', y: '35%' },
+    { name: 'Communities', color: '#ec4899', x: '-25%', y: '25%' },
+    { name: 'Event Managers', color: '#06b6d4', x: '-35%', y: '0%' },
+    { name: 'Production Teams', color: '#8b5cf6', x: '-25%', y: '-25%' },
   ];
 
   return (
@@ -61,7 +29,6 @@ export default function TalentPool() {
         backgroundColor: '#fafaf9',
       }}
     >
-      {/* Centered Content Container */}
       <div
         className="relative z-10 flex flex-col items-center gap-10 md:gap-16 text-center"
         style={{
@@ -76,12 +43,12 @@ export default function TalentPool() {
           <span
             className="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider"
             style={{
-              backgroundColor: 'rgba(219, 39, 119, 0.1)',
-              color: '#db2777',
+              backgroundColor: 'rgba(79, 70, 229, 0.08)',
+              color: 'rgb(79, 70, 229)',
               fontFamily: 'var(--font-sans)',
             }}
           >
-            Our Talent
+            Talent Ecosystem
           </span>
 
           <h2
@@ -90,74 +57,145 @@ export default function TalentPool() {
               fontFamily: 'var(--font-display)',
             }}
           >
-            A pool of highly talented<br />creators and gigsters
+            One campaign.<br />Multiple execution channels.
           </h2>
         </div>
 
-        {/* Overlapping Cards Cluster Container */}
-        <div className="relative w-full py-12 flex items-center justify-center min-h-[340px]">
-          {/* Wavy pink background stroke line */}
-          <svg 
-            className="absolute left-0 right-0 w-full pointer-events-none z-0" 
-            style={{ top: '45%', height: '140px' }} 
-            viewBox="0 0 1440 140" 
-            fill="none" 
-            preserveAspectRatio="none"
-          >
-            <path 
-              d="M-100,70 C150,-20 350,160 600,70 C850,-20 1050,160 1300,70 C1450,20 1550,70 1640,70" 
-              stroke="#ffa8f2" 
-              strokeWidth="8" 
-              strokeLinecap="round" 
-            />
+        {/* Visual Network Graph Container */}
+        <div 
+          className="relative w-full max-w-[650px] aspect-square md:h-[450px] md:aspect-auto flex items-center justify-center my-8"
+        >
+          {/* Desktop orbit SVG lines connecting center to nodes */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none hidden md:block">
+            {categories.map((cat, idx) => {
+              return (
+                <g key={idx}>
+                  <motion.line
+                    x1="50%"
+                    y1="50%"
+                    x2={`${50 + parseFloat(cat.x)}%`}
+                    y2={`${50 + parseFloat(cat.y)}%`}
+                    stroke={`${cat.color}25`}
+                    strokeWidth="2.5"
+                    strokeDasharray="6 4"
+                    initial={{ pathLength: 0 }}
+                    whileInView={{ pathLength: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: idx * 0.05 }}
+                  />
+                  <motion.circle
+                    cx={`${50 + parseFloat(cat.x)}%`}
+                    cy={`${50 + parseFloat(cat.y)}%`}
+                    r="4"
+                    fill={cat.color}
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: idx * 0.05 + 0.5 }}
+                  />
+                </g>
+              );
+            })}
           </svg>
 
-          {/* Cards Flex Row */}
-          <div className="relative z-10 flex flex-wrap items-center justify-center gap-8 md:gap-0 md:-space-x-5 max-w-full">
-            {talents.map((talent, idx) => (
+          {/* Central Node: Brands */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ type: 'spring', stiffness: 120, damping: 15 }}
+            style={{
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              backgroundColor: '#1c1917',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 900,
+              fontSize: '18px',
+              letterSpacing: '-0.02em',
+              zIndex: 30,
+              boxShadow: '0 20px 50px rgba(0,0,0,0.15), 0 0 0 8px rgba(28,25,23,0.05)',
+              position: 'relative'
+            }}
+          >
+            Brands
+            {/* Pulsing ring */}
+            <span style={{
+              position: 'absolute',
+              inset: '-8px',
+              border: '2px dashed rgba(28, 25, 23, 0.2)',
+              borderRadius: '50%',
+              animation: 'spin 30s linear infinite'
+            }} />
+          </motion.div>
+
+          {/* Floating/Orbiting Talent Nodes (Desktop layout) */}
+          <div className="absolute inset-0 pointer-events-none hidden md:block">
+            {categories.map((cat, idx) => (
               <motion.div
-                key={talent.id}
-                initial={{ opacity: 0, scale: 0.8, rotate: 0 }}
-                whileInView={{ 
-                  opacity: 1, 
-                  scale: 1, 
-                  rotate: talent.rotation,
-                  y: talent.yOffset
-                }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ 
-                  type: 'spring', 
-                  stiffness: 90, 
-                  damping: 14, 
-                  delay: idx * 0.08 
-                }}
-                whileHover={{ 
-                  scale: 1.1, 
-                  rotate: 0, 
-                  y: talent.yOffset - 15,
-                  zIndex: 50,
-                  transition: { duration: 0.25 }
-                }}
+                key={idx}
+                className="pointer-events-auto"
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ type: 'spring', stiffness: 100, damping: 12, delay: idx * 0.08 }}
+                whileHover={{ scale: 1.05 }}
                 style={{
-                  padding: '12px',
-                  backgroundColor: '#9b7bfc',
-                  borderRadius: '24px',
-                  boxShadow: '0 20px 45px rgba(155, 123, 252, 0.15)',
-                  cursor: 'pointer',
-                  flexShrink: 0,
+                  position: 'absolute',
+                  left: `calc(50% + ${cat.x} - 80px)`,
+                  top: `calc(50% + ${cat.y} - 22px)`,
+                  width: '160px',
+                  height: '44px',
+                  backgroundColor: '#ffffff',
+                  border: `1.5px solid ${cat.color}40`,
+                  borderRadius: '22px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 8px 20px rgba(0,0,0,0.03)',
+                  zIndex: 20,
+                  cursor: 'default'
                 }}
-                className="w-[160px] md:w-[180px] z-10"
               >
-                <img
-                  src={talent.image}
-                  alt={talent.name}
-                  style={{
-                    width: '100%',
-                    aspectRatio: '3/4',
-                    objectFit: 'cover',
-                    borderRadius: '16px',
-                  }}
-                />
+                <div style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  backgroundColor: cat.color,
+                  marginRight: '8px'
+                }} />
+                <span style={{ fontSize: '13px', fontWeight: 800, color: '#1c1917' }}>
+                  {cat.name}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Fallback Mobile grid (Simple Orbit-like compact layout) */}
+          <div className="flex flex-wrap items-center justify-center gap-3 w-full max-w-[340px] md:hidden z-10">
+            {categories.map((cat, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.04 }}
+                style={{
+                  backgroundColor: '#ffffff',
+                  border: `1px solid ${cat.color}30`,
+                  borderRadius: '16px',
+                  padding: '10px 16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  boxShadow: '0 4px 10px rgba(0,0,0,0.02)'
+                }}
+              >
+                <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: cat.color }} />
+                <span style={{ fontSize: '12px', fontWeight: 800, color: '#1c1917' }}>{cat.name}</span>
               </motion.div>
             ))}
           </div>
@@ -169,58 +207,34 @@ export default function TalentPool() {
             className="text-[17px] md:text-[19px] font-semibold text-[#78716c] leading-relaxed"
             style={{ fontFamily: 'var(--font-sans)' }}
           >
-            Gigsters and UGC creators help brands scale performance, turn ideas into consistent, high-converting social video content.
+            One brief. Multiple execution channels. Connect your campaign with the right talent segment to unlock viral scale.
           </p>
 
-          {/* Custom double pill button */}
-          <div className="flex items-center" style={{ gap: '10px' }}>
-            <motion.button
-              whileHover={{ scale: 1.02, backgroundColor: '#000000' }}
-              whileTap={{ scale: 0.98 }}
-              style={{
-                height: '56px',
-                paddingLeft: '32px',
-                paddingRight: '32px',
-                borderRadius: '28px',
-                backgroundColor: '#1c1917',
-                color: '#ffffff',
-                fontWeight: 800,
-                fontSize: '16px',
-                fontFamily: 'var(--font-sans)',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
-              }}
-            >
-              Explore Gigsters
-            </motion.button>
-            <motion.div
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                width: '56px',
-                height: '56px',
-                borderRadius: '50%',
-                backgroundColor: '#ffa8f2',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#1c1917',
-                cursor: 'pointer',
-                boxShadow: '0 10px 25px rgba(255, 168, 242, 0.25)',
-              }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="7" y1="17" x2="17" y2="7"></line>
-                <polyline points="7 7 17 7 17 17"></polyline>
-              </svg>
-            </motion.div>
-          </div>
+          <Link
+            href="/contact"
+            style={{
+              height: '56px',
+              paddingLeft: '32px',
+              paddingRight: '32px',
+              borderRadius: '28px',
+              backgroundColor: '#1c1917',
+              color: '#ffffff',
+              fontWeight: 800,
+              fontSize: '16px',
+              fontFamily: 'var(--font-sans)',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
+            }}
+            className="hover:bg-stone-800"
+          >
+            <span>Launch Campaign</span>
+            <ArrowRight size={16} style={{ marginLeft: '8px' }} />
+          </Link>
         </div>
-
       </div>
     </section>
   );

@@ -28,17 +28,17 @@ export default function CreatorContentSection() {
     >
       <div className="max-w-[1200px] w-full mx-auto relative z-10 grid grid-cols-1 md:grid-cols-2 section-grid-gap items-center">
 
-        {/* Left Column: Title & Text Block (on desktop) / Mobile bottom */}
+        {/* Left Column: Creator Economy Section */}
         <div className="flex flex-col justify-center gap-6 relative z-10 text-left order-2 md:order-1 md-ml-auto-custom max-w-[480px]">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-[40px] md:text-5xl lg:text-[56px] font-bold tracking-tighter leading-[1.05] max-w-[420px]"
+            className="text-4xl md:text-5xl font-black tracking-tighter leading-none"
             style={{ color: 'rgb(28, 25, 23)', fontFamily: 'var(--font-display)' }}
           >
-            Creator-led content, long-term growth.
+            Earn in the Creator Economy
           </motion.h2>
 
           <motion.p
@@ -46,11 +46,43 @@ export default function CreatorContentSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-base md:text-lg leading-relaxed max-w-[470px] opacity-75"
-            style={{ color: 'rgb(28, 25, 23)', fontFamily: 'var(--font-sans)' }}
+            className="text-base leading-relaxed opacity-75"
+            style={{ color: 'rgb(28, 25, 23)', fontFamily: 'var(--font-sans)', margin: 0 }}
           >
-            We source and test creators across niches and communities, focusing on those who naturally align with your brand. The result is authentic UGC that feels native and performs consistently.
+            Leverage your skills, background, or local community presence to land high-paying gigs and campaigns that match your profile.
           </motion.p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '8px' }}>
+            {[
+              { emoji: '🎓', role: 'Students', gig: 'Campus gigs' },
+              { emoji: '🎬', role: 'Creators', gig: 'UGC work' },
+              { emoji: '👩', role: 'Women', gig: 'Community campaigns' },
+              { emoji: '✂️', role: 'Editors', gig: 'Production projects' }
+            ].map((item, idx) => (
+              <motion.div
+                key={item.role}
+                initial={{ opacity: 0, x: -15 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.05, duration: 0.4 }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  backgroundColor: '#ffffff',
+                  border: '1px solid rgba(28, 25, 22, 0.06)',
+                  padding: '12px 18px',
+                  borderRadius: '16px',
+                  boxShadow: '0 4px 10px rgba(0,0,0,0.01)'
+                }}
+              >
+                <span style={{ fontSize: '18px' }}>{item.emoji}</span>
+                <span style={{ fontSize: '14px', fontWeight: 800, color: 'rgb(28, 25, 23)', width: '90px' }}>{item.role}</span>
+                <span style={{ fontSize: '14px', color: '#7c3aed', fontWeight: 700 }}>→</span>
+                <span style={{ fontSize: '14px', fontWeight: 700, color: '#44403c' }}>{item.gig}</span>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         {/* Right Column: Video Card & Stats Card Overlay */}

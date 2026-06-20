@@ -85,7 +85,7 @@ export default function FinalCta() {
           >
             <Magnetic strength={0.15}>
               <Link
-                href="/brand/post-gig"
+                href="/contact"
                 style={{
                   backgroundColor: 'rgb(79, 70, 229)',
                   color: '#ffffff',

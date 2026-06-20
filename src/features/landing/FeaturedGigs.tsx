@@ -3,53 +3,95 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Users, ArrowRight, Star, DollarSign, Briefcase } from 'lucide-react';
-import { getGigs } from '@/lib/services';
-import { useCurrency } from '@/hooks/useCurrency';
-import { displayPrice } from '@/lib/currency';
-import { formatRelativeTime } from '@/lib/utils';
-import { servicesData } from '@/data/services';
+import { Sparkles, ArrowRight, UserCheck, ShieldCheck, Mail, Check, X, Briefcase } from 'lucide-react';
 import TextReveal from '@/components/animation/TextReveal';
 import Magnetic from '@/components/animation/Magnetic';
 
 export default function FeaturedGigs() {
-  const { currency } = useCurrency();
-  const [filter, setFilter] = useState<'all' | 'ugc_creator' | 'editor' | 'motion_designer' | 'product_demo'>('all');
+  const [activeTab, setActiveTab] = useState<'brands' | 'talent'>('brands');
 
-  // Load real gigs from services
-  const allGigs = getGigs();
-  const filteredGigs = filter === 'all' 
-    ? allGigs.slice(0, 3) 
-    : allGigs.filter(g => g.category === filter).slice(0, 3);
-
-  const getCategoryLabel = (category: string) => {
-    return servicesData.find(s => s.id === category)?.name || category;
-  };
-
-  const categories = [
-    { id: 'all', label: 'ALL GIGS' },
-    { id: 'ugc_creator', label: 'UGC CREATOR' },
-    { id: 'editor', label: 'VIDEO EDITOR' },
-    { id: 'motion_designer', label: 'MOTION DESIGNER' },
-    { id: 'product_demo', label: 'PRODUCT DEMO' }
+  const brandOpportunities = [
+    {
+      id: 'o1',
+      title: 'Hire UGC Creators',
+      description: 'Access our catalog of verified creators who shoot native, high-retention short-form video assets.',
+      tag: 'UGC Content',
+      stat: 'Verified Talent',
+      statLabel: '1,200+ creators active',
+      cta: 'Browse Creators',
+      link: '/creators'
+    },
+    {
+      id: 'o2',
+      title: 'Find Influencers',
+      description: 'Connect with creators who have highly engaged, target demographics to run sponsored seeding campaigns.',
+      tag: 'Distribution',
+      stat: 'Targeted Reach',
+      statLabel: 'Activate local communities',
+      cta: 'Explore Channels',
+      link: '/brands'
+    },
+    {
+      id: 'o3',
+      title: 'Book Teams',
+      description: 'Hire a complete team of copywriters, creators, and editors who work in lockstep to deliver bulk assets.',
+      tag: 'Bulk Execution',
+      stat: 'Dedicated Slack',
+      statLabel: 'Complete campaign delivery',
+      cta: 'Hire a Team',
+      link: '/contact'
+    }
   ];
 
-  // Random rotations to replicate the organic hand-placed paper styling from origin/main
-  const rotations = ['rotate-[0.5deg]', 'rotate-[-0.5deg]', 'rotate-[1deg]', 'rotate-[-1deg]'];
+  const talentOpportunities = [
+    {
+      id: 't1',
+      title: 'Earn through gigs',
+      description: 'Apply for open briefs posted directly by verified brands. Set your own rates and keep 100% of your payout.',
+      tag: 'Monetization',
+      stat: '$150 - $600',
+      statLabel: 'Average rate per video',
+      cta: 'View Gigs Board',
+      link: '/gigs'
+    },
+    {
+      id: 't2',
+      title: 'Join campaigns',
+      description: 'Participate in community campaigns, campus activation, and product trials matching your lifestyle.',
+      tag: 'Seeding Gigs',
+      stat: 'Free Products',
+      statLabel: 'Plus high-paying bonuses',
+      cta: 'Browse Campaigns',
+      link: '/gigs'
+    },
+    {
+      id: 't3',
+      title: 'Build portfolio',
+      description: 'Get feedback, use testing tool templates, and build a verified profile page with clear conversion metrics.',
+      tag: 'Portfolios',
+      stat: 'Free Builder',
+      statLabel: 'Increase your close rate',
+      cta: 'Create Profile',
+      link: '/register?role=creator'
+    }
+  ];
+
+  const currentOpportunities = activeTab === 'brands' ? brandOpportunities : talentOpportunities;
+  const rotations = ['rotate-[0.5deg]', 'rotate-[-0.5deg]', 'rotate-[1deg]'];
 
   return (
     <section 
-      id="gigs"
+      id="opportunities-section"
       style={{
         padding: '120px 24px',
-        backgroundColor: '#F5F2EC', // Premium warm beige/off-white background matching the screenshots
+        backgroundColor: '#F5F2EC', // Premium warm beige
         position: 'relative',
         borderTop: '1px solid rgba(28, 25, 22, 0.08)',
         borderBottom: '1px solid rgba(28, 25, 22, 0.08)',
         overflow: 'hidden',
       }}
     >
-      {/* Decorative Grid Lines to make it feel like an engineering brief board */}
+      {/* Grid Lines */}
       <div 
         style={{
           position: 'absolute',
@@ -91,11 +133,11 @@ export default function FeaturedGigs() {
             }}
           >
             <Briefcase size={13} style={{ color: 'rgb(79, 70, 229)' }} />
-            <span>Open Gig Directory</span>
+            <span>Opportunities Hub</span>
           </div>
 
           <TextReveal
-            text="Live Creator Gigs Board"
+            text="Featured Opportunities"
             tag="h2"
             mode="words"
             className="text-foreground"
@@ -108,36 +150,53 @@ export default function FeaturedGigs() {
           />
           
           <p style={{ color: '#57534e', maxWidth: '600px', fontSize: '16.5px', lineHeight: 1.6 }}>
-            Browse open campaigns posted directly by vetted brands. Apply for free, pitch your rates, and keep 100% of your earnings.
+            Explore tailored pathways for brands seeking high-converting campaigns and creators looking for paid opportunities.
           </p>
         </div>
 
-        {/* Filter categories */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
-          {categories.map((cat, idx) => (
-            <button
-              key={cat.id}
-              onClick={() => setFilter(cat.id as any)}
-              style={{
-                border: 'none',
-                outline: 'none',
-                cursor: 'pointer',
-                padding: '10px 20px',
-                fontSize: '11px',
-                fontWeight: 700,
-                letterSpacing: '0.06em',
-                borderRadius: '8px',
-                backgroundColor: filter === cat.id ? '#1c1917' : '#E6E2DA',
-                color: filter === cat.id ? '#ffffff' : '#1c1917',
-                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-              }}
-            >
-              {cat.label}
-            </button>
-          ))}
+        {/* Two Tabs */}
+        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+          <button
+            onClick={() => setActiveTab('brands')}
+            style={{
+              border: 'none',
+              outline: 'none',
+              cursor: 'pointer',
+              padding: '12px 28px',
+              fontSize: '13px',
+              fontWeight: 800,
+              letterSpacing: '0.04em',
+              borderRadius: '9999px',
+              backgroundColor: activeTab === 'brands' ? '#1c1917' : '#E6E2DA',
+              color: activeTab === 'brands' ? '#ffffff' : '#1c1917',
+              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+              boxShadow: activeTab === 'brands' ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
+            }}
+          >
+            For Brands
+          </button>
+          <button
+            onClick={() => setActiveTab('talent')}
+            style={{
+              border: 'none',
+              outline: 'none',
+              cursor: 'pointer',
+              padding: '12px 28px',
+              fontSize: '13px',
+              fontWeight: 800,
+              letterSpacing: '0.04em',
+              borderRadius: '9999px',
+              backgroundColor: activeTab === 'talent' ? '#1c1917' : '#E6E2DA',
+              color: activeTab === 'talent' ? '#ffffff' : '#1c1917',
+              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+              boxShadow: activeTab === 'talent' ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
+            }}
+          >
+            For Talent
+          </button>
         </div>
 
-        {/* Gigs List/Corkboard Grid */}
+        {/* Corkboard Grid */}
         <div 
           style={{
             display: 'grid',
@@ -147,14 +206,14 @@ export default function FeaturedGigs() {
           }}
         >
           <AnimatePresence mode="popLayout">
-            {filteredGigs.map((gig, idx) => {
+            {currentOpportunities.map((opportunity, idx) => {
               const cardRotation = rotations[idx % rotations.length];
               const tapeClass = idx % 2 === 0 ? 'washi-tape-top-left' : 'washi-tape-top-right';
 
               return (
                 <motion.div
                   layout
-                  key={gig.id}
+                  key={opportunity.id}
                   initial={{ opacity: 0, scale: 0.95, y: 30 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: -30 }}
@@ -178,7 +237,7 @@ export default function FeaturedGigs() {
                   {/* Washi Tape Accent */}
                   <div className={`washi-tape ${tapeClass}`} />
 
-                  {/* Decorative Pushpin */}
+                  {/* Pushpin */}
                   <div 
                     style={{ 
                       position: 'absolute', 
@@ -209,67 +268,63 @@ export default function FeaturedGigs() {
                           textTransform: 'uppercase',
                         }}
                       >
-                        #{gig.id.substring(0, 5).toUpperCase()}
-                      </span>
-                      <span style={{ fontSize: '18px', fontWeight: 800, color: 'rgb(79, 70, 229)', display: 'flex', alignItems: 'center', gap: '2px' }}>
-                        <DollarSign size={14} style={{ color: 'rgb(79, 70, 229)' }} />
-                        {displayPrice(gig.price, currency)}
+                        {opportunity.tag}
                       </span>
                     </div>
 
-                    {/* Title & Brand */}
+                    {/* Title */}
                     <div>
-                      <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#1c1917', lineHeight: 1.3, letterSpacing: '-0.02em', marginBottom: '8px' }}>
-                        <Link href={`/gigs/${gig.slug}`} style={{ transition: 'color 0.3s' }} className="hover-text-primary">
-                          {gig.title}
-                        </Link>
+                      <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#1c1917', lineHeight: 1.3, letterSpacing: '-0.02em', marginBottom: '8px' }}>
+                        {opportunity.title}
                       </h3>
-                      <div style={{ fontSize: '13px', color: '#78716c' }}>
-                        by <strong style={{ color: '#1c1917' }}>{gig.brandName}</strong> • {formatRelativeTime(gig.postedAt)}
-                      </div>
-                    </div>
-
-                    {/* Tags */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                      {gig.tags.slice(0, 3).map(tag => (
-                        <span 
-                          key={tag} 
-                          style={{ 
-                            fontSize: '11px', 
-                            fontWeight: 500,
-                            color: '#78716c', 
-                            backgroundColor: '#E6E2DA', 
-                            padding: '4px 10px', 
-                            borderRadius: '20px',
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                      <p style={{ color: '#57534e', fontSize: '14px', lineHeight: 1.5, margin: 0 }}>
+                        {opportunity.description}
+                      </p>
                     </div>
                   </div>
 
-                  {/* Metadata info */}
+                  {/* Bottom Stats & CTA */}
                   <div 
                     style={{ 
                       display: 'flex', 
-                      justifyContent: 'space-between', 
-                      alignItems: 'center', 
+                      flexDirection: 'column',
+                      gap: '16px',
                       borderTop: '1px solid rgba(28, 25, 22, 0.06)', 
-                      paddingTop: '16px', 
+                      paddingTop: '20px', 
                       marginTop: '24px' 
                     }}
                   >
-                    <div style={{ display: 'flex', gap: '16px', fontSize: '13px', color: '#78716c' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <Users size={13} style={{ color: 'rgb(79, 70, 229)' }} />
-                        <strong style={{ color: '#1c1917' }}>{gig.applicantsCount}</strong> Applicants
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ fontSize: '16px', fontWeight: 800, color: 'rgb(79, 70, 229)' }}>
+                        {opportunity.stat}
                       </span>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <Calendar size={13} style={{ color: 'rgb(219, 39, 119)' }} />
-                        Due {gig.deadline}
+                      <span style={{ fontSize: '11px', color: '#78716c', fontWeight: 600 }}>
+                        {opportunity.statLabel}
                       </span>
                     </div>
+
+                    <Link
+                      href={opportunity.link}
+                      style={{
+                        padding: '12px',
+                        borderRadius: '30px',
+                        backgroundColor: '#1c1917',
+                        color: '#ffffff',
+                        fontSize: '12px',
+                        fontWeight: 800,
+                        letterSpacing: '0.05em',
+                        textTransform: 'uppercase',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        transition: 'all 0.3s ease',
+                      }}
+                      className="hover:bg-stone-800"
+                    >
+                      <span>{opportunity.cta}</span>
+                      <ArrowRight size={13} />
+                    </Link>
                   </div>
                 </motion.div>
               );
@@ -277,7 +332,7 @@ export default function FeaturedGigs() {
           </AnimatePresence>
         </div>
 
-        {/* Global Gig board redirect */}
+        {/* Global redirect */}
         <motion.div
           style={{ alignSelf: 'center', marginTop: '16px' }}
           initial={{ opacity: 0, y: 10 }}
@@ -286,7 +341,7 @@ export default function FeaturedGigs() {
         >
           <Magnetic strength={0.15}>
             <Link
-              href="/gigs"
+              href="/pricing"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -301,9 +356,9 @@ export default function FeaturedGigs() {
                 transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
               }}
-              className="hover-border-primary-full"
+              className="hover:border-primary-full"
             >
-              <span>Explore All Live Gigs</span>
+              <span>Explore Pricing Options</span>
               <ArrowRight size={15} />
             </Link>
           </Magnetic>

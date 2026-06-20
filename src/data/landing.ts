@@ -63,9 +63,9 @@ export const landingPageContent = {
     ]
   },
   cta: {
-    title: 'Ready to Scale Your Content Engine?',
-    subtitle: 'Join hundreds of brands and thousands of creators collaborating on high-converting short-form videos.',
-    brandCta: 'Post Your First Gig (Free)',
-    creatorCta: 'Become an iGigster Creator',
+    title: 'Launch your next campaign with people who can actually execute it.',
+    subtitle: 'Hire creators, influencers, students, agencies, production teams—or let iGigster run your campaign end to end.',
+    brandCta: 'Start Campaign',
+    creatorCta: 'Become Talent',
   }
 };

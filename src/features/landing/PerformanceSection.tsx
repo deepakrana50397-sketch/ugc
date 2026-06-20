@@ -106,29 +106,51 @@ export default function PerformanceSection() {
           </motion.div>
         </div>
 
-        {/* Right Column: Title & Text Block */}
-        <div className="flex flex-col justify-center gap-6 relative z-10 text-left max-w-[480px] md-mr-auto-custom">
+        {/* Right Column: Why Brands Choose igigister */}
+        <div className="flex flex-col justify-center gap-8 relative z-10 text-left max-w-[520px] md-mr-auto-custom">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-[40px] md:text-5xl lg:text-[56px] font-bold tracking-tighter leading-[1.05] max-w-[420px]"
+            className="text-4xl md:text-5xl font-black tracking-tighter leading-none"
             style={{ color: 'rgb(28, 25, 23)', fontFamily: 'var(--font-display)' }}
           >
-            Performance-driven UGC that delivers results
+            Why Brands Choose iGigster
           </motion.h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-base md:text-lg leading-relaxed max-w-[470px] opacity-75"
-            style={{ color: 'rgb(28, 25, 23)', fontFamily: 'var(--font-sans)' }}
+          <div 
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '24px 20px',
+            }}
+            className="why-choose-grid"
           >
-            Our UGC strategy is grounded in real performance data. We design, test, and refine creative so every piece contributes to growth you can actually measure.
-          </motion.p>
+            {[
+              { emoji: '⚡', title: 'Faster execution', desc: 'Launch campaigns in days, not weeks.' },
+              { emoji: '🎯', title: 'Qualified talent', desc: 'Vetted creators, students, and agencies.' },
+              { emoji: '📈', title: 'Scalable campaigns', desc: 'Easily scale delivery as your brand grows.' },
+              { emoji: '🧠', title: 'Smart matching', desc: 'Automated pairing based on data.' },
+              { emoji: '🛡', title: 'Verified network', desc: 'Secure hiring with verified credentials.' },
+              { emoji: '🤝', title: 'Managed services', desc: 'We execute and manage campaigns end to end.' }
+            ].map((item, idx) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.05, duration: 0.5 }}
+                style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '16px' }}>{item.emoji}</span>
+                  <span style={{ fontSize: '15px', fontWeight: 800, color: 'rgb(28, 25, 23)' }}>{item.title}</span>
+                </div>
+                <p style={{ fontSize: '12.5px', color: '#57534e', margin: 0, lineHeight: 1.4 }}>{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
       </div>

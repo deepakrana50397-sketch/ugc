@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, FileText, Cpu, Check, ArrowRight } from 'lucide-react';
+import { Sparkles, Video, Megaphone, GraduationCap, Users, Tent, MapPin, Film, PenTool, Check, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import GlowCard from '@/components/animation/GlowCard';
 import TextReveal from '@/components/animation/TextReveal';
@@ -12,63 +12,96 @@ export default function Services() {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.1,
+        staggerChildren: 0.05,
       },
     },
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 20 },
     visible: { 
       opacity: 1, 
       y: 0,
       transition: {
         type: 'spring' as const,
-        stiffness: 80,
-        damping: 15,
+        stiffness: 100,
+        damping: 18,
       }
     },
   };
 
-  const modules = [
+  const categories = [
     {
       id: '01',
-      tag: 'UGC MATCHMAKING',
-      icon: <Sparkles size={22} />,
-      title: 'UGC Sourcing & Seeding',
-      description: 'We match your brand brief with vetted creators. No actor vibes—just real consumers creating authentic mobile-native content.',
-      bullets: [
-        'Vetted profiles (8% pass rate)',
-        '100% rate transparency',
-        'Physical product seeding logistics'
-      ],
-      videoUrl: 'https://framerusercontent.com/assets/SCuqi0qyfpukKLtZm0jURfE.mp4',
+      emoji: '🎬',
+      icon: <Video size={20} />,
+      title: 'Content Creation',
+      description: 'High-converting UGC videos, TikToks, Reels, and static social assets created to grab attention.',
+      bullets: ['UGC video ads', 'Product photography', 'Short-form clips'],
+      link: '/gigs?category=content-creation'
     },
     {
       id: '02',
-      tag: 'DR SCRIPTING',
-      icon: <FileText size={22} />,
-      title: 'Direct-Response Scripting',
-      description: 'Our copywriting team drafts custom storyboards and visual scripts designed to hook viewers in 1.5 seconds. We test multiple hooks.',
-      bullets: [
-        'High-retention hooks formula',
-        'Auditory pacing structures',
-        'Storyboards approved before shooting'
-      ],
-      videoUrl: 'https://framerusercontent.com/assets/64ZMhO5aQtuzPw6cPEGQKIEos.mp4',
+      emoji: '📣',
+      icon: <Megaphone size={20} />,
+      title: 'Influencer Marketing',
+      description: 'Partner with creators and influencers who match your brand persona to reach targeted audiences.',
+      bullets: ['Influencer sourcing', 'Seeding campaigns', 'Brand ambassadors'],
+      link: '/gigs?category=influencer-marketing'
     },
     {
       id: '03',
-      tag: 'NATIVE EDITING',
-      icon: <Cpu size={22} />,
-      title: 'Conversion-First Editing',
-      description: 'Raw footage is spliced in-house. We apply native captions, zoom-cuts, and custom sound effects to optimize watch time.',
-      bullets: [
-        'Caption overlays & text graphics',
-        'Lighting & grading correction',
-        '90-day paid media usage rights'
-      ],
-      videoUrl: 'https://framerusercontent.com/assets/u0e0HQVXrB8r4Av9RYEjAmZ7rw.mp4',
+      emoji: '🎓',
+      icon: <GraduationCap size={20} />,
+      title: 'Campus Activation',
+      description: 'Mobilize student groups for direct campus marketing, peer seeding, and campus events.',
+      bullets: ['Student ambassadors', 'On-campus events', 'College community seeding'],
+      link: '/gigs?category=campus-activation'
+    },
+    {
+      id: '04',
+      emoji: '🏘',
+      icon: <Users size={20} />,
+      title: 'Community Awareness',
+      description: 'Tap into local associations, interest groups, and micro-communities for grassroots advocacy.',
+      bullets: ['Micro-community seeding', 'Word of mouth', 'Group discussions'],
+      link: '/gigs?category=community-awareness'
+    },
+    {
+      id: '05',
+      emoji: '🎪',
+      icon: <Tent size={20} />,
+      title: 'Event Marketing',
+      description: 'Deploy specialized production teams and creators to cover, hype, and record offline events.',
+      bullets: ['Live event coverage', 'Influencer attendance', 'Promo capturing'],
+      link: '/gigs?category=event-marketing'
+    },
+    {
+      id: '06',
+      emoji: '📍',
+      icon: <MapPin size={20} />,
+      title: 'Hyperlocal Promotion',
+      description: 'Geographically targeted campaigns to drive foot traffic, local app installs, and area buzz.',
+      bullets: ['Location targeted UGC', 'Local influencer push', 'Store visit prompts'],
+      link: '/gigs?category=hyperlocal-promotion'
+    },
+    {
+      id: '07',
+      emoji: '🎥',
+      icon: <Film size={20} />,
+      title: 'Production',
+      description: 'Full-scale video production, scripting, high-end shooting, and expert editing.',
+      bullets: ['Studio shoots', 'Professional editing', 'Direct-response assets'],
+      link: '/gigs?category=production'
+    },
+    {
+      id: '08',
+      emoji: '✍️',
+      icon: <PenTool size={20} />,
+      title: 'Creative Strategy',
+      description: 'Data-driven hook ideation, scriptwriting, creative testing guidelines, and performance audits.',
+      bullets: ['Hook formulation', 'DR script drafts', 'Competitor creative analysis'],
+      link: '/gigs?category=creative-strategy'
     }
   ];
 
@@ -92,7 +125,7 @@ export default function Services() {
           transform: 'translateX(-50%)',
           width: '80%',
           height: '60%',
-          background: 'radial-gradient(circle at center, rgba(79, 70, 229, 0.03) 0%, transparent 70%)',
+          background: 'radial-gradient(circle at center, rgba(79, 70, 229, 0.02) 0%, transparent 70%)',
           zIndex: 0,
           pointerEvents: 'none',
         }}
@@ -129,11 +162,11 @@ export default function Services() {
              }}
            >
              <Sparkles size={13} className="text-secondary" />
-             <span>Conversion Mechanics</span>
+             <span>Services Marketplace</span>
            </div>
 
            <TextReveal
-             text="Designed to convert."
+             text="Categories of execution."
              tag="h2"
              mode="words"
              className="text-foreground"
@@ -145,7 +178,7 @@ export default function Services() {
              }}
            />
            <TextReveal
-             text="Structured to scale."
+             text="People who execute."
              tag="h2"
              mode="words"
              delay={0.25}
@@ -167,162 +200,134 @@ export default function Services() {
              viewport={{ once: true }}
              transition={{ delay: 0.5, duration: 0.6 }}
            >
-             A complete sourcing, scripting, and mobile-native post-production pipeline built to scale your creative testing cycle.
+             Browse targeted execution channels where creators, students, influencers, and agencies launch and scale campaigns.
            </motion.p>
-         </div>
+        </div>
 
-         {/* Modules Grid */}
-         <motion.div 
-           style={{
-             display: 'grid',
-             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-             gap: '30px',
-             width: '100%',
-           }}
-           variants={containerVariants}
-           initial="hidden"
-           whileInView="visible"
-           viewport={{ once: true, margin: '-50px' }}
-         >
-           {modules.map((module) => (
-             <motion.div
-               key={module.id}
-               variants={cardVariants}
-               style={{ height: '100%' }}
-             >
-               <GlowCard
-                 glowColor="rgba(79, 70, 229, 0.08)"
-                 style={{
-                   padding: '40px 32px',
-                   display: 'flex',
-                   flexDirection: 'column',
-                   gap: '24px',
-                   height: '100%',
-                   position: 'relative',
-                   border: '1px solid rgba(231, 229, 228, 0.7)',
-                 }}
-               >
-                 {/* Meta details */}
-                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                   <span 
-                     style={{
-                       fontSize: '10px',
-                       fontFamily: 'monospace',
-                       fontWeight: 'bold',
-                       color: 'var(--muted)',
-                       backgroundColor: 'var(--muted-bg)',
-                       border: '1px solid var(--border)',
-                       padding: '4px 8px',
-                       borderRadius: '4px',
-                     }}
-                   >
-                     {module.tag}
-                   </span>
-                   <div
-                     style={{
-                       width: '44px',
-                       height: '44px',
-                       borderRadius: '50%',
-                       backgroundColor: 'rgba(79, 70, 229, 0.06)',
-                       display: 'flex',
-                       alignItems: 'center',
-                       justifyContent: 'center',
-                       color: 'rgb(79, 70, 229)',
-                       border: '1px solid rgba(79, 70, 229, 0.12)',
-                     }}
-                   >
-                     {module.icon}
-                   </div>
-                 </div>
+        {/* Modules Grid */}
+        <motion.div 
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '24px',
+            width: '100%',
+          }}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+        >
+          {categories.map((category) => (
+            <motion.div
+              key={category.id}
+              variants={cardVariants}
+              style={{ height: '100%' }}
+            >
+              <GlowCard
+                glowColor="rgba(79, 70, 229, 0.06)"
+                style={{
+                  padding: '32px 28px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '20px',
+                  height: '100%',
+                  position: 'relative',
+                  border: '1px solid rgba(231, 229, 228, 0.7)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                }}
+              >
+                {/* Meta details */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span 
+                    style={{
+                      fontSize: '18px',
+                    }}
+                  >
+                    {category.emoji}
+                  </span>
+                  <div
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(79, 70, 229, 0.06)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'rgb(79, 70, 229)',
+                      border: '1px solid rgba(79, 70, 229, 0.12)',
+                    }}
+                  >
+                    {category.icon}
+                  </div>
+                </div>
 
-                 {/* Title & Description */}
-                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
-                   <h3 style={{ color: 'var(--foreground)', fontSize: '20px', fontWeight: 700, letterSpacing: '-0.02em' }}>
-                     {module.title}
-                   </h3>
-                   <p style={{ color: 'var(--muted)', fontSize: '13.5px', lineHeight: 1.5 }}>
-                     {module.description}
-                   </p>
-                 </div>
+                {/* Title & Description */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left' }}>
+                  <h3 style={{ color: 'var(--foreground)', fontSize: '18px', fontWeight: 800, letterSpacing: '-0.02em' }}>
+                    {category.title}
+                  </h3>
+                  <p style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 1.45 }}>
+                    {category.description}
+                  </p>
+                </div>
 
-                 {/* Video Preview */}
-                 <div 
-                   style={{ 
-                     position: 'relative', 
-                     width: '100%', 
-                     aspectRatio: '4 / 3', 
-                     borderRadius: '16px', 
-                     overflow: 'hidden', 
-                     backgroundColor: 'transparent',
-                     border: '1px solid var(--border)',
-                   }}
-                 >
-                   <video
-                     src={module.videoUrl}
-                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                     autoPlay
-                     muted
-                     loop
-                     playsInline
-                   />
-                 </div>
+                {/* Bullets */}
+                <ul style={{ display: 'flex', flexDirection: 'column', gap: '8px', textAlign: 'left', listStyle: 'none', margin: 0, padding: 0 }}>
+                  {category.bullets.map((bullet, idx) => (
+                    <li key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--muted)' }}>
+                      <div 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          borderRadius: '50%', 
+                          backgroundColor: 'rgba(79, 70, 229, 0.05)', 
+                          border: '1px solid rgba(79, 70, 229, 0.12)', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          color: 'rgb(79, 70, 229)',
+                          flexShrink: 0,
+                        }}
+                      >
+                        <Check size={9} strokeWidth={3} />
+                      </div>
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
 
-                 {/* Bullets */}
-                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px', textAlign: 'left', listStyle: 'none' }}>
-                   {module.bullets.map((bullet, idx) => (
-                     <li key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '13.5px', color: 'var(--muted)' }}>
-                       <div 
-                         style={{ 
-                           width: '20px', 
-                           height: '20px', 
-                           borderRadius: '50%', 
-                           backgroundColor: 'rgba(79, 70, 229, 0.06)', 
-                           border: '1px solid rgba(79, 70, 229, 0.15)', 
-                           display: 'flex', 
-                           alignItems: 'center', 
-                           justifyContent: 'center',
-                           color: 'rgb(79, 70, 229)',
-                           flexShrink: 0,
-                         }}
-                       >
-                         <Check size={11} strokeWidth={3} />
-                       </div>
-                       <span>{bullet}</span>
-                     </li>
-                   ))}
-                 </ul>
-
-                 {/* Action CTA */}
-                 <div style={{ paddingTop: '20px', borderTop: '1px solid var(--border)', marginTop: 'auto' }}>
-                   <Link
-                     href="/pricing"
-                     style={{
-                       width: '100%',
-                       padding: '12px',
-                       borderRadius: '30px',
-                       backgroundColor: 'var(--foreground)',
-                       color: 'var(--background)',
-                       fontSize: '12px',
-                       fontWeight: 700,
-                       letterSpacing: '0.08em',
-                       textTransform: 'uppercase',
-                       display: 'flex',
-                       alignItems: 'center',
-                       justifyContent: 'center',
-                       gap: '6px',
-                       transition: 'all 0.3s ease',
-                     }}
-                     className="hover-bg-primary-btn"
-                   >
-                     <span>View rate guidelines</span>
-                     <ArrowRight size={13} />
-                   </Link>
-                 </div>
-               </GlowCard>
-             </motion.div>
-           ))}
-         </motion.div>
-       </div>
-     </section>
+                {/* Action CTA */}
+                <div style={{ paddingTop: '16px', borderTop: '1px solid var(--border)', marginTop: 'auto' }}>
+                  <Link
+                    href={category.link}
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      borderRadius: '30px',
+                      backgroundColor: 'var(--foreground)',
+                      color: 'var(--background)',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      transition: 'all 0.3s ease',
+                    }}
+                    className="hover-bg-primary-btn"
+                  >
+                    <span>Open Category</span>
+                    <ArrowRight size={12} />
+                  </Link>
+                </div>
+              </GlowCard>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
   );
 }

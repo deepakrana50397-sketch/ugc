@@ -70,7 +70,6 @@ export default function GrowContent() {
                 </svg>
               </div>
 
-              {/* Headings & Subtext */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <h2
                   style={{
@@ -82,7 +81,7 @@ export default function GrowContent() {
                     fontFamily: 'var(--font-display)',
                   }}
                 >
-                  Let’s grow<br />thorough content!
+                  Don’t want to<br />manage creators?
                 </h2>
                 <p
                   style={{
@@ -93,7 +92,7 @@ export default function GrowContent() {
                     margin: 0,
                   }}
                 >
-                  iGigster helps brands create content that earns attention, builds engagement, and drives real growth.
+                  Tell us your goal. We build and manage the team.
                 </p>
               </div>
 
@@ -113,7 +112,7 @@ export default function GrowContent() {
                   }}
                   className="hover:bg-stone-100"
                 >
-                  Book a call
+                  Hire iGigster
                 </Link>
                 <Link
                   href="/contact"

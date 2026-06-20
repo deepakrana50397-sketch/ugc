@@ -129,10 +129,10 @@ export default function Hero() {
     });
   }, [activeIndex, isPlaying]);
 
-  const services = [
-    'SHORT FORM CONTENT',
-    'SOCIAL MEDIA MANAGEMENT',
-    'INFLUENCER MARKETING'
+  const highlights = [
+    'SCALE CONTENT PRODUCTION',
+    'ACTIVATE LOCAL COMMUNITIES',
+    'END-TO-END CAMPAIGN MANAGEMENT'
   ];
 
   return (
@@ -178,7 +178,7 @@ export default function Hero() {
                 ease: 'linear',
               }}
             >
-              SOCIAL MEDIA MANAGEMENT • SHORT FORM CONTENT • INFLUENCER MARKETING •  SOCIAL MEDIA MANAGEMENT • SHORT FORM CONTENT • INFLUENCER MARKETING •  SOCIAL MEDIA MANAGEMENT • SHORT FORM CONTENT • INFLUENCER MARKETING •  SOCIAL MEDIA MANAGEMENT • SHORT FORM CONTENT • INFLUENCER MARKETING •  SOCIAL MEDIA MANAGEMENT • SHORT FORM CONTENT • INFLUENCER MARKETING •  SOCIAL MEDIA MANAGEMENT • SHORT FORM CONTENT • INFLUENCER MARKETING •
+              BUILD CONTENT • ACTIVATE COMMUNITIES • SCALE CAMPAIGNS • BUILD CONTENT • ACTIVATE COMMUNITIES • SCALE CAMPAIGNS • BUILD CONTENT • ACTIVATE COMMUNITIES • SCALE CAMPAIGNS • BUILD CONTENT • ACTIVATE COMMUNITIES • SCALE CAMPAIGNS • BUILD CONTENT • ACTIVATE COMMUNITIES • SCALE CAMPAIGNS •
             </motion.textPath>
           </text>
         </svg>
@@ -199,23 +199,24 @@ export default function Hero() {
           <div className="col-span-1 lg:col-span-4 flex flex-col justify-start gap-8 text-left lg:pt-16">
             <h1
               style={{
-                fontSize: 'clamp(44px, 4.8vw, 60px)',
-                lineHeight: 0.95,
+                fontSize: 'clamp(38px, 4vw, 54px)',
+                lineHeight: 1.05,
                 fontWeight: 800,
-                letterSpacing: '-0.04em',
+                letterSpacing: '-0.03em',
                 color: '#1c1917',
                 fontFamily: 'var(--font-display)',
               }}
             >
-              UGC that<br />
-              grows your<br />
-              brand.
+              Build content,<br />
+              activate communities,<br />
+              and scale campaigns<br />
+              with creators.
             </h1>
 
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {services.map((service) => (
+              {highlights.map((highlight) => (
                 <li
-                  key={service}
+                  key={highlight}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -227,7 +228,7 @@ export default function Hero() {
                   }}
                 >
                   <PinkAsterisk />
-                  <span>{service}</span>
+                  <span>{highlight}</span>
                 </li>
               ))}
             </ul>
@@ -441,96 +442,77 @@ export default function Hero() {
 
           {/* Right Column: Project Preview Card & Bio/CTA */}
           <div className="col-span-1 lg:col-span-4 flex flex-col justify-between text-left lg:py-2">
-            {/* Top Project Preview Box */}
+            {/* Top Right Visual Flow */}
             <div
               style={{
                 backgroundColor: '#ffffff',
                 border: '1.5px solid #e7e5e4',
                 borderRadius: '24px',
-                padding: '16px',
+                padding: '20px 18px',
                 display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
+                flexDirection: 'column',
+                gap: '8px',
                 boxShadow: '0 8px 24px rgba(0,0,0,0.03)',
                 position: 'relative',
               }}
             >
-              {/* Puffer Image */}
-              <img
-                src="/puffer_jacket_project.png"
-                alt="Puffer project preview"
-                style={{
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '16px',
-                  objectFit: 'cover',
-                  backgroundColor: '#f5f5f4'
-                }}
-              />
-
-              {/* Text content */}
-              <div style={{ flex: 1 }}>
-                <span
-                  style={{
-                    fontSize: '9px',
-                    fontWeight: 800,
-                    color: '#6366f1',
-                    letterSpacing: '0.08em',
-                    display: 'block',
-                    marginBottom: '4px'
-                  }}
-                >
-                  NEW PROJECT!
-                </span>
-                <h3
-                  style={{
-                    fontSize: '13px',
-                    fontWeight: 800,
-                    color: '#1c1917',
-                    lineHeight: '1.3',
-                  }}
-                >
-                  Making Rama unmistakable on...
-                </h3>
-              </div>
-
-              {/* Top Right Arrow Badge */}
-              <div
-                style={{
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '50%',
-                  backgroundColor: '#e7e5e4',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#1c1917',
-                  position: 'absolute',
-                  top: '16px',
-                  right: '16px',
-                }}
-              >
-                <ArrowUpRight size={14} />
-              </div>
+              {[
+                { name: 'Brand Campaign', color: '#db2777' },
+                { name: 'Talent Matching', color: '#7c3aed' },
+                { name: 'Creators + Teams', color: '#2563eb' },
+                { name: 'Content + Awareness', color: '#10b981' }
+              ].map((step, idx, arr) => (
+                <React.Fragment key={step.name}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '50%',
+                      backgroundColor: step.color + '15',
+                      color: step.color,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '11px',
+                      fontWeight: 800
+                    }}>
+                      {idx + 1}
+                    </div>
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#1c1917' }}>
+                      {step.name}
+                    </span>
+                  </div>
+                  {idx < arr.length - 1 && (
+                    <div style={{
+                      height: '10px',
+                      width: '2px',
+                      backgroundColor: '#e7e5e4',
+                      marginLeft: '11px',
+                      marginTop: '-4px',
+                      marginBottom: '-4px'
+                    }} />
+                  )}
+                </React.Fragment>
+              ))}
             </div>
 
             <div className="flex flex-col gap-6 mt-8 lg:mt-0 lg:mb-4 ">
-              {/* Description Text */}
+              {/* Description Text / Subheadline */}
               <p
                 style={{
-                  fontSize: '16px',
-                  lineHeight: '1.65',
+                  fontSize: '15px',
+                  lineHeight: '1.55',
                   color: '#44403c',
                   fontFamily: 'var(--font-sans)',
                   fontWeight: 500,
                   maxWidth: '330px',
                 }}
               >
-                iGigster. helps brands create content that truly connects with their audience, consistently and strategically across social media.
+                Hire creators, influencers, students, agencies, production teams—or let iGigster run your campaign end to end.
               </p>
 
-              {/* Book a Call Action and Arrow */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              {/* CTAs */}
+              <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                 <Link
                   href="/contact"
                   style={{
@@ -539,34 +521,35 @@ export default function Hero() {
                     justifyContent: 'center',
                     backgroundColor: '#1c1917',
                     color: '#ffffff',
-                    padding: '18px 40px',
+                    padding: '16px 36px',
                     borderRadius: '9999px',
-                    fontSize: '17px',
+                    fontSize: '16px',
                     fontWeight: 700,
                     transition: 'all 0.2s ease',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                   }}
                   className="hover:bg-stone-800"
                 >
-                  Book a call
+                  Start Campaign
                 </Link>
                 <Link
-                  href="/contact"
+                  href="/register?role=creator"
                   style={{
-                    width: '60px',
-                    height: '60px',
-                    borderRadius: '50%',
-                    backgroundColor: '#ffa5ec',
-                    color: '#1c1917',
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    backgroundColor: '#ffa8f2',
+                    color: '#1c1917',
+                    padding: '16px 28px',
+                    borderRadius: '9999px',
+                    fontSize: '15px',
+                    fontWeight: 800,
                     transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 12px rgba(255, 165, 236, 0.2)',
+                    boxShadow: '0 4px 12px rgba(255, 168, 242, 0.2)',
                   }}
-                  className="hover:scale-105"
+                  className="hover:bg-[#ff8de9]"
                 >
-                  <ArrowUpRight size={28} strokeWidth={2.5} />
+                  Become a Creator
                 </Link>
               </div>
             </div>

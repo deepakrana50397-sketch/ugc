@@ -118,13 +118,13 @@ export default function Footer() {
       <div className="max-w-[1280px] w-full mx-auto flex flex-col justify-between flex-1 relative z-10 mt-8">
 
         {/* Top Section */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 w-full">
 
-          {/* Left Column (Brand title & Contact info) */}
-          <div className="lg:col-span-5 flex flex-col gap-12">
+          {/* Left Column (Brand title, Contact, Socials) */}
+          <div className="lg:col-span-4 flex flex-col gap-8 text-left">
             <div>
               <h2
-                className="text-4xl md:text-5xl lg:text-[56px] font-extrabold tracking-tight leading-[1.05] text-[#1c1917]"
+                className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.05] text-[#1c1917]"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
                 UGC that grows<br />your brand.
@@ -138,64 +138,14 @@ export default function Footer() {
               <div className="flex flex-col gap-1">
                 <a
                   href="mailto:contact@iGigster.com"
-                  className="text-2xl md:text-3xl font-extrabold hover:opacity-80 transition-opacity tracking-tight"
+                  className="text-2xl font-extrabold hover:opacity-80 transition-opacity tracking-tight"
                 >
                   contact@iGigster.com
                 </a>
-                <a
-                  href="tel:+12345678"
-                  className="text-xl md:text-2xl font-extrabold hover:opacity-80 transition-opacity tracking-tight text-[#1c1917]/80"
-                >
-                  +12 345 678
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Center Column (Navigation & Legal side-by-side columns) */}
-          <div className="lg:col-span-4 grid grid-cols-2 gap-8 items-start text-left">
-            {/* Navigation */}
-            <div className="flex flex-col items-start gap-4">
-              <span className="text-[10px] tracking-widest uppercase text-[#1c1917]/50 font-bold font-mono">
-                NAVIGATION
-              </span>
-              <div className="flex flex-col items-start gap-3.5">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className="text-[#1c1917] text-sm md:text-[15px] font-bold relative group py-0.5"
-                  >
-                    <span>{link.label}</span>
-                    <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#1c1917] transition-all duration-300 group-hover:w-full" />
-                  </Link>
-                ))}
               </div>
             </div>
 
-            {/* Legal */}
-            <div className="flex flex-col items-start gap-4">
-              <span className="text-[10px] tracking-widest uppercase text-[#1c1917]/50 font-bold font-mono">
-                LEGAL
-              </span>
-              <div className="flex flex-col items-start gap-3.5">
-                {legalLinks.map((link) => (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className="text-[#1c1917] text-sm md:text-[15px] font-bold relative group py-0.5"
-                  >
-                    <span>{link.label}</span>
-                    <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#1c1917] transition-all duration-300 group-hover:w-full" />
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Social Column (Follow Us) */}
-          <div className="lg:col-span-3 flex flex-col items-start md:items-end gap-4">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+            <div className="flex flex-col gap-3">
               <span className="text-[10px] tracking-widest uppercase text-[#1c1917]/50 font-bold font-mono">
                 FOLLOW US
               </span>
@@ -229,6 +179,84 @@ export default function Footer() {
                 </a>
               </div>
             </div>
+          </div>
+
+          {/* Right Column: 6 Columns Grid */}
+          <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-8 text-left">
+            {[
+              {
+                title: 'FOR BRANDS',
+                links: [
+                  { label: 'Post Campaign', href: '/contact' },
+                  { label: 'Browse Creators', href: '/creators' },
+                  { label: 'Managed Services', href: '/contact' },
+                  { label: 'Pricing Plans', href: '/pricing' }
+                ]
+              },
+              {
+                title: 'FOR TALENT',
+                links: [
+                  { label: 'Become Talent', href: '/register?role=creator' },
+                  { label: 'Find Gigs', href: '/gigs' },
+                  { label: 'Creator Toolkit', href: '/' },
+                  { label: 'Earning Calculator', href: '/' }
+                ]
+              },
+              {
+                title: 'FOR AGENCIES',
+                links: [
+                  { label: 'Agency Register', href: '/register' },
+                  { label: 'Bulk Campaigns', href: '/contact' },
+                  { label: 'Partner Program', href: '/' },
+                  { label: 'Brand Connect', href: '/contact' }
+                ]
+              },
+              {
+                title: 'COMPANY',
+                links: [
+                  { label: 'About Us', href: '/about' },
+                  { label: 'Contact Support', href: '/contact' },
+                  { label: 'Careers', href: '/about#careers' },
+                  { label: 'Press Kit', href: '/' }
+                ]
+              },
+              {
+                title: 'RESOURCES',
+                links: [
+                  { label: 'UGC Blog', href: '/blog' },
+                  { label: 'Help Center', href: '/how-it-works' },
+                  { label: 'FAQs', href: '/how-it-works#faq' },
+                  { label: 'Creator Guides', href: '/' }
+                ]
+              },
+              {
+                title: 'LEGAL',
+                links: [
+                  { label: 'Privacy Policy', href: '#' },
+                  { label: 'Terms of Service', href: '#' },
+                  { label: 'Refund Policy', href: '#' },
+                  { label: 'Cookie Policy', href: '#' }
+                ]
+              }
+            ].map((section) => (
+              <div key={section.title} className="flex flex-col items-start gap-4">
+                <span className="text-[10px] tracking-widest uppercase text-[#1c1917]/50 font-bold font-mono">
+                  {section.title}
+                </span>
+                <div className="flex flex-col items-start gap-3">
+                  {section.links.map((link) => (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      className="text-[#1c1917] text-[11px] font-bold relative group py-0.5"
+                    >
+                      <span>{link.label}</span>
+                      <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#1c1917] transition-all duration-300 group-hover:w-full" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
 
         </div>

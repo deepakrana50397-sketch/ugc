@@ -9,48 +9,48 @@ export default function StackedServices() {
   const servicesData = [
     {
       id: '01',
-      tabTitle: 'SERVICE / 01',
+      tabTitle: 'MODE / 01',
       mobileTabTitle: '01',
-      title: 'Short-Form Production',
-      description: 'We produce high impact short form videos designed for how people actually consume content on social platforms. Built to grab attention.',
-      stat: '242+',
-      statLabel: 'Long Form Videos Clipped',
+      title: 'Find Talent',
+      description: 'Hire individual creators, influencers, students, agencies, production teams, and editors individually to plug specific gaps in your pipeline.',
+      stat: '1,200+',
+      statLabel: 'Active Creators Available',
       bgColor: 'rgb(161, 143, 255)', // Purple/Lavender
       textColor: 'rgb(28, 25, 23)',
       image: 'https://framerusercontent.com/images/IQt3n4yCfVlf2LjLAgR6UTG97I.jpg?width=954&height=1084',
     },
     {
       id: '02',
-      tabTitle: 'SERVICE / 02',
+      tabTitle: 'MODE / 02',
       mobileTabTitle: '02',
-      title: 'Creator & UGC Campaigns',
-      description: 'We turn data into direction. By analyzing performance, we refine formats, hooks, and storytelling to scale what works and cut what doesn\'t.',
-      stat: '50M+',
-      statLabel: 'Total Impressions',
+      title: 'Build Teams',
+      description: 'Hire multiple specialists who collaborate on your campaign seamlessly. Creators, copywriters, and video editors working in lockstep.',
+      stat: '3x',
+      statLabel: 'Faster Project Delivery',
       bgColor: 'rgb(255, 158, 237)', // Pink/Magenta
       textColor: 'rgb(28, 25, 23)',
       image: 'https://framerusercontent.com/images/QEvXFU7LLQGido9vvsIBugEh0.jpg?width=958&height=1084',
     },
     {
       id: '03',
-      tabTitle: 'SERVICE / 03',
+      tabTitle: 'MODE / 03',
       mobileTabTitle: '03',
-      title: 'Social Media Management',
-      description: 'From content planning to publishing and optimization, we manage your social presence with consistency and intent. Relax and we handle the rest.',
-      stat: '50M+',
-      statLabel: 'Total Impressions',
+      title: 'Hire Agencies',
+      description: 'Outsource entire social media and content production campaigns directly to professional agencies and community teams on iGigster.',
+      stat: '100%',
+      statLabel: 'Campaign Management Outsource',
       bgColor: 'rgb(214, 207, 199)', // Beige/Stone
       textColor: 'rgb(28, 25, 23)',
       image: 'https://framerusercontent.com/images/awOeL0yKNFgvqogsdV27KvNegc.jpg?width=958&height=1084',
     },
     {
       id: '04',
-      tabTitle: 'SERVICE / 04',
+      tabTitle: 'MODE / 04',
       mobileTabTitle: '04',
-      title: 'Performance Creative Strategy',
-      description: 'We research, test, iterate, and scale creative based on real world data. We\'re the first agency that doesn\'t guess, no vibes, just what performs.',
-      stat: '150%',
-      statLabel: 'Increase in Leads',
+      title: 'Managed by iGigster',
+      description: 'We execute everything for you. Send us your brief and we manage scripting, talent matching, curation, editing, and distribution.',
+      stat: '0',
+      statLabel: 'Operational Effort Required',
       bgColor: 'rgb(157, 255, 130)', // Lime Green
       textColor: 'rgb(28, 25, 23)',
       image: 'https://framerusercontent.com/images/egBQUlNKV8uJcmRSjCVVWJPTG9I.jpg?width=958&height=1084',
@@ -109,12 +109,12 @@ export default function StackedServices() {
             }}
           >
             <Sparkles size={13} />
-            <span>Creative Solutions</span>
+            <span>Choose How You Work</span>
           </div>
 
           <div className="flex flex-col gap-2">
             <TextReveal
-              text="Services designed to convert."
+              text="Flexible models designed to execute."
               tag="h2"
               mode="words"
               className="text-foreground text-4xl md:text-5xl lg:text-[56px] font-bold tracking-tighter leading-none"
@@ -123,7 +123,7 @@ export default function StackedServices() {
               }}
             />
             <TextReveal
-              text="Engineered to scale."
+              text="Structured to scale your campaigns."
               tag="h2"
               mode="words"
               delay={0.25}
@@ -139,7 +139,7 @@ export default function StackedServices() {
             className="text-stone-600 max-w-[600px] mx-auto text-base md:text-lg leading-relaxed mt-2"
             style={{ fontFamily: 'var(--font-sans)' }}
           >
-            A conversion-first post-production pipeline and performance creative engine built to scale your brand’s content cycles.
+            Pick the exact execution model that matches your workflow, scaling goals, and operational bandwidth.
           </p>
         </div>
 
@@ -245,6 +245,21 @@ export default function StackedServices() {
             </ScrollStackItem>
           ))}
         </ScrollStack>
+
+        {/* Compare options CTA */}
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={() => {
+              const el = document.getElementById('dont-settle-section');
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            className="inline-flex items-center justify-center bg-[#1c1917] text-white hover:bg-stone-800 transition-colors font-bold px-8 py-4 rounded-full text-base cursor-pointer border-none shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
+          >
+            Compare options
+          </button>
+        </div>
 
       </div>
     </section>
