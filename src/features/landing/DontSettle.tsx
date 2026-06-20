@@ -4,16 +4,22 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 
-// Shinta logo icon matching the mockup (black rectangle with white stylized S)
-const ShintaLogoIcon = () => (
-  <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
-    <rect width="100" height="100" rx="26" fill="#1c1917" />
+// iGigster logo icon matching the footer/navbar logo
+const IGigsterLogoIcon = () => (
+  <svg width="48" height="33" viewBox="0 0 38 26" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+    <rect width="38" height="26" rx="13" fill="url(#igigster-logo-grad-dontsettle)" />
     <path
-      d="M35 65C36.5 58 42.5 54 50 54C57.5 54 65 50.5 65 41C65 31.5 55 30 50 30C41 30 36.5 35.5 35 43M65 33C63.5 40 57.5 44 50 44C42.5 44 35 47.5 35 57C35 66.5 45 68 50 68C59 68 63.5 62.5 65 54"
+      d="M13 17.5C13.5 15.5 15.5 14.5 18 14.5C20.5 14.5 23 13.5 23 11C23 8.5 20 8 18 8C15 8 13.5 9.5 13 11.5M23 8.5C22.5 10.5 20.5 11.5 18 11.5C15.5 11.5 13 12.5 13 15C13 17.5 16 18 18 18C21 18 22.5 16.5 23 14.5"
       stroke="white"
-      strokeWidth="8.5"
+      strokeWidth="3"
       strokeLinecap="round"
     />
+    <defs>
+      <linearGradient id="igigster-logo-grad-dontsettle" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#db2777" />
+        <stop offset="100%" stopColor="#7c3aed" />
+      </linearGradient>
+    </defs>
   </svg>
 );
 
@@ -79,7 +85,7 @@ export default function DontSettle() {
     'Basic metrics'
   ];
 
-  const shintaPoints = [
+  const igigsterPoints = [
     'Platform-native, organic-first',
     'Engagement & relevance',
     'Performance-based selection',
@@ -181,7 +187,7 @@ export default function DontSettle() {
             </TiltCard>
           </motion.div>
 
-          {/* Card 2: Shinta */}
+          {/* Card 2: iGigster */}
           <motion.div
             initial={{ opacity: 0, x: 60, y: -20 }}
             whileInView={{ opacity: 1, x: 0, y: 0 }}
@@ -204,9 +210,9 @@ export default function DontSettle() {
               }}
             >
               <div>
-                {/* Brand Header with Shinta Logo */}
+                {/* Brand Header with iGigster Logo */}
                 <div className="flex items-center gap-3.5 mb-8">
-                  <ShintaLogoIcon />
+                  <IGigsterLogoIcon />
                   <h3
                     className="text-3xl md:text-[34px] font-extrabold tracking-tight"
                     style={{
@@ -215,12 +221,12 @@ export default function DontSettle() {
                       lineHeight: '1'
                     }}
                   >
-                    Shinta
+                    iGigster
                   </h3>
                 </div>
 
                 <ul className="flex flex-col gap-6">
-                  {shintaPoints.map((point, index) => (
+                  {igigsterPoints.map((point, index) => (
                     <li
                       key={index}
                       className="flex items-center gap-[18px] font-medium text-base md:text-[20px] text-[#1c1917]"

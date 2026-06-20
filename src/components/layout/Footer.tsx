@@ -242,18 +242,18 @@ export default function Footer() {
             <div className="w-full lg:w-[65%] select-none max-w-[640px] z-10">
               <Link href="/" className="block w-full">
                 <div className="flex items-center gap-[4%] select-none hover:scale-[1.01] transition-transform duration-300 w-full">
-                  <svg 
-                    viewBox="0 0 38 26" 
-                    fill="none" 
-                    xmlns="http://www.w3.org/2000/svg" 
+                  <svg
+                    viewBox="0 0 38 26"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                     className="w-[24%] max-w-[160px] min-w-[60px] h-auto flex-shrink-0"
                   >
                     <rect width="38" height="26" rx="13" fill="url(#igigster-footer-logo-grad)" />
-                    <path 
-                      d="M13 17.5C13.5 15.5 15.5 14.5 18 14.5C20.5 14.5 23 13.5 23 11C23 8.5 20 8 18 8C15 8 13.5 9.5 13 11.5M23 8.5C22.5 10.5 20.5 11.5 18 11.5C15.5 11.5 13 12.5 13 15C13 17.5 16 18 18 18C21 18 22.5 16.5 23 14.5" 
-                      stroke="white" 
-                      strokeWidth="3" 
-                      strokeLinecap="round" 
+                    <path
+                      d="M13 17.5C13.5 15.5 15.5 14.5 18 14.5C20.5 14.5 23 13.5 23 11C23 8.5 20 8 18 8C15 8 13.5 9.5 13 11.5M23 8.5C22.5 10.5 20.5 11.5 18 11.5C15.5 11.5 13 12.5 13 15C13 17.5 16 18 18 18C21 18 22.5 16.5 23 14.5"
+                      stroke="white"
+                      strokeWidth="3"
+                      strokeLinecap="round"
                     />
                     <defs>
                       <linearGradient id="igigster-footer-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -262,8 +262,8 @@ export default function Footer() {
                       </linearGradient>
                     </defs>
                   </svg>
-                  
-                  <span 
+
+                  <span
                     className="text-[#1c1917] font-black leading-none tracking-tighter"
                     style={{
                       fontSize: 'clamp(44px, 8vw, 120px)',
