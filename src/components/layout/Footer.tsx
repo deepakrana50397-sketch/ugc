@@ -240,7 +240,7 @@ export default function Footer() {
               }
             ].map((section) => (
               <div key={section.title} className="flex flex-col items-start gap-4">
-                <span className="text-[10px] tracking-widest uppercase text-[#1c1917]/50 font-bold font-mono">
+                <span className="text-[11px] tracking-widest uppercase text-[#1c1917]/60 font-bold font-mono">
                   {section.title}
                 </span>
                 <div className="flex flex-col items-start gap-3">
@@ -248,7 +248,7 @@ export default function Footer() {
                     <Link
                       key={link.label}
                       href={link.href}
-                      className="text-[#1c1917] text-[11px] font-bold relative group py-0.5"
+                      className="text-[#1c1917] text-[14px] font-bold relative group py-0.5"
                     >
                       <span>{link.label}</span>
                       <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#1c1917] transition-all duration-300 group-hover:w-full" />

@@ -196,21 +196,18 @@ export default function Hero() {
           className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 lg:items-stretch items-center"
         >
           {/* Left Column: Heading & Services */}
-          <div className="col-span-1 lg:col-span-4 flex flex-col justify-start gap-8 text-left lg:pt-16">
+          <div className="col-span-1 lg:col-span-5 flex flex-col justify-start gap-8 text-left lg:pt-16">
             <h1
               style={{
-                fontSize: 'clamp(38px, 4vw, 54px)',
-                lineHeight: 1.05,
+                fontSize: 'clamp(32px, 3.4vw, 44px)',
+                lineHeight: 1.1,
                 fontWeight: 800,
                 letterSpacing: '-0.03em',
                 color: '#1c1917',
                 fontFamily: 'var(--font-display)',
               }}
             >
-              Build content,<br />
-              activate communities,<br />
-              and scale campaigns<br />
-              with creators.
+              Build content, activate communities, and scale campaigns with creators.
             </h1>
 
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -271,9 +268,9 @@ export default function Hero() {
                         transformOrigin: 'bottom center',
                       }}
                       animate={{
-                        x: position === 0 ? 0 : position === 1 ? -22 : -44,
-                        y: position === 0 ? 0 : position === 1 ? -8 : -16,
-                        rotate: position === 0 ? 1 : position === 1 ? -4 : -8,
+                        x: position === 0 ? 0 : position === 1 ? -12 : -24,
+                        y: position === 0 ? 0 : position === 1 ? -6 : -12,
+                        rotate: position === 0 ? 0.5 : position === 1 ? -2 : -4,
                         scale: position === 0 ? 1 : position === 1 ? 0.96 : 0.92,
                         zIndex: position === 0 ? 30 : position === 1 ? 20 : 10,
                         opacity: position === 0 ? 1 : position === 1 ? 0.95 : 0.9,
@@ -441,7 +438,7 @@ export default function Hero() {
           </div>
 
           {/* Right Column: Project Preview Card & Bio/CTA */}
-          <div className="col-span-1 lg:col-span-4 flex flex-col justify-between text-left lg:py-2">
+          <div className="col-span-1 lg:col-span-3 flex flex-col justify-between text-left lg:py-2">
             {/* Top Right Visual Flow */}
             <div
               style={{

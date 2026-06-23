@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CurrencyProvider } from "@/hooks/useCurrency";
 import LenisProvider from "@/components/animation/LenisProvider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -36,6 +37,7 @@ export default function RootLayout({
             {children}
           </LenisProvider>
         </CurrencyProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
