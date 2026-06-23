@@ -455,7 +455,7 @@ export default function Footer() {
                 }}
                 className="hover:border-black group"
               >
-                <span>x10cify</span>
+                <span>x10cify.</span>
                 <svg
                   width="10"
                   height="10"
