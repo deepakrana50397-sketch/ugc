@@ -55,7 +55,7 @@ export default function DashboardLayout({
 
   if (loading || !user) {
     return (
-      <div style={{ backgroundColor: '#09090b', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontFamily: 'var(--font-sans)' }}>
+      <div style={{ backgroundColor: '#09090B', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontFamily: 'var(--font-sans)' }}>
         <span>Loading secure dashboard...</span>
       </div>
     );
@@ -141,8 +141,8 @@ export default function DashboardLayout({
     <div 
       className={theme === 'light' ? 'light-theme' : 'dark-theme'}
       style={{ 
-        backgroundColor: theme === 'light' ? '#fafaf9' : '#09090b', 
-        color: theme === 'light' ? '#18181b' : '#f4f4f5', 
+        backgroundColor: theme === 'light' ? '#F8F8FA' : '#09090B', 
+        color: theme === 'light' ? '#09090B' : '#FFFFFF', 
         minHeight: '100vh', 
         display: 'flex', 
         fontFamily: 'var(--font-sans)',
@@ -153,8 +153,8 @@ export default function DashboardLayout({
       {/* Left Sidebar Menu */}
       <aside 
         style={{
-          borderRight: theme === 'light' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.06)',
-          backgroundColor: theme === 'light' ? '#ffffff' : '#09090b',
+          borderRight: theme === 'light' ? '1px solid #E5E7EB' : '1px solid rgba(255,255,255,0.08)',
+          backgroundColor: theme === 'light' ? '#FFFFFF' : '#0F0F11',
           padding: isSidebarCollapsed ? '24px 8px 16px 8px' : '24px 16px 16px 16px',
           display: 'flex',
           flexDirection: 'column',
@@ -162,8 +162,8 @@ export default function DashboardLayout({
           position: 'sticky',
           top: 0,
           zIndex: 50,
-          width: isSidebarCollapsed ? '72px' : '240px',
-          minWidth: isSidebarCollapsed ? '72px' : '240px',
+          width: isSidebarCollapsed ? '80px' : '280px',
+          minWidth: isSidebarCollapsed ? '80px' : '280px',
           overflowY: 'auto',
           transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
         }}
@@ -181,13 +181,13 @@ export default function DashboardLayout({
         }}>
           <Link href="/" style={{ fontSize: '20px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
             <span style={{ 
-              background: user.role === 'creator' ? 'linear-gradient(135deg, #db2777 0%, #7c3aed 100%)' : 'linear-gradient(135deg, #4f46e5 0%, #0d9488 100%)', 
+              background: user.role === 'creator' ? 'linear-gradient(135deg, #EC4899 0%, #7c3aed 100%)' : 'linear-gradient(135deg, #4f46e5 0%, #0d9488 100%)', 
               color: '#ffffff', 
               padding: '3px 8px', 
               borderRadius: '6px', 
               fontSize: '13px' 
             }}>iG</span>
-            {!isSidebarCollapsed && <span style={{ color: theme === 'light' ? '#18181b' : '#ffffff' }}>igigster</span>}
+            {!isSidebarCollapsed && <span style={{ color: theme === 'light' ? '#09090B' : '#FFFFFF' }}>igigster</span>}
           </Link>
           
           <button 
@@ -195,7 +195,7 @@ export default function DashboardLayout({
             style={{ 
               background: 'none', 
               border: 'none', 
-              color: '#71717a', 
+              color: '#71717A', 
               cursor: 'pointer', 
               display: 'flex', 
               alignItems: 'center', 
@@ -221,8 +221,8 @@ export default function DashboardLayout({
             gap: isSidebarCollapsed ? '0' : '8px',
             width: isSidebarCollapsed ? '40px' : '100%',
             height: isSidebarCollapsed ? '40px' : '44px',
-            borderRadius: isSidebarCollapsed ? '50%' : '8px',
-            backgroundColor: '#db2777', // Solid pink from image
+            borderRadius: isSidebarCollapsed ? '50%' : '999px',
+            backgroundColor: '#EC4899', 
             color: '#ffffff',
             border: 'none',
             fontWeight: 700,
@@ -255,18 +255,18 @@ export default function DashboardLayout({
                   justifyContent: isSidebarCollapsed ? 'center' : 'flex-start',
                   gap: isSidebarCollapsed ? '0' : '10px',
                   padding: isSidebarCollapsed ? '10px' : '8px 12px',
-                  borderRadius: '8px',
+                  borderRadius: '14px', 
                   width: isSidebarCollapsed ? '40px' : '100%',
                   height: isSidebarCollapsed ? '40px' : 'auto',
                   margin: isSidebarCollapsed ? '0 auto' : '0',
                   fontSize: '13px',
                   fontWeight: isActive ? 600 : 500,
                   backgroundColor: isActive 
-                    ? (theme === 'light' ? 'rgba(219, 39, 119, 0.05)' : 'rgba(255, 255, 255, 0.08)') 
+                    ? (theme === 'light' ? 'rgba(236, 72, 153, 0.05)' : 'rgba(255, 255, 255, 0.08)') 
                     : 'transparent',
                   color: isActive 
-                    ? (theme === 'light' ? '#db2777' : '#ffffff') 
-                    : (theme === 'light' ? '#4f4f4f' : '#a1a1aa'),
+                    ? (theme === 'light' ? '#EC4899' : '#FFFFFF') 
+                    : (theme === 'light' ? '#52525B' : '#A1A1AA'),
                   transition: 'all 0.15s',
                 }}
                 className={!isActive ? 'hover-bg-white-002' : ''}
@@ -274,8 +274,8 @@ export default function DashboardLayout({
               >
                 <span style={{ 
                   color: isActive 
-                    ? (theme === 'light' ? '#db2777' : '#ffffff') 
-                    : '#71717a', 
+                    ? (theme === 'light' ? '#EC4899' : '#FFFFFF') 
+                    : '#71717A', 
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center' 
@@ -291,10 +291,10 @@ export default function DashboardLayout({
         {/* Tools Section */}
         {toolItems.length > 0 && (
           <>
-            <div style={{ borderTop: theme === 'light' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.06)', margin: '12px 0' }} />
+            <div style={{ borderTop: theme === 'light' ? '1px solid #E5E7EB' : '1px solid rgba(255,255,255,0.08)', margin: '12px 0' }} />
             
             {!isSidebarCollapsed && (
-              <span style={{ fontSize: '10px', fontWeight: 700, color: theme === 'light' ? '#9e9e9e' : '#71717a', textTransform: 'uppercase', letterSpacing: '0.05em', padding: '0 12px', marginBottom: '8px', display: 'block' }}>
+              <span style={{ fontSize: '10px', fontWeight: 700, color: '#71717A', textTransform: 'uppercase', letterSpacing: '0.05em', padding: '0 12px', marginBottom: '8px', display: 'block' }}>
                 Tools
               </span>
             )}
@@ -312,18 +312,18 @@ export default function DashboardLayout({
                       justifyContent: isSidebarCollapsed ? 'center' : 'flex-start',
                       gap: isSidebarCollapsed ? '0' : '10px',
                       padding: isSidebarCollapsed ? '10px' : '8px 12px',
-                      borderRadius: '8px',
+                      borderRadius: '14px', 
                       width: isSidebarCollapsed ? '40px' : '100%',
                       height: isSidebarCollapsed ? '40px' : 'auto',
                       margin: isSidebarCollapsed ? '0 auto' : '0',
                       fontSize: '13px',
                       fontWeight: isActive ? 600 : 500,
                       backgroundColor: isActive 
-                        ? (theme === 'light' ? 'rgba(219, 39, 119, 0.05)' : 'rgba(255, 255, 255, 0.08)') 
+                        ? (theme === 'light' ? 'rgba(236, 72, 153, 0.05)' : 'rgba(255, 255, 255, 0.08)') 
                         : 'transparent',
                       color: isActive 
-                        ? (theme === 'light' ? '#db2777' : '#ffffff') 
-                        : (theme === 'light' ? '#4f4f4f' : '#a1a1aa'),
+                        ? (theme === 'light' ? '#EC4899' : '#FFFFFF') 
+                        : (theme === 'light' ? '#52525B' : '#A1A1AA'),
                       transition: 'all 0.15s',
                     }}
                     className={!isActive ? 'hover-bg-white-002' : ''}
@@ -331,8 +331,8 @@ export default function DashboardLayout({
                   >
                     <span style={{ 
                       color: isActive 
-                        ? (theme === 'light' ? '#db2777' : '#ffffff') 
-                        : '#71717a', 
+                        ? (theme === 'light' ? '#EC4899' : '#FFFFFF') 
+                        : '#71717A', 
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center' 
@@ -348,7 +348,7 @@ export default function DashboardLayout({
         )}
 
         {/* Bottom Sidebar Panel */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', borderTop: theme === 'light' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.06)', paddingTop: '16px', marginTop: 'auto' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', borderTop: theme === 'light' ? '1px solid #E5E7EB' : '1px solid rgba(255,255,255,0.08)', paddingTop: '16px', marginTop: 'auto' }}>
           {/* Utility icons row */}
           <div 
             style={{ 
@@ -356,7 +356,7 @@ export default function DashboardLayout({
               flexDirection: isSidebarCollapsed ? 'column' : 'row', 
               justifyContent: 'space-between', 
               alignItems: 'center', 
-              color: '#71717a', 
+              color: '#71717A', 
               padding: isSidebarCollapsed ? '0' : '0 12px',
               gap: isSidebarCollapsed ? '16px' : '0' 
             }}
@@ -367,7 +367,7 @@ export default function DashboardLayout({
                 position: 'absolute', 
                 top: '-6px', 
                 right: '-6px', 
-                backgroundColor: '#db2777', 
+                backgroundColor: '#EC4899', 
                 color: '#ffffff', 
                 borderRadius: '50%', 
                 fontSize: '9px', 
@@ -395,7 +395,7 @@ export default function DashboardLayout({
           </div>
 
           {/* Separator line */}
-          <div style={{ borderTop: theme === 'light' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.06)' }} />
+          <div style={{ borderTop: theme === 'light' ? '1px solid #E5E7EB' : '1px solid rgba(255,255,255,0.08)' }} />
 
           {/* Profile Widget */}
           <div 
@@ -404,9 +404,9 @@ export default function DashboardLayout({
               alignItems: 'center', 
               justifyContent: isSidebarCollapsed ? 'center' : 'space-between',
               padding: isSidebarCollapsed ? '4px 0' : '6px 12px',
-              borderRadius: '12px',
-              backgroundColor: isSidebarCollapsed ? 'transparent' : (theme === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.02)'),
-              border: isSidebarCollapsed ? 'none' : (theme === 'light' ? '1px solid rgba(0,0,0,0.04)' : '1px solid rgba(255,255,255,0.04)'),
+              borderRadius: '14px',
+              backgroundColor: isSidebarCollapsed ? 'transparent' : (theme === 'light' ? '#F3F4F6' : '#18181B'),
+              border: isSidebarCollapsed ? 'none' : (theme === 'light' ? '1px solid #E5E7EB' : '1px solid rgba(255,255,255,0.08)'),
               cursor: 'pointer',
               transition: 'all 0.2s'
             }}
@@ -421,33 +421,33 @@ export default function DashboardLayout({
                   height: '32px', 
                   borderRadius: '50%', 
                   objectFit: 'cover', 
-                  border: theme === 'light' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.1)' 
+                  border: theme === 'light' ? '1px solid #E5E7EB' : '1px solid rgba(255,255,255,0.1)' 
                 }} 
               />
               {!isSidebarCollapsed && (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: theme === 'light' ? '#18181b' : '#ffffff', lineHeight: '1.2' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 700, color: theme === 'light' ? '#09090B' : '#FFFFFF', lineHeight: '1.2' }}>
                     {user.role === 'brand' ? 'Brand Account' : 'Creator Account'}
                   </span>
-                  <span style={{ fontSize: '11px', color: '#71717a', display: 'flex', alignItems: 'center', gap: '2px', marginTop: '2px' }}>
+                  <span style={{ fontSize: '11px', color: '#71717A', display: 'flex', alignItems: 'center', gap: '2px', marginTop: '2px' }}>
                     {user.role === 'brand' ? 'Growth Labs' : user.name} <ChevronDown size={10} />
                   </span>
                 </div>
               )}
             </div>
-            {!isSidebarCollapsed && <ChevronDown size={14} style={{ color: '#71717a' }} />}
+            {!isSidebarCollapsed && <ChevronDown size={14} style={{ color: '#71717A' }} />}
           </div>
         </div>
       </aside>
 
       {/* Right Column: Header + Content */}
-      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, backgroundColor: theme === 'light' ? '#fafaf9' : '#09090b', transition: 'all 0.3s' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, backgroundColor: theme === 'light' ? '#F8F8FA' : '#09090B', transition: 'all 0.3s' }}>
         {/* Top Header */}
         <header 
           style={{
-            borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.06)',
-            backgroundColor: theme === 'light' ? '#ffffff' : '#09090b',
-            height: '72px',
+            borderBottom: theme === 'light' ? '1px solid #E5E7EB' : '1px solid rgba(255,255,255,0.08)',
+            backgroundColor: theme === 'light' ? '#FFFFFF' : '#0F0F11',
+            height: '64px', 
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -458,9 +458,9 @@ export default function DashboardLayout({
             transition: 'all 0.3s'
           }}
         >
-          {/* Left: Announcement Banner (Center/Left of the content header) */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: theme === 'light' ? '#f5f5f4' : '#18181b', border: theme === 'light' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255, 255, 255, 0.05)', padding: '6px 14px', borderRadius: '20px', fontSize: '11px', color: theme === 'light' ? '#71717a' : '#a1a1aa' }} className="desktop-only">
-            <span style={{ backgroundColor: user.role === 'creator' ? 'rgba(219,39,119,0.15)' : 'rgba(13,148,136,0.15)', color: user.role === 'creator' ? '#db2777' : '#0d9488', padding: '2px 6px', borderRadius: '4px', fontWeight: 700, fontSize: '9px', textTransform: 'uppercase' }}>EARLY ACCESS</span>
+          {/* Left: Announcement Banner */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: theme === 'light' ? '#F3F4F6' : '#131316', border: theme === 'light' ? '1px solid #E5E7EB' : '1px solid rgba(255, 255, 255, 0.08)', padding: '6px 14px', borderRadius: '20px', fontSize: '11px', color: theme === 'light' ? '#52525B' : '#A1A1AA' }} className="desktop-only">
+            <span style={{ backgroundColor: user.role === 'creator' ? 'rgba(236,72,153,0.15)' : 'rgba(13,148,136,0.15)', color: '#EC4899', padding: '2px 6px', borderRadius: '4px', fontWeight: 700, fontSize: '9px', textTransform: 'uppercase' }}>EARLY ACCESS</span>
             <span>Next-Gen UGC tools: Create campaigns & manage tasks instantly</span>
           </div>
 
@@ -468,23 +468,47 @@ export default function DashboardLayout({
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginLeft: 'auto' }}>
             <CurrencyToggle />
             
-            <Link href="/pricing" style={{ color: '#db2777', fontSize: '13px', fontWeight: 650, textDecoration: 'none' }} className="hover-underline">
+            <Link href="/pricing" style={{ color: '#EC4899', fontSize: '13px', fontWeight: 650, textDecoration: 'none' }} className="hover-underline">
               Need help?
             </Link>
 
             {/* Message button */}
-            <button style={{ background: 'none', border: 'none', color: '#a1a1aa', cursor: 'pointer', display: 'flex', alignItems: 'center' }} className="hover-white-icon">
+            <button style={{ background: 'none', border: 'none', color: '#71717A', cursor: 'pointer', display: 'flex', alignItems: 'center' }} className="hover-white-icon">
               <MessageSquare size={18} />
             </button>
 
             {/* Bell button */}
-            <button style={{ background: 'none', border: 'none', color: '#a1a1aa', cursor: 'pointer', display: 'flex', alignItems: 'center', position: 'relative' }} className="hover-white-icon">
+            <button style={{ background: 'none', border: 'none', color: '#71717A', cursor: 'pointer', display: 'flex', alignItems: 'center', position: 'relative' }} className="hover-white-icon">
               <Bell size={18} />
-              <span style={{ position: 'absolute', top: '-2px', right: '-2px', width: '6px', height: '6px', backgroundColor: '#db2777', borderRadius: '50%' }} />
+              <span style={{ position: 'absolute', top: '-2px', right: '-2px', width: '6px', height: '6px', backgroundColor: '#EC4899', borderRadius: '50%' }} />
+            </button>
+
+            {/* Prominent Theme Toggle Button */}
+            <button 
+              onClick={toggleTheme}
+              style={{
+                background: theme === 'light' ? '#F3F4F6' : '#131316',
+                border: `1px solid ${theme === 'light' ? '#E5E7EB' : 'rgba(255,255,255,.08)'}`,
+                color: theme === 'light' ? '#09090B' : '#FFFFFF',
+                padding: '6px 14px',
+                borderRadius: '999px',
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.2s'
+              }}
+              className="hover-white-bg"
+              title={theme === 'light' ? 'Switch to Dark Theme' : 'Switch to Light Theme'}
+            >
+              {theme === 'light' ? <Sun size={14} /> : <Moon size={14} />}
+              <span>{theme === 'light' ? 'Light Mode' : 'Dark Mode'}</span>
             </button>
 
             {/* Avatar & Logout */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingLeft: '12px', borderLeft: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingLeft: '12px', borderLeft: theme === 'light' ? '1px solid #E5E7EB' : '1px solid rgba(255,255,255,0.08)' }}>
               <img src={user.avatar} alt={user.name} style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.1)' }} />
             </div>
 
@@ -511,34 +535,36 @@ export default function DashboardLayout({
         </header>
 
         {/* Content Box */}
-        <main style={{ padding: '40px 24px', backgroundColor: theme === 'light' ? '#fafaf9' : '#09090b', overflowY: 'auto', flex: 1, transition: 'all 0.3s' }}>
-          {children}
+        <main style={{ padding: '24px', backgroundColor: theme === 'light' ? '#F8F8FA' : '#09090B', overflowY: 'auto', flex: 1, transition: 'all 0.3s' }}>
+          <div style={{ maxWidth: '1600px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {children}
+          </div>
         </main>
       </div>
 
       <style jsx global>{`
         /* Global theme resets inside dashboard */
         .light-theme {
-          background-color: #fafaf9 !important;
-          color: #18181b !important;
+          background-color: #F8F8FA !important;
+          color: #09090B !important;
         }
         .light-theme main {
-          background-color: #fafaf9 !important;
+          background-color: #F8F8FA !important;
         }
         .light-theme aside {
-          background-color: #ffffff !important;
-          border-right: 1px solid rgba(0, 0, 0, 0.05) !important;
+          background-color: #FFFFFF !important;
+          border-right: 1px solid #E5E7EB !important;
         }
         .light-theme header {
-          background-color: #ffffff !important;
-          border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+          background-color: #FFFFFF !important;
+          border-bottom: 1px solid #E5E7EB !important;
         }
         .light-theme .glass-panel {
-          background: #ffffff !important;
-          background-color: #ffffff !important;
-          border: 1px solid rgba(0, 0, 0, 0.05) !important;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0, 0, 0, 0.01) !important;
-          color: #18181b !important;
+          background: #FFFFFF !important;
+          background-color: #FFFFFF !important;
+          border: 1px solid #E5E7EB !important;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+          color: #09090B !important;
         }
         .light-theme h1,
         .light-theme h2,
@@ -546,28 +572,28 @@ export default function DashboardLayout({
         .light-theme h4,
         .light-theme h5,
         .light-theme h6 {
-          color: #18181b !important;
+          color: #09090B !important;
         }
         .light-theme [style*="color: rgb(15, 23, 42)"],
         .light-theme [style*="color:#0f172a"],
         .light-theme [style*="color: #0f172a"] {
-          color: #18181b !important;
+          color: #09090B !important;
         }
 
         .hover-bg-white-002:hover {
-          background-color: rgba(0, 0, 0, 0.02) !important;
-          color: #db2777 !important;
+          background-color: rgba(255, 255, 255, 0.06) !important;
+          color: #EC4899 !important;
         }
         .light-theme .hover-bg-white-002:hover {
-          background-color: rgba(0, 0, 0, 0.02) !important;
-          color: #18181b !important;
+          background-color: #F3F4F6 !important;
+          color: #09090B !important;
         }
         .sidebar-bottom-icon:hover {
-          color: #db2777 !important;
+          color: #EC4899 !important;
           transform: translateY(-1px);
         }
         .hover-white-icon:hover {
-          color: #db2777 !important;
+          color: #EC4899 !important;
         }
         @media (max-width: 768px) {
           .desktop-only { display: none !important; }
