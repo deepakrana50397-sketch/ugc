@@ -31,5 +31,5 @@ export interface Application {
   portfolioLink: string;
   rate: MultiCurrencyPrice;
   appliedAt: string;
-  status: 'pending' | 'shortlisted' | 'unlocked' | 'rejected' | 'accepted';
+  status: 'pending' | 'shortlisted' | 'unlocked' | 'rejected' | 'accepted' | 'interview' | 'withdrawn';
 }

@@ -26,6 +26,8 @@ export default function AdminApplicationsPage() {
       case 'unlocked': return '#10b981';
       case 'shortlisted': return '#f59e0b';
       case 'rejected': return '#ef4444';
+      case 'interview': return '#3b82f6';
+      case 'withdrawn': return '#64748b';
       default: return '#3b82f6';
     }
   };

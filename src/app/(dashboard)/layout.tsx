@@ -334,6 +334,22 @@ export default function DashboardLayout({
               className="hover-bg-white-002"
             >
               <Bell size={17} />
+              <span style={{
+                position: 'absolute',
+                top: '-4px',
+                right: '-4px',
+                backgroundColor: '#EC4899',
+                color: '#ffffff',
+                borderRadius: '50%',
+                fontSize: '9px',
+                fontWeight: 700,
+                width: '15px',
+                height: '15px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                lineHeight: 1
+              }}>3</span>
             </button>
 
             {/* Pink circular text avatar */}
