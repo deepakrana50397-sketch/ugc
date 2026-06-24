@@ -5,6 +5,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Play, Compass } from 'lucide-react';
+import { useSiteMode } from '@/hooks/useSiteMode';
+
 
 const PinkAsterisk = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
@@ -129,11 +131,22 @@ export default function Hero() {
     });
   }, [activeIndex, isPlaying]);
 
-  const highlights = [
+  const { mode } = useSiteMode();
+
+  const brandHighlights = [
     'SCALE CONTENT PRODUCTION',
     'ACTIVATE LOCAL COMMUNITIES',
     'END-TO-END CAMPAIGN MANAGEMENT'
   ];
+
+  const talentHighlights = [
+    'GET OPEN GIG OPPORTUNITIES',
+    'APPLY FOR FREE',
+    'DIRECT BRAND CONNECTIONS'
+  ];
+
+  const highlights = mode === 'brand' ? brandHighlights : talentHighlights;
+
 
   return (
     <section
@@ -207,7 +220,9 @@ export default function Hero() {
                 fontFamily: 'var(--font-display)',
               }}
             >
-              Build content, activate communities, and scale campaigns with creators.
+              {mode === 'brand'
+                ? "Build content, activate communities, and scale campaigns with creators."
+                : "Find High-Paying UGC & Video Creation Gigs on iGigster."}
             </h1>
 
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -505,13 +520,15 @@ export default function Hero() {
                   maxWidth: '330px',
                 }}
               >
-                Hire creators, influencers, students, agencies, production teams—or let iGigster run your campaign end to end.
+                {mode === 'brand'
+                  ? "Hire creators, influencers, students, agencies, production teams—or let iGigster run your campaign end to end."
+                  : "Work with top brands, agencies, and e-commerce companies. Apply to active campaigns and set your own rates."}
               </p>
 
               {/* CTAs */}
               <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                 <Link
-                  href="/contact"
+                  href={mode === 'brand' ? '/contact' : '/gigs'}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -527,27 +544,29 @@ export default function Hero() {
                   }}
                   className="hover:bg-stone-800"
                 >
-                  Start Campaign
+                  {mode === 'brand' ? 'Start Campaign' : 'Explore Open Gigs'}
                 </Link>
-                <Link
-                  href="/register?role=creator"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: '#ffa8f2',
-                    color: '#1c1917',
-                    padding: '16px 28px',
-                    borderRadius: '9999px',
-                    fontSize: '15px',
-                    fontWeight: 800,
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 12px rgba(255, 168, 242, 0.2)',
-                  }}
-                  className="hover:bg-[#ff8de9]"
-                >
-                  Become a Creator
-                </Link>
+                {mode === 'talent' && (
+                  <Link
+                    href="/register?role=creator"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: '#ffa8f2',
+                      color: '#1c1917',
+                      padding: '16px 28px',
+                      borderRadius: '9999px',
+                      fontSize: '15px',
+                      fontWeight: 800,
+                      transition: 'all 0.2s ease',
+                      boxShadow: '0 4px 12px rgba(255, 168, 242, 0.2)',
+                    }}
+                    className="hover:bg-[#ff8de9]"
+                  >
+                    Become a Creator
+                  </Link>
+                )}
               </div>
             </div>
           </div>

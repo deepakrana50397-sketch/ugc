@@ -3,6 +3,8 @@
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useSiteMode } from '@/hooks/useSiteMode';
+
 
 const XIcon = () => (
   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#ffffff">
@@ -40,6 +42,7 @@ const FooterLogoIcon = () => (
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
+  const { mode } = useSiteMode();
 
   // Track scroll position of the footer
   const { scrollYProgress } = useScroll({
@@ -127,7 +130,11 @@ export default function Footer() {
                 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.05] text-[#1c1917]"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
-                UGC that grows<br />your brand.
+                {mode === 'brand' ? (
+                  <>UGC that grows<br />your brand.</>
+                ) : (
+                  <>UGC that earns<br />you money.</>
+                )}
               </h2>
             </div>
 

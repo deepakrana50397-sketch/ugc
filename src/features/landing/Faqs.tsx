@@ -3,13 +3,25 @@
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { faqsData } from '@/data/faqs';
+import { useSiteMode } from '@/hooks/useSiteMode';
+
 
 export default function Faqs() {
   const [openId, setOpenId] = useState<string | null>(null);
+  const { mode } = useSiteMode();
 
   const toggleFAQ = (id: string) => {
     setOpenId(openId === id ? null : id);
   };
+
+  const filteredFaqs = faqsData.filter((faq) => {
+    if (mode === 'brand') {
+      return faq.category === 'brands' || faq.category === 'general';
+    } else {
+      return faq.category === 'creators' || faq.category === 'general';
+    }
+  });
+
 
   return (
     <section 
@@ -42,7 +54,7 @@ export default function Faqs() {
 
         {/* Accordions */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }} className="stagger-container">
-          {faqsData.map((faq) => {
+          {filteredFaqs.map((faq) => {
             const isOpen = openId === faq.id;
             return (
               <div

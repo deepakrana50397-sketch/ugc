@@ -7,6 +7,8 @@ import { Menu, X, LogOut, LayoutDashboard, UserCheck } from 'lucide-react';
 import { getCurrentUser, logoutUser } from '@/lib/services';
 import { User } from '@/types/common';
 import Magnetic from '../animation/Magnetic';
+import { useSiteMode } from '@/hooks/useSiteMode';
+import { motion } from 'framer-motion';
 
 // Stylized gradient logo icon matching the image
 const LogoIcon = () => (
@@ -27,6 +29,7 @@ export default function Navbar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const { mode, setMode } = useSiteMode();
 
   // Monitor user state inside browser
   useEffect(() => {
@@ -49,12 +52,98 @@ export default function Navbar() {
     router.push('/');
   };
 
-  const navLinks = [
+  const brandLinks = [
     { label: 'Projects', href: '/brands' },
+    { label: 'Creators', href: '/creators' },
+    { label: 'About Us', href: '/about' },
+    { label: 'Contact', href: '/contact' },
+  ];
+
+  const talentLinks = [
+    { label: 'Find Gigs', href: '/gigs' },
     { label: 'About Us', href: '/about' },
     { label: 'Blog', href: '/blog' },
     { label: 'Contact', href: '/contact' },
   ];
+
+  const navLinks = mode === 'brand' ? brandLinks : talentLinks;
+
+  const ModeSwitcher = () => (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderRadius: '9999px',
+        padding: '2px',
+        position: 'relative',
+      }}
+    >
+      <button
+        onClick={() => setMode('brand')}
+        style={{
+          padding: '6px 14px',
+          borderRadius: '9999px',
+          fontSize: '12px',
+          fontWeight: 600,
+          color: mode === 'brand' ? '#ffffff' : '#a8a29e',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          zIndex: 10,
+          transition: 'color 0.2s',
+          position: 'relative',
+        }}
+      >
+        Hire Talent
+        {mode === 'brand' && (
+          <motion.div
+            layoutId="activeModeBg"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '9999px',
+              zIndex: -1,
+            }}
+            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+          />
+        )}
+      </button>
+      <button
+        onClick={() => setMode('talent')}
+        style={{
+          padding: '6px 14px',
+          borderRadius: '9999px',
+          fontSize: '12px',
+          fontWeight: 600,
+          color: mode === 'talent' ? '#ffffff' : '#a8a29e',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          zIndex: 10,
+          transition: 'color 0.2s',
+          position: 'relative',
+        }}
+      >
+        Find Gigs
+        {mode === 'talent' && (
+          <motion.div
+            layoutId="activeModeBg"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '9999px',
+              zIndex: -1,
+            }}
+            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+          />
+        )}
+      </button>
+    </div>
+  );
 
   return (
     <header
@@ -147,6 +236,11 @@ export default function Navbar() {
           })}
         </nav>
 
+        {/* Desktop Mode Switcher */}
+        <div className="desktop-nav-links" style={{ display: 'none', alignItems: 'center' }}>
+          <ModeSwitcher />
+        </div>
+
         {/* Actions (Right) */}
         <div
           style={{
@@ -157,7 +251,7 @@ export default function Navbar() {
           className="desktop-nav-actions"
         >
           {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <Link
                 href={
                   user.role === 'creator'
@@ -167,9 +261,10 @@ export default function Navbar() {
                       : '/admin/dashboard'
                 }
                 style={{
-                  fontSize: '13px',
-                  fontWeight: 600,
+                  fontSize: '14px',
+                  fontWeight: 500,
                   color: '#a8a29e',
+                  padding: '6px 12px',
                   transition: 'color 0.2s',
                   display: 'flex',
                   alignItems: 'center',
@@ -186,8 +281,10 @@ export default function Navbar() {
                   border: 'none',
                   cursor: 'pointer',
                   color: '#ef4444',
-                  fontSize: '13px',
-                  fontWeight: 600,
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  padding: '6px 12px',
+                  transition: 'color 0.2s',
                 }}
               >
                 Sign Out
@@ -210,7 +307,7 @@ export default function Navbar() {
 
           <Magnetic strength={0.15}>
             <Link
-              href="/contact"
+              href={mode === 'brand' ? '/register?role=brand' : '/register?role=creator'}
               style={{
                 fontSize: '14px',
                 fontWeight: 600,
@@ -222,7 +319,7 @@ export default function Navbar() {
               }}
               className="hover:bg-stone-100"
             >
-              Book a Call
+              {mode === 'brand' ? 'Join as Brand' : 'Join as Creator'}
             </Link>
           </Magnetic>
         </div>
@@ -264,6 +361,11 @@ export default function Navbar() {
             boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
           }}
         >
+          {/* Mobile Mode Switcher */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4px' }}>
+            <ModeSwitcher />
+          </div>
+
           {navLinks.map((item) => (
             <Link
               key={item.href}
@@ -339,7 +441,7 @@ export default function Navbar() {
           )}
 
           <Link
-            href="/contact"
+            href={mode === 'brand' ? '/register?role=brand' : '/register?role=creator'}
             onClick={() => setIsOpen(false)}
             style={{
               fontSize: '15px',
@@ -352,7 +454,7 @@ export default function Navbar() {
               marginTop: '6px',
             }}
           >
-            Book a Call
+            {mode === 'brand' ? 'Join as Brand' : 'Join as Creator'}
           </Link>
         </div>
       )}

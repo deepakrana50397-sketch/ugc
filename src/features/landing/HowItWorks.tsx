@@ -5,9 +5,11 @@ import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { Sparkles, Check, Send, Users, UserCheck, Play, Award } from 'lucide-react';
 import GlowCard from '@/components/animation/GlowCard';
 import TextReveal from '@/components/animation/TextReveal';
+import { useSiteMode } from '@/hooks/useSiteMode';
 
 export default function HowItWorks() {
   const sectionRef = useRef<HTMLElement>(null);
+  const { mode } = useSiteMode();
 
   // Monitor scroll for SVG path drawing
   const { scrollYProgress } = useScroll({
@@ -23,7 +25,7 @@ export default function HowItWorks() {
 
   const pathLength = useTransform(scaleY, [0.1, 0.85], [0, 1]);
 
-  const steps = [
+  const brandSteps = [
     {
       step: '01',
       title: 'Post Brief',
@@ -68,6 +70,53 @@ export default function HowItWorks() {
     }
   ];
 
+  const talentSteps = [
+    {
+      step: '01',
+      title: 'Join Platform',
+      description: 'Register your creator profile, connect social channels, and showcase your best UGC portfolios.',
+      icon: <Users size={18} />,
+      color: '#db2777'
+    },
+    {
+      step: '02',
+      title: 'Explore Gigs',
+      description: 'Browse active brand briefs with verified budgets, parameters, and product niches.',
+      icon: <Send size={18} />,
+      color: '#7c3aed'
+    },
+    {
+      step: '03',
+      title: 'Pitch & Apply',
+      description: 'Submit your creative hooks, conceptual angles, rates, and portfolio examples directly.',
+      icon: <UserCheck size={18} />,
+      color: '#2563eb'
+    },
+    {
+      step: '04',
+      title: 'Get Hired',
+      description: 'Establish direct connections with hiring brands and align on campaign goals.',
+      icon: <Check size={18} strokeWidth={3} />,
+      color: '#10b981'
+    },
+    {
+      step: '05',
+      title: 'Create Content',
+      description: 'Record engaging footage, apply retention editing, and compile production assets.',
+      icon: <Play size={18} fill="currentColor" />,
+      color: '#f59e0b'
+    },
+    {
+      step: '06',
+      title: 'Deliver & Earn',
+      description: 'Deliver the finalized videos, receive your secure payout, and unlock repeating gigs.',
+      icon: <Award size={18} />,
+      color: '#db2777'
+    }
+  ];
+
+  const steps = mode === 'brand' ? brandSteps : talentSteps;
+
   return (
     <section 
       ref={sectionRef}
@@ -110,11 +159,11 @@ export default function HowItWorks() {
             }}
           >
             <Sparkles size={13} />
-            <span>Campaign Timeline</span>
+            <span>{mode === 'brand' ? 'Campaign Timeline' : 'Creator Journey'}</span>
           </div>
 
           <TextReveal
-            text="How Campaigns Work"
+            text={mode === 'brand' ? "How Campaigns Work" : "How Gigs Work"}
             tag="h2"
             mode="words"
             className="text-foreground"
@@ -125,7 +174,9 @@ export default function HowItWorks() {
             }}
           />
           <p style={{ color: 'var(--muted)', maxWidth: '500px', margin: '0 auto', fontSize: '16px', lineHeight: 1.55 }}>
-            From posting your initial brief to acquiring final creative assets in simple, verified steps.
+            {mode === 'brand'
+              ? 'From posting your initial brief to acquiring final creative assets in simple, verified steps.'
+              : 'From setting up your creator profile to applying for campaigns and getting paid securely.'}
           </p>
         </div>
 

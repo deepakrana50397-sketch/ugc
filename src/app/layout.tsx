@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { CurrencyProvider } from "@/hooks/useCurrency";
 import LenisProvider from "@/components/animation/LenisProvider";
+import { SiteModeProvider, SiteMode } from "@/hooks/useSiteMode";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
@@ -9,11 +11,14 @@ export const metadata: Metadata = {
   description: "Connect with verified UGC creators, editors, and motion designers for TikTok, Instagram Reels, and YouTube Shorts.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const initialMode = (cookieStore.get("igigster_mode")?.value as SiteMode) || "brand";
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -32,14 +37,17 @@ export default function RootLayout({
         />
       </head>
       <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }} suppressHydrationWarning>
-        <CurrencyProvider>
-          <LenisProvider>
-            {children}
-          </LenisProvider>
-        </CurrencyProvider>
+        <SiteModeProvider initialMode={initialMode}>
+          <CurrencyProvider>
+            <LenisProvider>
+              {children}
+            </LenisProvider>
+          </CurrencyProvider>
+        </SiteModeProvider>
         <SpeedInsights />
       </body>
     </html>
   );
 }
+
 

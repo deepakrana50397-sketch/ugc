@@ -1,5 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import Hero from '@/features/landing/Hero';
 import TrustedBrands from '@/features/landing/TrustedBrands';
 import ScrollRevealSection from '@/features/landing/ScrollRevealSection';
@@ -32,9 +33,57 @@ export const metadata: Metadata = getPageMetadata({
   path: '/',
 });
 
-export default function Home() {
+export default async function Home() {
   const orgSchema = getOrganizationSchema();
   const webSchema = getWebsiteSchema();
+
+  const cookieStore = await cookies();
+  const mode = (cookieStore.get('igigster_mode')?.value as 'brand' | 'talent') || 'brand';
+
+  if (mode === 'talent') {
+    return (
+      <>
+        <JsonLd data={orgSchema} />
+        <JsonLd data={webSchema} />
+
+        {/* 1. Hero */}
+        <Hero />
+
+        {/* 2. Trusted by & Niches */}
+        <TrustedBrands />
+
+        {/* PROMOTED: Featured Gigs (crucial for creators looking for work) */}
+        <FeaturedGigs />
+
+        {/* 2.5. Scroll Reveal Section */}
+        <ScrollRevealSection />
+
+        {/* 3. Services */}
+        <Services />
+
+        {/* 3.7. Our Process Section */}
+        <OurProcess />
+
+        {/* 3.8. Talent Pool Section */}
+        <TalentPool />
+
+        {/* 4. How it works */}
+        <HowItWorks />
+
+        {/* 7. Creator Categories */}
+        <CreatorCategories />
+
+        {/* 8. Testimonials */}
+        <Testimonials />
+
+        {/* 10. FAQs */}
+        <Faqs />
+
+        {/* 11. Final CTA */}
+        <FinalCta />
+      </>
+    );
+  }
 
   return (
     <>
@@ -109,3 +158,4 @@ export default function Home() {
     </>
   );
 }
+
