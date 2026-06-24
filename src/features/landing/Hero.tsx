@@ -32,6 +32,11 @@ export default function Hero() {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [videoProgress, setVideoProgress] = useState(0);
+  
+  // Custom states for autoplay preview on start & play button interaction
+  const [isAutoplayPreview, setIsAutoplayPreview] = useState(true);
+  const [isHoveringPlayBtn, setIsHoveringPlayBtn] = useState(false);
+  const autoplayTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({});
 
@@ -71,15 +76,25 @@ export default function Hero() {
     }
   ];
 
+  const endAutoplayPreview = () => {
+    if (autoplayTimerRef.current) {
+      clearTimeout(autoplayTimerRef.current);
+      autoplayTimerRef.current = null;
+    }
+    setIsAutoplayPreview(false);
+  };
+
   const handleNextCard = () => {
     setIsPlaying(false);
     setVideoProgress(0);
+    endAutoplayPreview();
     setActiveIndex((prev) => (prev + 1) % cardsData.length);
   };
 
   const handlePrevCard = () => {
     setIsPlaying(false);
     setVideoProgress(0);
+    endAutoplayPreview();
     setActiveIndex((prev) => (prev - 1 + cardsData.length) % cardsData.length);
   };
 
@@ -93,13 +108,14 @@ export default function Hero() {
 
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
+    endAutoplayPreview();
     const currentVideo = videoRefs.current[activeIndex];
     if (currentVideo) {
       if (isPlaying) {
         currentVideo.pause();
         setIsPlaying(false);
       } else {
-        currentVideo.play().catch(err => console.log('Autoplay error:', err));
+        currentVideo.play().catch(err => console.log('Play error:', err));
         setIsPlaying(true);
       }
     }
@@ -115,6 +131,21 @@ export default function Hero() {
   const handleVideoEnded = () => {
     handleNextCard();
   };
+
+  // Autoplay preview (muted) on start/mount for 2 seconds, then pause
+  useEffect(() => {
+    setIsPlaying(true);
+    autoplayTimerRef.current = setTimeout(() => {
+      setIsPlaying(false);
+      setIsAutoplayPreview(false);
+    }, 2000);
+
+    return () => {
+      if (autoplayTimerRef.current) {
+        clearTimeout(autoplayTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     Object.entries(videoRefs.current).forEach(([key, videoEl]) => {
@@ -208,8 +239,8 @@ export default function Hero() {
         <div
           className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 lg:items-stretch items-center"
         >
-          {/* Left Column: Heading & Services */}
-          <div className="col-span-1 lg:col-span-5 flex flex-col justify-start gap-8 text-left lg:pt-16">
+          {/* Left Column: Heading & Services (4 cols for symmetry) */}
+          <div className="col-span-1 lg:col-span-4 flex flex-col justify-start gap-8 text-left lg:pt-16">
             <h1
               style={{
                 fontSize: 'clamp(32px, 3.4vw, 44px)',
@@ -246,7 +277,7 @@ export default function Hero() {
             </ul>
           </div>
 
-          {/* Center Column: 3D Stacked Creator Video Cards */}
+          {/* Center Column: 3D Stacked Creator Video Cards (Symmetrically centered) */}
           <div className="col-span-1 lg:col-span-4 flex justify-center items-center relative py-12 lg:py-0">
             <div
               className="card-stack-container"
@@ -254,7 +285,7 @@ export default function Hero() {
                 position: 'relative',
                 width: 'clamp(300px, 90vw, 360px)',
                 height: 'clamp(533px, 160vw, 640px)',
-                cursor: isHovered && !isPlaying ? 'none' : 'default',
+                cursor: isHovered && !isPlaying && !isHoveringPlayBtn ? 'none' : 'default',
               }}
               onMouseMove={handleMouseMove}
               onMouseEnter={() => setIsHovered(true)}
@@ -316,7 +347,7 @@ export default function Hero() {
                         loop
                         playsInline
                         preload="auto"
-                        muted={!isFront || !isPlaying}
+                        muted={isAutoplayPreview ? true : (!isFront || !isPlaying)}
                         style={{
                           width: '100%',
                           height: '100%',
@@ -382,11 +413,13 @@ export default function Hero() {
                             alignItems: 'center',
                             justifyContent: 'center',
                             zIndex: 15,
-                            pointerEvents: 'none',
                           }}
                         >
-                          <div
+                          <button
                             className="animate-play-pulse"
+                            onClick={togglePlay}
+                            onMouseEnter={() => setIsHoveringPlayBtn(true)}
+                            onMouseLeave={() => setIsHoveringPlayBtn(false)}
                             style={{
                               width: '72px',
                               height: '72px',
@@ -398,10 +431,13 @@ export default function Hero() {
                               justifyContent: 'center',
                               color: '#ffffff',
                               border: '1px solid rgba(255,255,255,0.12)',
+                              cursor: 'pointer',
+                              pointerEvents: 'auto',
+                              outline: 'none',
                             }}
                           >
                             <Play size={26} fill="#ffffff" style={{ marginLeft: '4px' }} />
-                          </div>
+                          </button>
                         </div>
                       )}
 
@@ -417,7 +453,7 @@ export default function Hero() {
               </AnimatePresence>
 
               {/* Custom floating Swipe indicator cursor */}
-              {isHovered && !isPlaying && (
+              {isHovered && !isPlaying && !isHoveringPlayBtn && (
                 <motion.div
                   style={{
                     position: 'absolute',
@@ -452,8 +488,8 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right Column: Project Preview Card & Bio/CTA */}
-          <div className="col-span-1 lg:col-span-3 flex flex-col justify-between text-left lg:py-2">
+          {/* Right Column: Project Preview Card & Bio/CTA (4 cols for symmetry) */}
+          <div className="col-span-1 lg:col-span-4 flex flex-col justify-between text-left lg:py-2">
             {/* Top Right Visual Flow */}
             <div
               style={{

@@ -150,11 +150,11 @@ export default function RegisterPage() {
   );
 
   return (
-    <div 
+    <div
       className="login-container"
-      style={{ 
-        minHeight: '100vh', 
-        display: 'flex', 
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
         backgroundColor: '#fafaf9', // Warm stone background matches landing page
         fontFamily: 'var(--font-sans)',
         color: '#1c1917',
@@ -163,7 +163,7 @@ export default function RegisterPage() {
       }}
     >
       {/* 1. Left Showcase Column (Desktop Only) */}
-      <div 
+      <div
         style={{
           width: '55%',
           height: '100%',
@@ -181,8 +181,8 @@ export default function RegisterPage() {
         className="login-left-panel"
       >
         {/* Dynamic grid decoration overlay */}
-        <div 
-          className="bg-grid-pattern" 
+        <div
+          className="bg-grid-pattern"
           style={{
             position: 'absolute',
             inset: 0,
@@ -193,7 +193,7 @@ export default function RegisterPage() {
         />
 
         {/* Dynamic mesh glow circle behind art */}
-        <div 
+        <div
           style={{
             position: 'absolute',
             top: '50%',
@@ -202,7 +202,7 @@ export default function RegisterPage() {
             width: '450px',
             height: '450px',
             borderRadius: '50%',
-            background: mode === 'talent' 
+            background: mode === 'talent'
               ? 'radial-gradient(circle, rgba(219,39,119,0.12) 0%, rgba(219,39,119,0) 70%)'
               : 'radial-gradient(circle, rgba(13,148,136,0.1) 0%, rgba(13,148,136,0) 70%)',
             filter: 'blur(60px)',
@@ -228,15 +228,15 @@ export default function RegisterPage() {
 
         {/* Center illustration art centered inside a container */}
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, zIndex: 10, position: 'relative' }}>
-          <img 
-            src={mode === 'talent' ? '/register_bg_art.svg' : '/brand_register_art.png'} 
-            alt="UGC Creation illustration" 
-            style={{ 
-              maxWidth: '85%', 
-              maxHeight: '420px', 
+          <img
+            src={mode === 'talent' ? '/girl.svg' : '/brand_register_art.png'}
+            alt="UGC Creation illustration"
+            style={{
+              maxWidth: '85%',
+              maxHeight: '420px',
               objectFit: 'contain',
               filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.08))'
-            }} 
+            }}
             className="animate-float-slow"
           />
         </div>
@@ -276,7 +276,7 @@ export default function RegisterPage() {
       </div>
 
       {/* 2. Right Form Column */}
-      <div 
+      <div
         style={{
           width: '45%',
           height: '100%',
@@ -308,8 +308,8 @@ export default function RegisterPage() {
         </svg>
 
         {/* Subtle grid pattern background to align style with main landing page */}
-        <div 
-          className="bg-grid-pattern" 
+        <div
+          className="bg-grid-pattern"
           style={{
             position: 'absolute',
             inset: 0,
@@ -339,8 +339,8 @@ export default function RegisterPage() {
         {/* Main Content (Centered signup card) */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', justifyContent: 'center', flex: 1, width: '100%', maxWidth: '440px', margin: '32px auto', zIndex: 10 }}>
           {/* Signup Card */}
-          <div 
-            className="glass-panel" 
+          <div
+            className="glass-panel"
             style={{
               padding: '36px',
               border: mode === 'talent' ? '1.5px solid rgba(219,39,119,0.15)' : '1.5px solid rgba(79,70,229,0.15)',
@@ -356,16 +356,16 @@ export default function RegisterPage() {
           >
             {/* Headers */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <div style={{ 
-                display: 'inline-flex', 
-                alignItems: 'center', 
-                gap: '6px', 
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
                 backgroundColor: mode === 'talent' ? 'rgba(219, 39, 119, 0.06)' : 'rgba(79, 70, 229, 0.06)',
                 border: mode === 'talent' ? '1px solid rgba(219, 39, 119, 0.15)' : '1px solid rgba(79, 70, 229, 0.15)',
-                padding: '5px 12px', 
-                borderRadius: '20px', 
-                color: mode === 'talent' ? '#db2777' : '#4f46e5', 
-                fontSize: '11px', 
+                padding: '5px 12px',
+                borderRadius: '20px',
+                color: mode === 'talent' ? '#db2777' : '#4f46e5',
+                fontSize: '11px',
                 fontWeight: 700,
                 textTransform: 'uppercase',
                 width: 'fit-content'
@@ -377,8 +377,8 @@ export default function RegisterPage() {
                 {mode === 'talent' ? 'Create Creator Account' : 'Create Brand Account'}
               </h1>
               <p style={{ color: '#78716c', fontSize: '13.5px', lineHeight: 1.45 }}>
-                {mode === 'talent' 
-                  ? 'Join the premium short-form marketplace, apply to gigs, and earn money.' 
+                {mode === 'talent'
+                  ? 'Join the premium short-form marketplace, apply to gigs, and earn money.'
                   : 'Hire top-tier video creators, editors, and launch campaigns.'}
               </p>
             </div>
@@ -448,7 +448,7 @@ export default function RegisterPage() {
                 type="submit"
                 disabled={loading}
                 style={{
-                  background: mode === 'talent' 
+                  background: mode === 'talent'
                     ? 'linear-gradient(90deg, #db2777 0%, #7c3aed 100%)'
                     : 'linear-gradient(90deg, #4f46e5 0%, #0d9488 100%)',
                   color: '#ffffff',
@@ -477,7 +477,7 @@ export default function RegisterPage() {
                   Log In
                 </Link>
               </div>
-              
+
               <button
                 type="button"
                 onClick={() => setMode(mode === 'brand' ? 'talent' : 'brand')}
