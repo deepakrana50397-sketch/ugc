@@ -9,10 +9,18 @@ import {
   Bookmark, ChevronDown
 } from 'lucide-react';
 
+import { useSearchParams } from 'next/navigation';
+import CreatorMessagesView from './components/CreatorMessagesView';
+import CreatorEarningsView from './components/CreatorEarningsView';
+import CreatorAnalyticsView from './components/CreatorAnalyticsView';
+import CreatorReviewsView from './components/CreatorReviewsView';
+
 export default function CreatorDashboardPage() {
   const { currency } = useCurrency();
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const isINR = currency === 'INR';
+  const searchParams = useSearchParams();
+  const view = searchParams.get('view');
 
   useEffect(() => {
     // Theme subscription
@@ -38,6 +46,70 @@ export default function CreatorDashboardPage() {
   const mutedText = 'var(--muted-text)';
   const accentColor = '#EC4899';
   const shadowStyle = 'var(--shadow-style)';
+
+  if (view === 'messages') {
+    return (
+      <CreatorMessagesView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'earnings' || view === 'payouts') {
+    return (
+      <CreatorEarningsView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'analytics') {
+    return (
+      <CreatorAnalyticsView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'reviews') {
+    return (
+      <CreatorReviewsView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
 
   // Format dynamic currency values
   const formatVal = (inrVal: number, usdVal: number) => {

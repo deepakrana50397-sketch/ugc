@@ -343,13 +343,62 @@ export default function CreatorBrowseGigsPage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', color: primaryText }}>
       
       {/* Title Header */}
-      <div>
-        <h1 style={{ fontSize: '30px', fontWeight: 850, color: primaryText, letterSpacing: '-0.02em', margin: 0 }}>
-          Find Gigs
-        </h1>
-        <p style={{ color: secondaryText, fontSize: '14.5px', marginTop: '6px', fontWeight: 400 }}>
-          Discover exciting opportunities and work with amazing brands.
-        </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '24px' }}>
+        <div>
+          <h1 style={{ fontSize: '30px', fontWeight: 850, color: primaryText, letterSpacing: '-0.02em', margin: 0 }}>
+            Find Gigs
+          </h1>
+          <p style={{ color: secondaryText, fontSize: '14.5px', marginTop: '6px', fontWeight: 400 }}>
+            Discover exciting opportunities and work with amazing brands.
+          </p>
+        </div>
+
+        {/* Top Right Card: Get Gigs in Inbox */}
+        <div 
+          style={{ 
+            backgroundColor: cardBg, 
+            border: `1px solid ${borderColor}`, 
+            borderRadius: '16px', 
+            padding: '14px 20px', 
+            boxShadow: '0 2px 8px rgba(0,0,0,0.01)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '20px',
+            maxWidth: '420px',
+            flexWrap: 'wrap'
+          }}
+        >
+          <div>
+            <h3 style={{ fontSize: '14px', fontWeight: 750, color: primaryText, margin: 0 }}>
+              Get gigs in your inbox
+            </h3>
+            <p style={{ fontSize: '12px', color: secondaryText, margin: '4px 0 0 0', lineHeight: 1.4 }}>
+              Create alerts and never miss new opportunities.
+            </p>
+          </div>
+          <button
+            onClick={() => alert('Created alert successfully! We will notify you of matching briefs.')}
+            style={{
+              backgroundColor: isLight ? '#FFF2F8' : 'rgba(236,72,153,0.1)',
+              border: `1px solid ${isLight ? '#FBCFE8' : 'rgba(236,72,153,0.2)'}`,
+              color: '#EC4899',
+              borderRadius: '8px',
+              padding: '8px 14px',
+              fontSize: '12px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              whiteSpace: 'nowrap'
+            }}
+            className="hover-opacity-90"
+          >
+            <Bell size={13} />
+            <span>Create Alert</span>
+          </button>
+        </div>
       </div>
 
       {/* Search bar at top level */}
@@ -973,48 +1022,7 @@ export default function CreatorBrowseGigsPage() {
             </div>
           </div>
 
-          {/* Card 3: Get Gigs in Inbox */}
-          <div 
-            style={{ 
-              backgroundColor: cardBg, 
-              border: `1px solid ${borderColor}`, 
-              borderRadius: '16px', 
-              padding: '20px', 
-              boxShadow: '0 2px 8px rgba(0,0,0,0.01)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px'
-            }}
-          >
-            <h3 style={{ fontSize: '14.5px', fontWeight: 750, color: primaryText, margin: 0 }}>
-              Get gigs in your inbox
-            </h3>
-            <p style={{ fontSize: '12.5px', color: secondaryText, margin: 0, lineHeight: 1.5 }}>
-              Create alerts and never miss new opportunities.
-            </p>
-            <button
-              onClick={() => alert('Created alert successfully! We will notify you of matching briefs.')}
-              style={{
-                backgroundColor: isLight ? '#FFF2F8' : 'rgba(236,72,153,0.1)',
-                border: `1px solid ${isLight ? '#FBCFE8' : 'rgba(236,72,153,0.2)'}`,
-                color: '#EC4899',
-                borderRadius: '8px',
-                padding: '8px 14px',
-                fontSize: '12px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                marginTop: '4px'
-              }}
-              className="hover-opacity-90"
-            >
-              <Bell size={13} />
-              <span>Create Alert</span>
-            </button>
-          </div>
+
 
         </div>
 

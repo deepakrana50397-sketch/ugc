@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getApplications, updateApplicationStatus } from '@/lib/services';
+import CreatorContractsView from './components/CreatorContractsView';
+import CreatorCollabsView from './components/CreatorCollabsView';
 import { Application } from '@/types/common';
 import { 
   Search, Calendar, HelpCircle, ShieldAlert, Sparkles, 
@@ -641,6 +643,38 @@ export default function CreatorApplicationsPage() {
     }
     setCurrentPage(1);
   }, [isMyProjects, applications.length]);
+
+  if (view === 'contracts') {
+    return (
+      <CreatorContractsView
+        theme={theme}
+        isLight={theme === 'light'}
+        cardBg={theme === 'light' ? '#FFFFFF' : '#131316'}
+        borderColor={theme === 'light' ? '#E5E7EB' : 'rgba(255,255,255,0.08)'}
+        primaryText={theme === 'light' ? '#09090B' : '#FFFFFF'}
+        secondaryText={theme === 'light' ? '#52525B' : '#A1A1AA'}
+        mutedText={theme === 'light' ? '#71717A' : '#71717A'}
+        accentColor="#EC4899"
+        shadowStyle={theme === 'light' ? '0 1px 2px rgba(0,0,0,.04)' : 'none'}
+      />
+    );
+  }
+
+  if (view === 'collabs') {
+    return (
+      <CreatorCollabsView
+        theme={theme}
+        isLight={theme === 'light'}
+        cardBg={theme === 'light' ? '#FFFFFF' : '#131316'}
+        borderColor={theme === 'light' ? '#E5E7EB' : 'rgba(255,255,255,0.08)'}
+        primaryText={theme === 'light' ? '#09090B' : '#FFFFFF'}
+        secondaryText={theme === 'light' ? '#52525B' : '#A1A1AA'}
+        mutedText={theme === 'light' ? '#71717A' : '#71717A'}
+        accentColor="#EC4899"
+        shadowStyle={theme === 'light' ? '0 1px 2px rgba(0,0,0,.04)' : 'none'}
+      />
+    );
+  }
 
   const isLight = theme === 'light';
 

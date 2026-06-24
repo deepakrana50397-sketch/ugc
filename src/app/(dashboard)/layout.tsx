@@ -95,7 +95,6 @@ export default function DashboardLayout({
         { href: '/creator/applications', label: 'My Applications', icon: <FolderOpen size={16} /> },
         { href: '/creator/applications?view=my-projects', label: 'My Projects', icon: <Briefcase size={16} /> },
         { href: '/creator/dashboard?view=earnings', label: 'Earnings', icon: <Wallet size={16} /> },
-        { href: '/creator/dashboard?view=payouts', label: 'Payouts', icon: <CreditCard size={16} /> },
         { href: '/creator/dashboard?view=messages', label: 'Messages', icon: <MessageSquare size={16} />, badge: 5 },
         { href: '/creator/dashboard?view=analytics', label: 'Analytics', icon: <BarChart2 size={16} /> },
         { href: '/creator/profile', label: 'Portfolio', icon: <Image size={16} /> },
@@ -136,7 +135,7 @@ export default function DashboardLayout({
         { href: '/creator/profile', label: 'Profile Strength', icon: <Activity size={16} />, badge: '85%' },
         { href: '/creator/gigs?view=brief-match', label: 'AI Content Assistant', icon: <Sparkles size={16} /> },
         { href: '/creator/profile?view=pitch-builder', label: 'Rate Calculator', icon: <Calculator size={16} /> },
-        { href: '/creator/dashboard?view=content-planner', label: 'Brand Collaboration', icon: <Users size={16} /> },
+        { href: '/creator/applications?view=collabs', label: 'Brand Collaboration', icon: <Users size={16} /> },
       ];
     } else if (user.role === 'brand') {
       return [

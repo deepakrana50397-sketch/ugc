@@ -34,6 +34,9 @@ export interface Creator {
     youtube?: string;
     linkedin?: string;
     twitter?: string;
+    behance?: string;
+    dribbble?: string;
+    website?: string;
   };
   isFeatured?: boolean;
   isVerified?: boolean;
