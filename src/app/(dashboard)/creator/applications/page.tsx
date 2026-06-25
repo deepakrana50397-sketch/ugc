@@ -6,13 +6,14 @@ import { getApplications, updateApplicationStatus } from '@/lib/services';
 import CreatorContractsView from './components/CreatorContractsView';
 import CreatorCollabsView from './components/CreatorCollabsView';
 import { Application } from '@/types/common';
-import { 
-  Search, Calendar, HelpCircle, ShieldAlert, Sparkles, 
+import {
+  Search, Calendar, HelpCircle, ShieldAlert, Sparkles,
   Bookmark, View, Info, ExternalLink, ChevronLeft, ChevronRight,
   User, Check, Filter, Clock, FileText, CheckCircle2, ChevronDown,
   Send, Star, MessageSquare, Download, X, Play, FileSpreadsheet
 } from 'lucide-react';
 import { useCurrency } from '@/hooks/useCurrency';
+import { useDashboardStore } from '@/store/dashboard/useDashboardStore';
 
 // Mock applications to seed and align with the metrics
 const DEFAULT_24_APPLICATIONS: Application[] = [
@@ -23,7 +24,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-1',
     brandName: 'Mamaearth',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     creatorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200',
     creatorTitle: 'Beauty & Lifestyle UGC Creator',
     pitch: 'Hey team! I love Mamaearth products and use your sunscreen daily. I would love to make an Instagram reel highlighting your organic moisturizer, showing the light texture, quick absorption, and glow on camera. I have a professional softbox lighting setup and can deliver within 3 days.',
@@ -47,7 +48,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-2',
     brandName: 'Swiggy',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     creatorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200',
     creatorTitle: 'Beauty & Lifestyle UGC Creator',
     pitch: 'Hi Swiggy! As a college creator, I can drive massive engagement for the campus ambassador program. I plan to run campus food crawls and promote student discounts through reels. Let’s collaborate!',
@@ -71,7 +72,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-3',
     brandName: 'boAt',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     creatorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200',
     creatorTitle: 'Beauty & Lifestyle UGC Creator',
     pitch: 'Hey boAt! I would love to review your new noise-canceling headphones. I can create a crisp, high-audio-quality review showing active lifestyle usage, comfort, and bass test.',
@@ -95,7 +96,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-4',
     brandName: 'Zomato',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     creatorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200',
     creatorTitle: 'Beauty & Lifestyle UGC Creator',
     pitch: 'Hi Zomato! I specialize in food cinematography and lifestyle vlogs. I can create appetizing short videos highlighting local spots and delivery options for your handles.',
@@ -119,7 +120,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-5',
     brandName: 'Minimalist',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     creatorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200',
     creatorTitle: 'Beauty & Lifestyle UGC Creator',
     pitch: 'Hello! As a skincare reviewer, I promote science-backed ingredients. I can shoot a morning skincare routine video featuring your serums.',
@@ -143,7 +144,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-6',
     brandName: 'Paytm',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     creatorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200',
     creatorTitle: 'Beauty & Lifestyle UGC Creator',
     pitch: 'Hi Paytm! I can promote the fest ticket sales through payment discount reels and college campus story updates.',
@@ -160,7 +161,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandLogoColor: '#3B82F6',
     brandLogoText: 'P'
   } as any,
-  
+
   // 4 other shortlisted items (making a total of 5 shortlisted)
   {
     id: 'app-mock-7',
@@ -169,7 +170,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-7',
     brandName: 'LunaCare',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 12000, USD: 140 },
     appliedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'shortlisted',
@@ -189,7 +190,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-8',
     brandName: 'BohoVibes',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 15000, USD: 180 },
     appliedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'shortlisted',
@@ -209,7 +210,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-9',
     brandName: 'CafeSocial',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 8000, USD: 100 },
     appliedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'shortlisted',
@@ -229,7 +230,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-10',
     brandName: 'Lumina Candles',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 5000, USD: 60 },
     appliedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'shortlisted',
@@ -251,7 +252,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-11',
     brandName: 'FitLife India',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 16000, USD: 200 },
     appliedAt: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'accepted',
@@ -271,7 +272,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-12',
     brandName: 'BlueTokai',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 9000, USD: 110 },
     appliedAt: new Date(Date.now() - 13 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'accepted',
@@ -291,7 +292,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-13',
     brandName: 'YogaBar',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 7500, USD: 90 },
     appliedAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'accepted',
@@ -311,7 +312,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-14',
     brandName: 'Fender',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 18000, USD: 220 },
     appliedAt: new Date(Date.now() - 17 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'accepted',
@@ -333,7 +334,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-15',
     brandName: 'EcoBeauty',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 13000, USD: 160 },
     appliedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'interview',
@@ -353,7 +354,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-16',
     brandName: 'GoldGym',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 11000, USD: 130 },
     appliedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'interview',
@@ -375,7 +376,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-17',
     brandName: 'GainzCorp',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 10000, USD: 120 },
     appliedAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'rejected',
@@ -395,7 +396,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-18',
     brandName: 'NYX',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 6000, USD: 75 },
     appliedAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'rejected',
@@ -415,7 +416,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-19',
     brandName: 'Puma',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 9500, USD: 115 },
     appliedAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'rejected',
@@ -437,7 +438,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-20',
     brandName: 'Noise',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 7000, USD: 85 },
     appliedAt: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'withdrawn',
@@ -459,7 +460,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-21',
     brandName: 'Apex Security',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 15000, USD: 180 },
     appliedAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'pending',
@@ -479,7 +480,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-22',
     brandName: 'CozyHome IoT',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 8000, USD: 100 },
     appliedAt: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'pending',
@@ -499,7 +500,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-23',
     brandName: 'PulseWear',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 9000, USD: 110 },
     appliedAt: new Date(Date.now() - 17 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'pending',
@@ -519,7 +520,7 @@ const DEFAULT_24_APPLICATIONS: Application[] = [
     brandId: 'brand-mock-24',
     brandName: 'PureGlow',
     creatorId: 'creator-1',
-    creatorName: 'Neha Kapoor',
+    creatorName: 'Ananya Sharma',
     rate: { INR: 7000, USD: 85 },
     appliedAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000).toISOString(),
     status: 'pending',
@@ -540,16 +541,23 @@ export default function CreatorApplicationsPage() {
   const view = searchParams.get('view');
   const isMyProjects = view === 'my-projects';
 
+  const { creator, user, loadDashboard } = useDashboardStore();
+  const profile = creator.profile;
+
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
   const [applications, setApplications] = useState<Application[]>([]);
   const [activeUnlockApp, setActiveUnlockApp] = useState<Application | null>(null);
-  
+
   // Interactive UI Filter States
   // Default to Approved tab if viewing projects
   const [activeTab, setActiveTab] = useState<'all' | 'applied' | 'shortlisted' | 'interview' | 'approved' | 'rejected' | 'withdrawn'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'applied' | 'shortlisted' | 'interview' | 'approved' | 'rejected' | 'withdrawn'>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'gig_title'>('newest');
-  
+
   // Split-screen select details state
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
 
@@ -617,7 +625,7 @@ export default function CreatorApplicationsPage() {
     if (storedBookmarks) {
       try {
         setBookmarks(JSON.parse(storedBookmarks));
-      } catch (e) {}
+      } catch (e) { }
     }
 
     return () => {
@@ -722,17 +730,33 @@ export default function CreatorApplicationsPage() {
     return currency === 'INR' ? `₹${inrVal.toLocaleString()}` : `$${usdVal.toLocaleString()}`;
   };
 
+  const currentCreatorName = profile?.name || user?.name || 'Ananya Sharma';
+  const currentCreatorAvatar = profile?.avatar || user?.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200';
+  const currentCreatorTitle = profile?.title || user?.title || 'UGC Creator & Content Strategist';
+
+  const mappedApplications = applications.map(app => {
+    if (app.creatorId === 'creator-1') {
+      return {
+        ...app,
+        creatorName: currentCreatorName,
+        creatorAvatar: currentCreatorAvatar,
+        creatorTitle: currentCreatorTitle
+      };
+    }
+    return app;
+  });
+
   // Get dynamic counts for the metrics cards and tabs
-  const countAll = applications.length;
-  const countApplied = applications.filter(a => a.status === 'pending').length;
-  const countShortlisted = applications.filter(a => a.status === 'shortlisted').length;
-  const countInterview = applications.filter(a => a.status === 'interview').length;
-  const countApproved = applications.filter(a => a.status === 'accepted' || a.status === 'unlocked').length;
-  const countRejected = applications.filter(a => a.status === 'rejected').length;
-  const countWithdrawn = applications.filter(a => a.status === 'withdrawn').length;
+  const countAll = mappedApplications.length;
+  const countApplied = mappedApplications.filter(a => a.status === 'pending').length;
+  const countShortlisted = mappedApplications.filter(a => a.status === 'shortlisted').length;
+  const countInterview = mappedApplications.filter(a => a.status === 'interview').length;
+  const countApproved = mappedApplications.filter(a => a.status === 'accepted' || a.status === 'unlocked').length;
+  const countRejected = mappedApplications.filter(a => a.status === 'rejected').length;
+  const countWithdrawn = mappedApplications.filter(a => a.status === 'withdrawn').length;
 
   // Filter application list based on Active Tab, Search Query, Status dropdown, Sort settings
-  const filteredApplications = applications.filter(app => {
+  const filteredApplications = mappedApplications.filter(app => {
     // 1. Tab filter
     if (activeTab === 'applied' && app.status !== 'pending') return false;
     if (activeTab === 'shortlisted' && app.status !== 'shortlisted') return false;
@@ -782,7 +806,7 @@ export default function CreatorApplicationsPage() {
   );
 
   // Selected application object
-  const selectedApp = (applications.find(a => a.id === selectedAppId) || null) as any;
+  const selectedApp = (mappedApplications.find(a => a.id === selectedAppId) || null) as any;
 
   // Status pills background & text colors
   const getStatusStyle = (status: Application['status']) => {
@@ -806,9 +830,9 @@ export default function CreatorApplicationsPage() {
 
   // Mock export handler
   const handleExport = () => {
-    const csvContent = "data:text/csv;charset=utf-8," 
+    const csvContent = "data:text/csv;charset=utf-8,"
       + ["ID,Gig Title,Brand,Rate,Applied Date,Status"].join("\n") + "\n"
-      + applications.map(app => `"${app.id}","${app.gigTitle}","${app.brandName}","${formatRateRange(app)}","${app.appliedAt}","${app.status}"`).join("\n");
+      + mappedApplications.map(app => `"${app.id}","${app.gigTitle}","${app.brandName}","${formatRateRange(app)}","${app.appliedAt}","${app.status}"`).join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -820,7 +844,7 @@ export default function CreatorApplicationsPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', color: primaryText }}>
-      
+
       {/* Title Header with Export Action */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
         <div>
@@ -856,7 +880,7 @@ export default function CreatorApplicationsPage() {
       </div>
 
       {/* Top Metrics Cards Row */}
-      <div 
+      <div
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -956,7 +980,7 @@ export default function CreatorApplicationsPage() {
             >
               {tab.label} <span style={{ opacity: 0.7, fontSize: '12.5px' }}>({tab.count})</span>
               {isActive && (
-                <div 
+                <div
                   style={{
                     position: 'absolute',
                     bottom: '-2px',
@@ -965,7 +989,7 @@ export default function CreatorApplicationsPage() {
                     height: '2px',
                     backgroundColor: accentColor,
                     borderRadius: '2px'
-                  }} 
+                  }}
                 />
               )}
             </button>
@@ -975,27 +999,27 @@ export default function CreatorApplicationsPage() {
 
       {/* Split-Screen layout container */}
       <div style={{ display: 'flex', gap: '24px', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start' }}>
-        
+
         {/* Left Column: List and Filters */}
         <div style={{ flex: '2 1 650px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          
+
           {/* Filters Control row */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-            
+
             {/* Search Input bar */}
             <div style={{ position: 'relative', flex: '1 1 280px', maxWidth: '380px' }}>
-              <Search 
-                size={16} 
-                style={{ 
-                  position: 'absolute', 
-                  left: '14px', 
-                  top: '50%', 
-                  transform: 'translateY(-50%)', 
-                  color: mutedText 
-                }} 
+              <Search
+                size={16}
+                style={{
+                  position: 'absolute',
+                  left: '14px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: mutedText
+                }}
               />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -1012,13 +1036,13 @@ export default function CreatorApplicationsPage() {
                   fontSize: '13.5px',
                   outline: 'none',
                   transition: 'all 0.2s ease'
-                }} 
+                }}
               />
             </div>
 
             {/* Right Buttons Filter & Sort */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              
+
               {/* Filter dropdown */}
               <div ref={statusDropdownRef} style={{ position: 'relative' }}>
                 <button
@@ -1039,8 +1063,8 @@ export default function CreatorApplicationsPage() {
                 >
                   <Filter size={14} />
                   <span>
-                    {statusFilter === 'all' 
-                      ? 'Filter' 
+                    {statusFilter === 'all'
+                      ? 'Filter'
                       : statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1)}
                   </span>
                   <ChevronDown size={13} style={{ opacity: 0.6 }} />
@@ -1083,8 +1107,8 @@ export default function CreatorApplicationsPage() {
                           padding: '8px 12px',
                           borderRadius: '8px',
                           border: 'none',
-                          backgroundColor: statusFilter === opt.key 
-                            ? (isLight ? '#F3F4F6' : 'rgba(255,255,255,0.05)') 
+                          backgroundColor: statusFilter === opt.key
+                            ? (isLight ? '#F3F4F6' : 'rgba(255,255,255,0.05)')
                             : 'transparent',
                           color: primaryText,
                           fontSize: '12.5px',
@@ -1160,8 +1184,8 @@ export default function CreatorApplicationsPage() {
                           padding: '8px 12px',
                           borderRadius: '8px',
                           border: 'none',
-                          backgroundColor: sortBy === opt.key 
-                            ? (isLight ? '#F3F4F6' : 'rgba(255,255,255,0.05)') 
+                          backgroundColor: sortBy === opt.key
+                            ? (isLight ? '#F3F4F6' : 'rgba(255,255,255,0.05)')
                             : 'transparent',
                           color: primaryText,
                           fontSize: '12.5px',
@@ -1184,27 +1208,27 @@ export default function CreatorApplicationsPage() {
           </div>
 
           {/* Applications list table */}
-          <div 
-            style={{ 
-              backgroundColor: cardBg, 
-              border: `1px solid ${borderColor}`, 
-              borderRadius: '16px', 
+          <div
+            style={{
+              backgroundColor: cardBg,
+              border: `1px solid ${borderColor}`,
+              borderRadius: '16px',
               overflow: 'hidden',
               boxShadow: '0 2px 10px rgba(0,0,0,0.01)'
             }}
           >
             {/* Headers */}
-            <div 
-              style={{ 
-                display: 'flex', 
-                padding: '14px 24px', 
-                borderBottom: `1px solid ${borderColor}`, 
+            <div
+              style={{
+                display: 'flex',
+                padding: '14px 24px',
+                borderBottom: `1px solid ${borderColor}`,
                 backgroundColor: isLight ? '#FAF9FB' : '#161619',
-                fontSize: '12px', 
-                fontWeight: 700, 
-                color: secondaryText, 
-                textTransform: 'uppercase', 
-                letterSpacing: '0.05em' 
+                fontSize: '12px',
+                fontWeight: 700,
+                color: secondaryText,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
               }}
               className="desktop-only-flex"
             >
@@ -1224,7 +1248,7 @@ export default function CreatorApplicationsPage() {
                   const isSelected = selectedAppId === app.id;
 
                   return (
-                    <div 
+                    <div
                       key={app.id}
                       onClick={() => setSelectedAppId(app.id)}
                       style={{
@@ -1237,8 +1261,8 @@ export default function CreatorApplicationsPage() {
                         flexDirection: 'row',
                         flexWrap: 'wrap',
                         gap: '12px',
-                        backgroundColor: isSelected 
-                          ? (isLight ? '#FDF2F8' : 'rgba(236,72,153,0.04)') 
+                        backgroundColor: isSelected
+                          ? (isLight ? '#FDF2F8' : 'rgba(236,72,153,0.04)')
                           : 'transparent',
                         borderLeft: isSelected ? `3px solid ${accentColor}` : '3px solid transparent'
                       }}
@@ -1246,9 +1270,9 @@ export default function CreatorApplicationsPage() {
                     >
                       {/* Column 1: Gig/Brand thumbnail and info */}
                       <div style={{ flex: '4 1 240px', display: 'flex', alignItems: 'center', gap: '14px', minWidth: 0 }}>
-                        <img 
-                          src={app.thumbnailUrl || 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=100&auto=format&fit=crop&q=60'} 
-                          alt="thumbnail" 
+                        <img
+                          src={app.thumbnailUrl || 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=100&auto=format&fit=crop&q=60'}
+                          alt="thumbnail"
                           style={{
                             width: '44px',
                             height: '44px',
@@ -1256,40 +1280,40 @@ export default function CreatorApplicationsPage() {
                             objectFit: 'cover',
                             flexShrink: 0,
                             border: `1px solid ${borderColor}`
-                          }} 
+                          }}
                         />
                         <div style={{ minWidth: 0 }}>
-                          <h3 
-                            style={{ 
-                              fontSize: '14px', 
-                              fontWeight: 700, 
-                              color: primaryText, 
-                              margin: 0, 
-                              textOverflow: 'ellipsis', 
-                              overflow: 'hidden', 
-                              whiteSpace: 'nowrap' 
+                          <h3
+                            style={{
+                              fontSize: '14px',
+                              fontWeight: 700,
+                              color: primaryText,
+                              margin: 0,
+                              textOverflow: 'ellipsis',
+                              overflow: 'hidden',
+                              whiteSpace: 'nowrap'
                             }}
                           >
                             {app.gigTitle}
                           </h3>
-                          <span 
-                            style={{ 
-                              color: secondaryText, 
-                              fontSize: '12.5px', 
-                              display: 'block', 
+                          <span
+                            style={{
+                              color: secondaryText,
+                              fontSize: '12.5px',
+                              display: 'block',
                               marginTop: '2px',
                               fontWeight: 500
                             }}
                           >
                             {app.brandName}
                           </span>
-                          <span 
-                            style={{ 
-                              color: secondaryText, 
-                              fontSize: '12.5px', 
-                              fontWeight: 650, 
-                              display: 'block', 
-                              marginTop: '3px' 
+                          <span
+                            style={{
+                              color: secondaryText,
+                              fontSize: '12.5px',
+                              fontWeight: 650,
+                              display: 'block',
+                              marginTop: '3px'
                             }}
                           >
                             {formatRateRange(app)}
@@ -1313,16 +1337,16 @@ export default function CreatorApplicationsPage() {
 
                       {/* Column 3: Status bullet */}
                       <div style={{ flex: '2 1 110px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div 
+                        <div
                           style={{
                             width: '8px',
                             height: '8px',
                             borderRadius: '50%',
                             backgroundColor: statusStyle.bullet,
                             flexShrink: 0
-                          }} 
+                          }}
                         />
-                        <span 
+                        <span
                           style={{
                             fontSize: '13px',
                             fontWeight: 600,
@@ -1334,13 +1358,13 @@ export default function CreatorApplicationsPage() {
                       </div>
 
                       {/* Column 4: Actions */}
-                      <div 
-                        style={{ 
-                          flex: '2 1 110px', 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'flex-end', 
-                          gap: '10px' 
+                      <div
+                        style={{
+                          flex: '2 1 110px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'flex-end',
+                          gap: '10px'
                         }}
                         onClick={(e) => e.stopPropagation()} // Stop selected parent triggers
                       >
@@ -1375,9 +1399,9 @@ export default function CreatorApplicationsPage() {
                           }}
                           title={isBookmarked ? 'Remove Bookmark' : 'Save Application'}
                         >
-                          <Bookmark 
-                            size={16} 
-                            fill={isBookmarked ? accentColor : 'none'} 
+                          <Bookmark
+                            size={16}
+                            fill={isBookmarked ? accentColor : 'none'}
                           />
                         </button>
                       </div>
@@ -1464,13 +1488,13 @@ export default function CreatorApplicationsPage() {
 
         {/* Right Column: Split-screen details panel */}
         {selectedApp && (
-          <div 
-            style={{ 
-              flex: '1 1 350px', 
-              backgroundColor: cardBg, 
-              border: `1px solid ${borderColor}`, 
-              borderRadius: '16px', 
-              padding: '24px', 
+          <div
+            style={{
+              flex: '1 1 350px',
+              backgroundColor: cardBg,
+              border: `1px solid ${borderColor}`,
+              borderRadius: '16px',
+              padding: '24px',
               boxShadow: '0 4px 20px rgba(0,0,0,0.02)',
               display: 'flex',
               flexDirection: 'column',
@@ -1481,11 +1505,11 @@ export default function CreatorApplicationsPage() {
             {/* Header Close button and title */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div style={{ minWidth: 0 }}>
-                <h2 
-                  style={{ 
-                    fontSize: '17px', 
-                    fontWeight: 800, 
-                    color: primaryText, 
+                <h2
+                  style={{
+                    fontSize: '17px',
+                    fontWeight: 800,
+                    color: primaryText,
                     margin: 0,
                     lineHeight: 1.3
                   }}
@@ -1515,9 +1539,9 @@ export default function CreatorApplicationsPage() {
 
             {/* Selected item metadata card */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <img 
-                src={selectedApp.thumbnailUrl || 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=100&auto=format&fit=crop&q=60'} 
-                alt="thumbnail" 
+              <img
+                src={selectedApp.thumbnailUrl || 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=100&auto=format&fit=crop&q=60'}
+                alt="thumbnail"
                 style={{
                   width: '64px',
                   height: '64px',
@@ -1542,10 +1566,10 @@ export default function CreatorApplicationsPage() {
             </div>
 
             {/* Application Status Timeline block */}
-            <div 
-              style={{ 
-                border: `1px solid ${borderColor}`, 
-                borderRadius: '12px', 
+            <div
+              style={{
+                border: `1px solid ${borderColor}`,
+                borderRadius: '12px',
                 padding: '16px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -1557,10 +1581,10 @@ export default function CreatorApplicationsPage() {
                 <span style={{ fontSize: '13px', fontWeight: 700, color: primaryText }}>
                   Application Status
                 </span>
-                <span 
-                  style={{ 
-                    fontSize: '11px', 
-                    fontWeight: 700, 
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
                     color: getStatusStyle(selectedApp.status).color,
                     backgroundColor: getStatusStyle(selectedApp.status).bg,
                     padding: '2px 8px',
@@ -1574,7 +1598,7 @@ export default function CreatorApplicationsPage() {
                   {getStatusStyle(selectedApp.status).label}
                 </span>
               </div>
-              
+
               <p style={{ fontSize: '12.5px', color: secondaryText, margin: 0, lineHeight: 1.45 }}>
                 {selectedApp.status === 'shortlisted' && "Great! You've been shortlisted by the brand."}
                 {selectedApp.status === 'accepted' && "Congratulations! Your application has been approved by the brand."}
@@ -1587,9 +1611,9 @@ export default function CreatorApplicationsPage() {
 
               {/* Timeline graphic steps */}
               <div style={{ display: 'flex', flexDirection: 'column', position: 'relative', paddingLeft: '24px', gap: '20px', marginTop: '6px' }}>
-                
+
                 {/* Connecting Line vertical bar */}
-                <div 
+                <div
                   style={{
                     position: 'absolute',
                     left: '7px',
@@ -1597,15 +1621,15 @@ export default function CreatorApplicationsPage() {
                     bottom: '8px',
                     width: '2px',
                     backgroundColor: isLight ? '#E5E7EB' : 'rgba(255,255,255,0.06)'
-                  }} 
+                  }}
                 />
 
                 {/* Step 1: Applied */}
-                <TimelineStep 
-                  title="Applied" 
-                  desc="You applied for this gig" 
-                  date={selectedApp.appliedAt ? new Date(selectedApp.appliedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : 'Recently'} 
-                  isPassed={true} 
+                <TimelineStep
+                  title="Applied"
+                  desc="You applied for this gig"
+                  date={selectedApp.appliedAt ? new Date(selectedApp.appliedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : 'Recently'}
+                  isPassed={true}
                   isCurrent={selectedApp.status === 'pending'}
                   accentColor={accentColor}
                   mutedText={mutedText}
@@ -1614,11 +1638,11 @@ export default function CreatorApplicationsPage() {
                 />
 
                 {/* Step 2: Viewed by Brand */}
-                <TimelineStep 
-                  title="Viewed by Brand" 
-                  desc="Brand viewed your application" 
-                  date={selectedApp.status !== 'pending' ? new Date(new Date(selectedApp.appliedAt).getTime() + 24*60*60*1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''} 
-                  isPassed={selectedApp.status !== 'pending'} 
+                <TimelineStep
+                  title="Viewed by Brand"
+                  desc="Brand viewed your application"
+                  date={selectedApp.status !== 'pending' ? new Date(new Date(selectedApp.appliedAt).getTime() + 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''}
+                  isPassed={selectedApp.status !== 'pending'}
                   isCurrent={false}
                   accentColor={accentColor}
                   mutedText={mutedText}
@@ -1627,11 +1651,11 @@ export default function CreatorApplicationsPage() {
                 />
 
                 {/* Step 3: Shortlisted */}
-                <TimelineStep 
-                  title="Shortlisted" 
-                  desc="You've been shortlisted" 
-                  date={['shortlisted', 'interview', 'accepted', 'unlocked'].includes(selectedApp.status) ? new Date(new Date(selectedApp.appliedAt).getTime() + 2*24*60*60*1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''} 
-                  isPassed={['shortlisted', 'interview', 'accepted', 'unlocked'].includes(selectedApp.status)} 
+                <TimelineStep
+                  title="Shortlisted"
+                  desc="You've been shortlisted"
+                  date={['shortlisted', 'interview', 'accepted', 'unlocked'].includes(selectedApp.status) ? new Date(new Date(selectedApp.appliedAt).getTime() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''}
+                  isPassed={['shortlisted', 'interview', 'accepted', 'unlocked'].includes(selectedApp.status)}
                   isCurrent={selectedApp.status === 'shortlisted'}
                   accentColor={accentColor}
                   mutedText={mutedText}
@@ -1641,11 +1665,11 @@ export default function CreatorApplicationsPage() {
                 />
 
                 {/* Step 4: Interview */}
-                <TimelineStep 
-                  title="Interview" 
-                  desc="Interview pending or scheduled" 
-                  date={['interview', 'accepted', 'unlocked'].includes(selectedApp.status) ? new Date(new Date(selectedApp.appliedAt).getTime() + 3*24*60*60*1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''} 
-                  isPassed={['interview', 'accepted', 'unlocked'].includes(selectedApp.status)} 
+                <TimelineStep
+                  title="Interview"
+                  desc="Interview pending or scheduled"
+                  date={['interview', 'accepted', 'unlocked'].includes(selectedApp.status) ? new Date(new Date(selectedApp.appliedAt).getTime() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''}
+                  isPassed={['interview', 'accepted', 'unlocked'].includes(selectedApp.status)}
                   isCurrent={selectedApp.status === 'interview'}
                   accentColor={accentColor}
                   mutedText={mutedText}
@@ -1655,11 +1679,11 @@ export default function CreatorApplicationsPage() {
                 />
 
                 {/* Step 5: Approved */}
-                <TimelineStep 
-                  title="Approved" 
-                  desc="Hired and project ready" 
-                  date={['accepted', 'unlocked'].includes(selectedApp.status) ? new Date(new Date(selectedApp.appliedAt).getTime() + 4*24*60*60*1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''} 
-                  isPassed={['accepted', 'unlocked'].includes(selectedApp.status)} 
+                <TimelineStep
+                  title="Approved"
+                  desc="Hired and project ready"
+                  date={['accepted', 'unlocked'].includes(selectedApp.status) ? new Date(new Date(selectedApp.appliedAt).getTime() + 4 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''}
+                  isPassed={['accepted', 'unlocked'].includes(selectedApp.status)}
                   isCurrent={['accepted', 'unlocked'].includes(selectedApp.status)}
                   accentColor={accentColor}
                   mutedText={mutedText}
@@ -1675,15 +1699,15 @@ export default function CreatorApplicationsPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '13.5px', color: secondaryText, fontWeight: 650 }}>My Application</span>
-                <button 
+                <button
                   onClick={() => setShowCoverLetter(true)}
-                  style={{ 
-                    background: 'none', 
-                    border: 'none', 
-                    color: accentColor, 
-                    fontWeight: 750, 
-                    cursor: 'pointer', 
-                    fontSize: '13px' 
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: accentColor,
+                    fontWeight: 750,
+                    cursor: 'pointer',
+                    fontSize: '13px'
                   }}
                 >
                   View Cover Letter
@@ -1695,9 +1719,9 @@ export default function CreatorApplicationsPage() {
                 <span style={{ fontSize: '11.5px', color: mutedText, display: 'block', marginBottom: '8px', fontWeight: 600 }}>
                   Attachments (2)
                 </span>
-                
+
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  
+
                   {/* Play Video icon attachment box */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', border: `1px solid ${borderColor}`, padding: '8px 12px', borderRadius: '8px', backgroundColor: isLight ? '#F9FAFB' : 'rgba(255,255,255,0.02)' }}>
                     <div style={{ backgroundColor: '#F5F3FF', color: '#8B5CF6', padding: '4px', borderRadius: '6px', display: 'flex' }}>
@@ -1773,7 +1797,7 @@ export default function CreatorApplicationsPage() {
 
       {/* Verification Shortlist Payment Drawer Modal */}
       {activeUnlockApp && (
-        <div 
+        <div
           style={{
             position: 'fixed',
             top: 0,
@@ -1789,7 +1813,7 @@ export default function CreatorApplicationsPage() {
             padding: '24px',
           }}
         >
-          <div 
+          <div
             style={{
               backgroundColor: isLight ? '#FFFFFF' : '#1C1C1F',
               maxWidth: '480px',
@@ -1814,15 +1838,15 @@ export default function CreatorApplicationsPage() {
               </p>
             </div>
 
-            <div 
-              style={{ 
-                backgroundColor: isLight ? '#F9FAFB' : 'rgba(255,255,255,0.02)', 
-                padding: '16px', 
-                borderRadius: '12px', 
-                border: `1px solid ${borderColor}`, 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center' 
+            <div
+              style={{
+                backgroundColor: isLight ? '#F9FAFB' : 'rgba(255,255,255,0.02)',
+                padding: '16px',
+                borderRadius: '12px',
+                border: `1px solid ${borderColor}`,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
               }}
             >
               <span style={{ fontSize: '14px', color: secondaryText }}>Shortlist connection fee:</span>
@@ -1872,7 +1896,7 @@ export default function CreatorApplicationsPage() {
 
       {/* Cover Letter View Dialog */}
       {showCoverLetter && selectedApp && (
-        <div 
+        <div
           style={{
             position: 'fixed',
             top: 0,
@@ -1888,7 +1912,7 @@ export default function CreatorApplicationsPage() {
             padding: '24px',
           }}
         >
-          <div 
+          <div
             style={{
               backgroundColor: isLight ? '#FFFFFF' : '#1C1C1F',
               maxWidth: '520px',
@@ -1958,10 +1982,10 @@ interface TimelineStepProps {
 
 function TimelineStep({
   title, desc, date, isPassed, isCurrent, accentColor,
-  mutedText, secondaryText, primaryText, 
+  mutedText, secondaryText, primaryText,
   isYellowIndicator, isPurpleIndicator, isGreenIndicator
 }: TimelineStepProps) {
-  
+
   // Icon style selection
   let dotBg = 'transparent';
   let dotBorder = '2px solid #9CA3AF';
@@ -1992,7 +2016,7 @@ function TimelineStep({
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', width: '100%' }}>
       {/* Circle Icon Bullet */}
-      <div 
+      <div
         style={{
           position: 'absolute',
           left: '-23px',
@@ -2033,8 +2057,8 @@ function TimelineStep({
 function MapPinWrapper({ size }: { size: number }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-      <circle cx="12" cy="10" r="3"/>
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
     </svg>
   );
 }

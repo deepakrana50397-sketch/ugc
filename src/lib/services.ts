@@ -3,12 +3,9 @@ import { Creator } from '@/types/creator';
 import { Application, User } from '@/types/common';
 import { mockGigs } from '@/data/gigs';
 import { mockCreators } from '@/data/creators';
-import { creatorDashboardData, brandDashboardData } from '@/data/dashboard';
 
-// Helper to check if window is defined (client-side)
 const isClient = typeof window !== 'undefined';
 
-// Safe localStorage getter
 function getLocalStorageItem<T>(key: string, defaultValue: T): T {
   if (!isClient) return defaultValue;
   try {
@@ -20,7 +17,6 @@ function getLocalStorageItem<T>(key: string, defaultValue: T): T {
   }
 }
 
-// Safe localStorage setter
 function setLocalStorageItem<T>(key: string, value: T): void {
   if (!isClient) return;
   try {
@@ -30,84 +26,109 @@ function setLocalStorageItem<T>(key: string, value: T): void {
   }
 }
 
-// Seeds default data into localStorage if not present
+// Background sync function connecting local storage cache with server-side Next.js mock API routes
+export async function syncDatabaseWithApi() {
+  if (!isClient) return;
+  try {
+    // 1. Sync auth user
+    const resAuth = await fetch('/api/auth/me');
+    const authData = await resAuth.json();
+    if (authData.success && authData.user) {
+      setLocalStorageItem('igigster_user', authData.user);
+    }
+
+    // 2. Sync gigs
+    const resGigs = await fetch('/api/gigs');
+    const gigsData = await resGigs.json();
+    if (gigsData.success && gigsData.gigs) {
+      setLocalStorageItem('igigster_gigs', gigsData.gigs);
+    }
+
+    // 3. Sync creators
+    const resCreators = await fetch('/api/creators');
+    const creatorsData = await resCreators.json();
+    if (creatorsData.success && creatorsData.creators) {
+      setLocalStorageItem('igigster_creators', creatorsData.creators);
+    }
+
+    // 4. Sync applications
+    const resApps = await fetch('/api/applications');
+    const appsData = await resApps.json();
+    if (appsData.success && appsData.applications) {
+      setLocalStorageItem('igigster_applications', appsData.applications);
+    }
+
+    // 5. Sync escrow audits
+    const resEscrow = await fetch('/api/escrow');
+    const escrowData = await resEscrow.json();
+    if (escrowData.success && escrowData.escrow) {
+      setLocalStorageItem('igigster_admin_escrow', escrowData.escrow);
+    }
+
+    // 6. Sync payouts queue
+    const resPayouts = await fetch('/api/payouts');
+    const payoutsData = await resPayouts.json();
+    if (payoutsData.success && payoutsData.payouts) {
+      setLocalStorageItem('igigster_admin_payouts', payoutsData.payouts);
+    }
+
+    // 7. Sync risk moderation
+    const resRisk = await fetch('/api/risk');
+    const riskData = await resRisk.json();
+    if (riskData.success && riskData.risk) {
+      setLocalStorageItem('igigster_admin_risk', riskData.risk);
+    }
+  } catch (err) {
+    console.warn('API Sync unavailable, relying on local cache:', err);
+  }
+}
+
 export function seedMockDatabase() {
   if (!isClient) return;
-  
+
+  // Initialize synchronous cache values if empty
   if (!localStorage.getItem('igigster_gigs')) {
     setLocalStorageItem('igigster_gigs', mockGigs);
   }
   if (!localStorage.getItem('igigster_creators')) {
     setLocalStorageItem('igigster_creators', mockCreators);
   }
-  if (!localStorage.getItem('igigster_applications')) {
-    // Seed initial applications from dashboard data
-    const initialApps: Application[] = creatorDashboardData.applications.map((app, index) => {
-      const creator = mockCreators[0]; // Neha Kapoor
-      const gig = mockGigs.find(g => g.id === app.gigId) || mockGigs[0];
-      return {
-        id: app.id,
-        gigId: app.gigId,
-        gigTitle: app.gigTitle,
-        brandId: gig.brandId,
-        brandName: app.brandName,
-        creatorId: creator.id,
-        creatorName: creator.name,
-        creatorAvatar: creator.avatar,
-        creatorTitle: creator.title,
-        pitch: `Pitch proposal for ${app.gigTitle} by Neha Kapoor.`,
-        portfolioLink: creator.portfolio[0]?.videoUrl || '',
-        rate: app.bidAmount,
-        appliedAt: new Date(app.appliedDate).toISOString(),
-        status: app.status as any
-      };
-    });
-    setLocalStorageItem('igigster_applications', initialApps);
-  }
+
+  // Trigger background sync with Next.js route endpoints
+  syncDatabaseWithApi();
 }
 
 // ----------------------
 // AUTH SIMULATION SERVICE
 // ----------------------
 export function getCurrentUser(): User | null {
+  seedMockDatabase();
   return getLocalStorageItem<User | null>('igigster_user', null);
 }
 
-export function loginMockUser(email: string, role: 'creator' | 'brand' | 'admin'): User {
-  let name = 'Guest User';
-  let companyName = undefined;
-  let title = undefined;
-
-  if (role === 'creator') {
-    name = 'Neha Kapoor';
-    title = 'Beauty & Lifestyle UGC Creator';
-  } else if (role === 'brand') {
-    name = 'Sarah Jenkins';
-    companyName = 'SkinGlow India';
-  } else if (role === 'admin') {
-    name = 'Admin Director';
+export async function loginMockUser(email: string, role: 'creator' | 'brand' | 'admin'): Promise<User> {
+  const response = await fetch('/api/auth/me', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, role })
+  });
+  const data = await response.json();
+  if (data.success && data.user) {
+    setLocalStorageItem('igigster_user', data.user);
+    return data.user;
   }
-
-  const user: User = {
-    id: role === 'creator' ? 'creator-1' : role === 'brand' ? 'brand-skinglow' : 'admin-1',
-    name,
-    email,
-    role,
-    companyName,
-    title,
-    avatar: role === 'creator' 
-      ? 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200'
-      : 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200',
-    joinedAt: new Date().toISOString()
-  };
-
-  setLocalStorageItem('igigster_user', user);
-  return user;
+  throw new Error('Login API failed');
 }
 
-export function logoutUser(): void {
-  if (!isClient) return;
-  localStorage.removeItem('igigster_user');
+export async function logoutUser(): Promise<void> {
+  if (isClient) {
+    localStorage.removeItem('igigster_user');
+  }
+  await fetch('/api/auth/me', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: '', role: '' })
+  });
 }
 
 // ----------------------
@@ -123,29 +144,33 @@ export function getGigBySlug(slug: string): Gig | undefined {
   return gigs.find(g => g.slug === slug);
 }
 
-export function createGig(gig: Omit<Gig, 'id' | 'postedAt' | 'applicantsCount' | 'status' | 'brandId' | 'brandName' | 'brandLogo'>): Gig {
-  const gigs = getGigs();
-  const user = getCurrentUser();
-  
-  const newGig: Gig = {
-    ...gig,
-    id: `gig-${Date.now()}`,
-    postedAt: new Date().toISOString(),
-    applicantsCount: 0,
-    status: 'active',
-    brandId: user?.id || 'brand-generic',
-    brandName: user?.companyName || user?.name || 'Incredible Brand',
-    brandLogo: user?.avatar || 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80&w=100'
-  };
-
-  setLocalStorageItem('igigster_gigs', [newGig, ...gigs]);
-  return newGig;
+export async function createGig(gig: Omit<Gig, 'id' | 'postedAt' | 'applicantsCount' | 'status' | 'brandId' | 'brandName' | 'brandLogo'>): Promise<Gig> {
+  const response = await fetch('/api/gigs', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(gig)
+  });
+  const data = await response.json();
+  if (data.success && data.gig) {
+    // Sync cache locally
+    const gigs = getGigs();
+    setLocalStorageItem('igigster_gigs', [data.gig, ...gigs]);
+    return data.gig;
+  }
+  throw new Error('Create Gig brief API failed');
 }
 
-export function updateGigStatus(gigId: string, status: Gig['status']): void {
+export async function updateGigStatus(gigId: string, status: Gig['status']): Promise<void> {
   const gigs = getGigs();
   const updated = gigs.map(g => g.id === gigId ? { ...g, status } : g);
   setLocalStorageItem('igigster_gigs', updated);
+
+  // Sync to database
+  await fetch('/api/gigs', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: gigId, status })
+  });
 }
 
 // ----------------------
@@ -161,45 +186,27 @@ export function getCreatorById(id: string): Creator | undefined {
   return creators.find(c => c.id === id);
 }
 
-export function registerCreatorProfile(creatorData: Partial<Creator>): Creator {
-  const creators = getCreators();
-  const user = getCurrentUser();
+export async function registerCreatorProfile(creatorData: Partial<Creator>): Promise<Creator> {
+  const response = await fetch('/api/creators', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(creatorData)
+  });
+  const data = await response.json();
+  if (data.success && data.creator) {
+    const creators = getCreators();
+    const exists = creators.some(c => c.id === data.creator.id);
+    const updatedCreators = exists
+      ? creators.map(c => c.id === data.creator.id ? data.creator : c)
+      : [data.creator, ...creators];
 
-  const newCreator: Creator = {
-    id: user?.id || `creator-${Date.now()}`,
-    name: user?.name || creatorData.name || 'New Creator',
-    avatar: user?.avatar || creatorData.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
-    title: creatorData.title || 'UGC Video Creator',
-    bio: creatorData.bio || '',
-    category: creatorData.category || 'video_creator',
-    location: creatorData.location || 'India',
-    rating: 5.0,
-    completedJobs: 0,
-    skills: creatorData.skills || [],
-    startingRate: creatorData.startingRate || { INR: 2000, USD: 30 },
-    portfolio: creatorData.portfolio || [],
-    socials: creatorData.socials || {},
-    isFeatured: false,
-    isVerified: false,
-    ...creatorData
-  };
-
-  const exists = creators.some(c => c.id === newCreator.id);
-  const updatedCreators = exists
-    ? creators.map(c => c.id === newCreator.id ? newCreator : c)
-    : [newCreator, ...creators];
-
-  setLocalStorageItem('igigster_creators', updatedCreators);
-  
-  // Update the current logged in user metadata too
-  if (user) {
-    user.name = newCreator.name;
-    user.title = newCreator.title;
-    user.avatar = newCreator.avatar;
-    setLocalStorageItem('igigster_user', user);
+    setLocalStorageItem('igigster_creators', updatedCreators);
+    if (data.user) {
+      setLocalStorageItem('igigster_user', data.user);
+    }
+    return data.creator;
   }
-
-  return newCreator;
+  throw new Error('Register Creator profile API failed');
 }
 
 // ----------------------
@@ -210,51 +217,45 @@ export function getApplications(): Application[] {
   return getLocalStorageItem<Application[]>('igigster_applications', []);
 }
 
-export function applyToGig(applicationData: {
+export async function applyToGig(applicationData: {
   gigId: string;
   pitch: string;
   portfolioLink: string;
   rate: { INR: number; USD: number };
-}): Application {
-  const applications = getApplications();
-  const user = getCurrentUser();
-  const gigs = getGigs();
-  const gig = gigs.find(g => g.id === applicationData.gigId);
-
-  if (!gig) throw new Error('Gig not found');
-
-  const newApp: Application = {
-    id: `app-${Date.now()}`,
-    gigId: applicationData.gigId,
-    gigTitle: gig.title,
-    brandId: gig.brandId,
-    brandName: gig.brandName,
-    creatorId: user?.id || 'creator-anonymous',
-    creatorName: user?.name || 'Anonymous Creator',
-    creatorAvatar: user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
-    creatorTitle: user?.title || 'UGC Creator',
-    pitch: applicationData.pitch,
-    portfolioLink: applicationData.portfolioLink,
-    rate: applicationData.rate,
-    appliedAt: new Date().toISOString(),
-    status: 'pending'
-  };
-
-  // Increment gig application counter
-  const updatedGigs = gigs.map(g => {
-    if (g.id === applicationData.gigId) {
-      return { ...g, applicantsCount: g.applicantsCount + 1 };
-    }
-    return g;
+}): Promise<Application> {
+  const response = await fetch('/api/applications', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(applicationData)
   });
-  setLocalStorageItem('igigster_gigs', updatedGigs);
+  const data = await response.json();
+  if (data.success && data.application) {
+    // Update count in gigs locally
+    const gigs = getGigs();
+    const updatedGigs = gigs.map(g => {
+      if (g.id === applicationData.gigId) {
+        return { ...g, applicantsCount: g.applicantsCount + 1 };
+      }
+      return g;
+    });
+    setLocalStorageItem('igigster_gigs', updatedGigs);
 
-  setLocalStorageItem('igigster_applications', [newApp, ...applications]);
-  return newApp;
+    // Sync app locally
+    const applications = getApplications();
+    setLocalStorageItem('igigster_applications', [data.application, ...applications]);
+    return data.application;
+  }
+  throw new Error('Apply pitch to Gig API failed');
 }
 
-export function updateApplicationStatus(appId: string, status: Application['status']): void {
+export async function updateApplicationStatus(appId: string, status: Application['status']): Promise<void> {
   const applications = getApplications();
   const updated = applications.map(app => app.id === appId ? { ...app, status } : app);
   setLocalStorageItem('igigster_applications', updated);
+
+  await fetch('/api/applications', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: appId, status })
+  });
 }

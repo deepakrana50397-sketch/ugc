@@ -7,15 +7,49 @@ import { displayPrice } from '@/lib/currency';
 import { useCurrency } from '@/hooks/useCurrency';
 import { getGigs } from '@/lib/services';
 import { Gig } from '@/types/gig';
+import { useTheme } from '@/components/providers/ThemeProvider';
 import {
   Search, Users, Briefcase, Rocket, Megaphone, Calendar, BarChart2, Grid,
   Plus, X, Heart, ShieldAlert, Sparkles, Smile, FolderOpen, ArrowUpRight, CheckCircle
 } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const CreatorMessagesView = dynamic(() => import('@/app/(dashboard)/creator/dashboard/components/CreatorMessagesView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const CreatorAnalyticsView = dynamic(() => import('@/app/(dashboard)/creator/dashboard/components/CreatorAnalyticsView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const BrandPaymentsView = dynamic(() => import('./components/BrandPaymentsView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const BrandSavedView = dynamic(() => import('./components/BrandSavedView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const BrandTeamView = dynamic(() => import('./components/BrandTeamView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const BrandContractsView = dynamic(() => import('./components/BrandContractsView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const BrandContentPlannerView = dynamic(() => import('./components/BrandContentPlannerView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const BrandKitView = dynamic(() => import('./components/BrandKitView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const BrandReportsView = dynamic(() => import('./components/BrandReportsView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
 
 export default function BrandDashboardPage() {
   const { currency } = useCurrency();
+  const searchParams = useSearchParams();
+  const view = searchParams.get('view');
+  
   const [activeGigs, setActiveGigs] = useState<Gig[]>([]);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const { theme } = useTheme();
   const [greeting, setGreeting] = useState("Good evening, let's create real impact!");
 
   useEffect(() => {
@@ -31,17 +65,6 @@ export default function BrandDashboardPage() {
       setGreeting("Good evening, let's create real impact!");
     }
 
-    // Theme subscription
-    const savedTheme = localStorage.getItem('igigster_theme') as 'dark' | 'light';
-    if (savedTheme) setTheme(savedTheme);
-
-    const handleThemeChange = () => {
-      const currentTheme = localStorage.getItem('igigster_theme') as 'dark' | 'light';
-      if (currentTheme) setTheme(currentTheme);
-    };
-
-    window.addEventListener('igigster-theme-change', handleThemeChange);
-    return () => window.removeEventListener('igigster-theme-change', handleThemeChange);
   }, []);
 
   const stats = brandDashboardData.stats;
@@ -64,10 +87,154 @@ export default function BrandDashboardPage() {
 
   const shadowStyle = 'var(--shadow-style)';
 
+  if (view === 'messages') {
+    return (
+      <CreatorMessagesView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'analytics') {
+    return (
+      <CreatorAnalyticsView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'payments') {
+    return (
+      <BrandPaymentsView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'saved') {
+    return (
+      <BrandSavedView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'team') {
+    return (
+      <BrandTeamView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'contracts') {
+    return (
+      <BrandContractsView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'content-planner') {
+    return (
+      <BrandContentPlannerView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'brand-kit') {
+    return (
+      <BrandKitView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'reports') {
+    return (
+      <BrandReportsView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
   const brandShortcuts = [
     { label: 'Find Talent', desc: 'Hire creators & pros', icon: <Users size={24} strokeWidth={2.2} />, iconColor: '#8B5CF6', href: '/brand/applicants' },
     { label: 'Build Team', desc: 'Hire multiple people', icon: <Users size={24} strokeWidth={2.2} />, iconColor: '#3B82F6', href: '/brand/applicants' },
-    { label: 'Hire Agency', desc: 'Work with agencies', icon: <Briefcase size={24} strokeWidth={2.2} />, iconColor: '#10B981', href: '/brand/applicants' },
+    { label: 'Hire Agency', desc: 'Work with agencies', icon: <Briefcase size={24} strokeWidth={2.2} />, iconColor: '#10B981', href: '/brand/applicants?view=agencies' },
     { label: 'Hire igigster', desc: 'We run your campaign', icon: <Rocket size={24} strokeWidth={2.2} />, iconColor: '#EC4899', href: '/how-it-works' },
     { label: 'Post Campaign', desc: 'Post a new brief', icon: <Megaphone size={24} strokeWidth={2.2} />, iconColor: '#F97316', href: '/brand/post-gig' },
     { label: 'My Campaigns', desc: 'Track & manage', icon: <Calendar size={24} strokeWidth={2.2} />, iconColor: '#8B5CF6', href: '/brand/gigs' },

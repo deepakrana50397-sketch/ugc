@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useDashboardStore } from '@/store/dashboard/useDashboardStore';
 import { 
   Star, Search, ChevronDown, Clock, Lightbulb, MessageSquare, 
   CheckCircle2, ArrowUpRight, MoreVertical, Calendar, Layers, Check
@@ -88,6 +89,9 @@ export default function CreatorReviewsView({
   accentColor,
   shadowStyle
 }: ReviewsViewProps) {
+  const { user, creator } = useDashboardStore();
+  const profile = creator.profile;
+  const firstName = profile?.name ? profile.name.split(' ')[0] : (user?.name ? user.name.split(' ')[0] : 'Ananya');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [ratingFilter, setRatingFilter] = useState('All');
@@ -521,7 +525,7 @@ export default function CreatorReviewsView({
 
                 {/* Review Text */}
                 <p style={{ fontSize: '13.5px', color: secondaryText, margin: '4px 0', lineHeight: 1.5, fontWeight: 400 }}>
-                  {rev.text}
+                  {rev.text.replace(/Ananya/g, firstName)}
                 </p>
 
                 {/* Sub ratings row tags */}

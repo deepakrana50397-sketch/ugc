@@ -3,14 +3,14 @@ import { Creator } from '@/types/creator';
 export const mockCreators: Creator[] = [
   {
     id: 'creator-1',
-    name: 'Neha Kapoor',
+    name: 'Ananya Sharma',
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200',
     bio: 'Professional UGC content creator specializing in lifestyle, beauty, and wellness short-form videos. Over 3 years of experience writing hooks that stop the scroll and filming highly relatable aesthetic content.',
-    title: 'Beauty & Lifestyle UGC Creator',
+    title: 'UGC Creator & Content Strategist',
     category: 'video_creator',
     location: 'Mumbai, India',
-    rating: 4.9,
-    completedJobs: 84,
+    rating: 4.8,
+    completedJobs: 28,
     skills: ['Directing', 'Scriptwriting', 'Color Grading', 'Voiceover', 'Product Styling'],
     startingRate: { INR: 5000, USD: 70 },
     portfolio: [

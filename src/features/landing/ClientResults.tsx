@@ -123,7 +123,7 @@ export default function ClientResults() {
               </span>{' '}
               <span 
                 style={{ 
-                  fontFamily: "'Playfair Display', serif", 
+                  fontFamily: "var(--font-playfair)", 
                   fontStyle: 'italic', 
                   fontWeight: 500,
                 }}
@@ -253,7 +253,7 @@ export default function ClientResults() {
             >
               <h3 
                 style={{
-                  fontFamily: "'Playfair Display', serif",
+                  fontFamily: "var(--font-playfair)",
                   fontStyle: 'italic',
                   fontWeight: 500,
                   fontSize: 'clamp(36px, 6vw, 54px)',
@@ -315,10 +315,10 @@ export default function ClientResults() {
             >
               {/* Elegant handwritten Signature overlay text "theo" using Dancing Script */}
               <h3 
-                style={{
-                  fontFamily: "'Dancing Script', cursive",
-                  fontWeight: 600,
+                style={{ 
+                  fontFamily: "var(--font-dancing)",
                   fontSize: 'clamp(48px, 8vw, 76px)',
+                  fontWeight: 600,
                   color: '#ffffff',
                   letterSpacing: '0.02em',
                   textShadow: '0 4px 16px rgba(0, 0, 0, 0.25)',
@@ -388,7 +388,7 @@ export default function ClientResults() {
               </span>{' '}
               <span 
                 style={{ 
-                  fontFamily: "'Playfair Display', serif", 
+                  fontFamily: "var(--font-playfair)", 
                   fontStyle: 'italic', 
                   fontWeight: 500,
                 }}

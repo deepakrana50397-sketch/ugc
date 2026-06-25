@@ -460,6 +460,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body.dark-theme {
+  background-color: #09090B !important;
+  color: #FFFFFF !important;
+}
+
+body.light-theme {
+  background-color: #fafaf9 !important;
+  color: #1c1917 !important;
+}
+
 h1,
 h2,
 h3,

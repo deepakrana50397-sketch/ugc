@@ -18,7 +18,7 @@ export default function AboutPage() {
       bio: 'Ex-SaaS builder passionate about democratizing content creators economy.'
     },
     {
-      name: 'Neha Kapoor',
+      name: 'Ananya Sharma',
       role: 'Head of Creator Relations',
       avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200',
       bio: 'Vetted UGC creator with 100+ active campaign integrations under her belt.'
@@ -34,7 +34,7 @@ export default function AboutPage() {
   return (
     <div style={{ backgroundColor: '#f8fafc', color: '#0f172a', minHeight: '100vh', padding: '80px 24px 100px 24px' }}>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        
+
         {/* Mission Title */}
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '64px' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.2)', padding: '6px 14px', borderRadius: '20px', alignSelf: 'center', color: 'rgb(99, 102, 241)', fontSize: '13px', fontWeight: 600 }}>
@@ -74,9 +74,9 @@ export default function AboutPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px' }}>
             {team.map((member, idx) => (
               <div key={idx} className="glass-panel" style={{ padding: '32px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', border: '1px solid var(--card-border)' }}>
-                <img 
-                  src={member.avatar} 
-                  alt={member.name} 
+                <img
+                  src={member.avatar}
+                  alt={member.name}
                   style={{ width: '96px', height: '96px', borderRadius: '50%', objectFit: 'cover', border: '3px solid rgb(var(--primary))' }}
                 />
                 <div>

@@ -52,10 +52,10 @@ export default function RegisterPage() {
 
     const targetRole = mode === 'talent' ? 'creator' : 'brand';
 
-    setTimeout(() => {
+    setTimeout(async () => {
       try {
         // Create session via loginMockUser
-        const user = loginMockUser(email, targetRole);
+        const user = await loginMockUser(email, targetRole);
         user.name = name; // Update with input name
         if (typeof window !== 'undefined') {
           localStorage.setItem('igigster_user', JSON.stringify(user));

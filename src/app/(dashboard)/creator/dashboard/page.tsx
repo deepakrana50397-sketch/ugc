@@ -3,38 +3,81 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCurrency } from '@/hooks/useCurrency';
+import { useDashboardStore } from '@/store/dashboard/useDashboardStore';
+import { useTheme } from '@/components/providers/ThemeProvider';
 import {
   Search, Send, FolderOpen, DollarSign, Star, Users, Heart, Sparkles,
   TrendingUp, Clock, CheckCircle2, XCircle, Gift, MapPin, BadgeCheck,
   Bookmark, ChevronDown
 } from 'lucide-react';
 
-import { useSearchParams } from 'next/navigation';
-import CreatorMessagesView from './components/CreatorMessagesView';
-import CreatorEarningsView from './components/CreatorEarningsView';
-import CreatorAnalyticsView from './components/CreatorAnalyticsView';
-import CreatorReviewsView from './components/CreatorReviewsView';
-import CreatorSavedView from './components/CreatorSavedView';
+import { useSearchParams, useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const CreatorMessagesView = dynamic(() => import('./components/CreatorMessagesView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const CreatorEarningsView = dynamic(() => import('./components/CreatorEarningsView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const CreatorAnalyticsView = dynamic(() => import('./components/CreatorAnalyticsView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const CreatorReviewsView = dynamic(() => import('./components/CreatorReviewsView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const CreatorSavedView = dynamic(() => import('./components/CreatorSavedView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const CreatorAiAssistantView = dynamic(() => import('./components/CreatorAiAssistantView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const CreatorRateCalculatorView = dynamic(() => import('./components/CreatorRateCalculatorView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
+const CreatorProfileStrengthView = dynamic(() => import('./components/CreatorProfileStrengthView'), {
+  loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
+});
 
 export default function CreatorDashboardPage() {
   const { currency } = useCurrency();
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const { user, creator, loadDashboard } = useDashboardStore();
+  const profile = creator.profile;
+  const router = useRouter();
+  const { theme } = useTheme();
   const isINR = currency === 'INR';
   const searchParams = useSearchParams();
   const view = searchParams.get('view');
 
+  // Profile Strength States
+  const [isProfileStrengthExpanded, setIsProfileStrengthExpanded] = useState(false);
+  const [socialLinked, setSocialLinked] = useState(false);
+  const [tagsAdded, setTagsAdded] = useState(false);
+  const [linkingSocial, setLinkingSocial] = useState(false);
+  const [addingTags, setAddingTags] = useState(false);
+
+  // Modal triggers
+  const [isSocialLinkModalOpen, setIsSocialLinkModalOpen] = useState(false);
+  const [socialHandleInput, setSocialHandleInput] = useState('');
+  
+  const [isTagsModalOpen, setIsTagsModalOpen] = useState(false);
+  const [selectedTag, setSelectedTag] = useState('Fashion');
+
+  let strengthPercent = 85;
+  if (socialLinked) strengthPercent += 10;
+  if (tagsAdded) strengthPercent += 5;
+
   useEffect(() => {
-    // Theme subscription
-    const savedTheme = localStorage.getItem('igigster_theme') as 'dark' | 'light';
-    if (savedTheme) setTheme(savedTheme);
+    loadDashboard();
 
-    const handleThemeChange = () => {
-      const currentTheme = localStorage.getItem('igigster_theme') as 'dark' | 'light';
-      if (currentTheme) setTheme(currentTheme);
+    const handleProfileUpdate = () => {
+      loadDashboard();
     };
+    window.addEventListener('creator-profile-updated', handleProfileUpdate);
 
-    window.addEventListener('igigster-theme-change', handleThemeChange);
-    return () => window.removeEventListener('igigster-theme-change', handleThemeChange);
+    return () => {
+      window.removeEventListener('creator-profile-updated', handleProfileUpdate);
+    };
   }, []);
 
   const isLight = theme === 'light';
@@ -112,6 +155,22 @@ export default function CreatorDashboardPage() {
     );
   }
 
+  if (view === 'ai-assistant') {
+    return (
+      <CreatorAiAssistantView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
   if (view === 'saved') {
     return (
       <CreatorSavedView
@@ -128,6 +187,39 @@ export default function CreatorDashboardPage() {
     );
   }
 
+  if (view === 'rate-calculator') {
+    return (
+      <CreatorRateCalculatorView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'profile-strength') {
+    return (
+      <CreatorProfileStrengthView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+
   // Format dynamic currency values
   const formatVal = (inrVal: number, usdVal: number) => {
     return isINR ? `₹${inrVal.toLocaleString('en-IN')}` : `$${usdVal.toLocaleString('en-US')}`;
@@ -139,7 +231,7 @@ export default function CreatorDashboardPage() {
     { label: 'My Projects', desc: 'Track your active projects', icon: <FolderOpen size={20} />, iconColor: '#3B82F6', bgCircle: 'rgba(59, 130, 246, 0.08)', href: '/creator/applications' },
     { label: 'Earnings', desc: 'View income and payouts', icon: <DollarSign size={20} />, iconColor: '#10B981', bgCircle: 'rgba(16, 185, 129, 0.08)', href: '/creator/dashboard' },
     { label: 'Portfolio', desc: 'Showcase your best work', icon: <Star size={20} />, iconColor: '#F97316', bgCircle: 'rgba(249, 115, 22, 0.08)', href: '/creator/profile' },
-    { label: 'Brand Collabs', desc: 'Work with top brands', icon: <Users size={20} />, iconColor: '#6366F1', bgCircle: 'rgba(99, 102, 241, 0.08)', href: '/creator/dashboard' },
+    { label: 'Brand Collabs', desc: 'Work with top brands', icon: <Users size={20} />, iconColor: '#6366F1', bgCircle: 'rgba(99, 102, 241, 0.08)', href: '/creator/applications?view=collabs' },
   ];
 
   const recentProjects = [
@@ -245,7 +337,7 @@ export default function CreatorDashboardPage() {
                 margin: 0,
                 fontFamily: 'var(--font-sans)',
               }}>
-                Welcome back, <span style={{ color: accentColor }}>Ananya!</span> 👋
+                Welcome back, <span style={{ color: accentColor }}>{profile?.name ? profile.name.split(' ')[0] : (user?.name ? user.name.split(' ')[0] : 'Creator')}!</span> 👋
               </h1>
               <p style={{ color: secondaryText, fontSize: '13px', fontWeight: 400, marginTop: '8px', opacity: 0.8 }}>
                 Build your brand. Create impact. Earn more.
@@ -633,19 +725,19 @@ export default function CreatorDashboardPage() {
             <div style={{ display: 'flex', gap: '14px', alignItems: 'center', marginBottom: '16px' }}>
               <div style={{ position: 'relative' }}>
                 <img
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200"
-                  alt="Ananya Sharma"
+                  src={profile?.avatar || user?.avatar || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200"}
+                  alt={profile?.name || user?.name || "Creator"}
                   style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--avatar-border)' }}
                 />
                 <BadgeCheck size={16} fill="#3B82F6" color="#ffffff" style={{ position: 'absolute', bottom: '0', right: '0' }} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ fontSize: '14px', fontWeight: 800, color: primaryText }}>Ananya Sharma</span>
+                  <span style={{ fontSize: '14px', fontWeight: 800, color: primaryText }}>{profile?.name || user?.name || "Creator"}</span>
                 </div>
-                <span style={{ fontSize: '11px', color: secondaryText, marginTop: '2px' }}>UGC Creator & Content Strategist</span>
+                <span style={{ fontSize: '11px', color: secondaryText, marginTop: '2px' }}>{profile?.title || user?.title || "UGC Creator"}</span>
                 <span style={{ fontSize: '10.5px', color: mutedText, display: 'flex', alignItems: 'center', gap: '2px', marginTop: '3px' }}>
-                  <MapPin size={10} color={accentColor} /> Bangalore, India
+                  <MapPin size={10} color={accentColor} /> {profile?.location || "India"}
                 </span>
               </div>
             </div>
@@ -654,37 +746,163 @@ export default function CreatorDashboardPage() {
 
             {/* Profile Strength */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '12px', fontWeight: 700, color: primaryText }}>Profile Strength</span>
-                <span style={{ fontSize: '12px', fontWeight: 800, color: primaryText }}>85%</span>
+              <div
+                onClick={() => setIsProfileStrengthExpanded(!isProfileStrengthExpanded)}
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '12.5px', fontWeight: 750, color: primaryText }}>Profile Strength</span>
+                  <ChevronDown
+                    size={13}
+                    style={{
+                      transform: isProfileStrengthExpanded ? 'rotate(180deg)' : 'none',
+                      transition: 'transform 0.2s',
+                      color: mutedText
+                    }}
+                  />
+                </div>
+                <span style={{ fontSize: '12.5px', fontWeight: 800, color: accentColor }}>{strengthPercent}%</span>
               </div>
 
               <div style={{ width: '100%', height: '6px', backgroundColor: 'var(--progress-track-bg)', borderRadius: '3px', overflow: 'hidden' }}>
-                <div style={{ width: '85%', height: '100%', backgroundColor: accentColor, borderRadius: '3px' }} />
+                <div style={{ width: `${strengthPercent}%`, height: '100%', backgroundColor: accentColor, borderRadius: '3px', transition: 'width 0.5s cubic-bezier(0.16, 1, 0.3, 1)' }} />
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', marginTop: '4px' }}>
-                <span style={{ fontSize: '10.5px', color: secondaryText, flex: 1, lineHeight: '1.4' }}>
-                  Great job! Complete your profile to get better matches.
-                </span>
-                <button
-                  style={{
-                    backgroundColor: 'rgba(236,72,153,0.06)',
-                    border: `1px solid ${accentColor}25`,
-                    color: accentColor,
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    padding: '6px 12px',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                    transition: 'all 0.2s'
-                  }}
-                  className="improve-profile-btn"
-                >
-                  Improve Profile
-                </button>
-              </div>
+              {/* Collapsible details checklist */}
+              {isProfileStrengthExpanded ? (
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px',
+                  marginTop: '6px',
+                  padding: '12px',
+                  borderRadius: '12px',
+                  backgroundColor: 'var(--hover-bg)',
+                  border: `1px solid ${borderColor}`,
+                  animation: 'fadeIn 0.2s ease-out'
+                }}>
+                  <span style={{ fontSize: '11px', fontWeight: 700, color: mutedText, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Task Checklist</span>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {[
+                      { label: 'Set up bio & profile title', done: true, points: '25%' },
+                      { label: 'Define starting video rates', done: true, points: '25%' },
+                      { label: 'Upload portfolio video reels', done: true, points: '20%' },
+                      { label: 'Verify mobile contact number', done: true, points: '15%' },
+                    ].map((item, idx) => (
+                      <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: 0.85 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <CheckCircle2 size={13} style={{ color: '#10B981' }} />
+                          <span style={{ fontSize: '11.5px', color: primaryText, textDecoration: 'line-through', opacity: 0.65 }}>{item.label}</span>
+                        </div>
+                        <span style={{ fontSize: '10px', fontWeight: 700, color: '#10B981' }}>+{item.points}</span>
+                      </div>
+                    ))}
+
+                    {/* Social handles link check */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        {socialLinked ? (
+                          <CheckCircle2 size={13} style={{ color: '#10B981' }} />
+                        ) : (
+                          <div style={{ width: '13px', height: '13px', borderRadius: '50%', border: `1.5px solid ${borderColor}`, boxSizing: 'border-box' }} />
+                        )}
+                        <span style={{
+                          fontSize: '11.5px',
+                          color: primaryText,
+                          textDecoration: socialLinked ? 'line-through' : 'none',
+                          opacity: socialLinked ? 0.65 : 1
+                        }}>Link Instagram handle</span>
+                      </div>
+                      {socialLinked ? (
+                        <span style={{ fontSize: '10px', fontWeight: 700, color: '#10B981' }}>+10%</span>
+                      ) : (
+                        <button
+                          onClick={() => setIsSocialLinkModalOpen(true)}
+                          style={{
+                            backgroundColor: 'transparent',
+                            border: `1px solid ${accentColor}`,
+                            color: accentColor,
+                            fontSize: '9.5px',
+                            fontWeight: 700,
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          Link
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Specialties location tag check */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        {tagsAdded ? (
+                          <CheckCircle2 size={13} style={{ color: '#10B981' }} />
+                        ) : (
+                          <div style={{ width: '13px', height: '13px', borderRadius: '50%', border: `1.5px solid ${borderColor}`, boxSizing: 'border-box' }} />
+                        )}
+                        <span style={{
+                          fontSize: '11.5px',
+                          color: primaryText,
+                          textDecoration: tagsAdded ? 'line-through' : 'none',
+                          opacity: tagsAdded ? 0.65 : 1
+                        }}>Add specialty tags</span>
+                      </div>
+                      {tagsAdded ? (
+                        <span style={{ fontSize: '10px', fontWeight: 700, color: '#10B981' }}>+5%</span>
+                      ) : (
+                        <button
+                          onClick={() => setIsTagsModalOpen(true)}
+                          style={{
+                            backgroundColor: 'transparent',
+                            border: `1px solid ${accentColor}`,
+                            color: accentColor,
+                            fontSize: '9.5px',
+                            fontWeight: 700,
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          Add
+                        </button>
+                      )}
+                    </div>
+
+                  </div>
+                  
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
+                    <Sparkles size={11} style={{ color: '#F59E0B' }} />
+                    <span style={{ fontSize: '9.5px', color: '#F59E0B', fontWeight: 650 }}>Completed profiles get 3x higher visibility!</span>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', marginTop: '4px' }}>
+                  <span style={{ fontSize: '10.5px', color: secondaryText, flex: 1, lineHeight: '1.4' }}>
+                    Great job! Complete your profile to get better matches.
+                  </span>
+                  <button
+                    style={{
+                      backgroundColor: 'rgba(236,72,153,0.06)',
+                      border: `1px solid ${accentColor}25`,
+                      color: accentColor,
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      padding: '6px 12px',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.2s'
+                    }}
+                    className="improve-profile-btn"
+                    onClick={() => setIsProfileStrengthExpanded(true)}
+                  >
+                    Improve Profile
+                  </button>
+                </div>
+              )}
             </div>
 
             <div style={{ borderTop: `1px solid ${borderColor}`, margin: '16px 0' }} />
@@ -692,9 +910,9 @@ export default function CreatorDashboardPage() {
             {/* Stats Grid (2x2) */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               {[
-                { label: 'Rating', val: '4.8 ★', color: '#EAB308' },
+                { label: 'Rating', val: `${profile?.rating || '4.8'} ★`, color: '#EAB308' },
                 { label: 'Reviews', val: '32', color: primaryText },
-                { label: 'Projects', val: '28', color: primaryText },
+                { label: 'Projects', val: `${profile?.completedJobs || '28'}`, color: primaryText },
                 { label: 'Response Rate', val: '96%', color: primaryText }
               ].map((item, idx) => (
                 <div
@@ -942,6 +1160,201 @@ export default function CreatorDashboardPage() {
           }
         }
       `}</style>
+
+      {/* Social Link Modal */}
+      {isSocialLinkModalOpen && (
+        <div
+          onClick={() => setIsSocialLinkModalOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            padding: '24px',
+            animation: 'fadeIn 0.2s ease-out'
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: cardBg,
+              border: `1px solid ${borderColor}`,
+              borderRadius: '24px',
+              padding: '24px',
+              width: '100%',
+              maxWidth: '380px',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+              animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 800, color: primaryText, margin: 0 }}>Link Social Account</h3>
+              <button
+                onClick={() => setIsSocialLinkModalOpen(false)}
+                style={{ background: 'none', border: 'none', color: secondaryText, cursor: 'pointer', padding: '4px' }}
+              >
+                <XCircle size={18} />
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <label style={{ fontSize: '11px', fontWeight: 700, color: secondaryText, textTransform: 'uppercase' }}>Instagram/TikTok Handle</label>
+              <input
+                type="text"
+                placeholder="@username"
+                value={socialHandleInput}
+                onChange={(e) => setSocialHandleInput(e.target.value)}
+                style={{
+                  height: '38px',
+                  borderRadius: '8px',
+                  border: `1px solid ${borderColor}`,
+                  backgroundColor: isLight ? '#FFFFFF' : '#141417',
+                  color: primaryText,
+                  padding: '0 12px',
+                  fontSize: '13px',
+                  outline: 'none'
+                }}
+              />
+            </div>
+
+            <button
+              onClick={() => {
+                if (!socialHandleInput.trim()) return;
+                setLinkingSocial(true);
+                setTimeout(() => {
+                  setLinkingSocial(false);
+                  setSocialLinked(true);
+                  setIsSocialLinkModalOpen(false);
+                  setSocialHandleInput('');
+                }, 1200);
+              }}
+              disabled={linkingSocial}
+              style={{
+                height: '38px',
+                backgroundColor: accentColor,
+                color: '#FFFFFF',
+                border: 'none',
+                borderRadius: '19px',
+                fontSize: '13px',
+                fontWeight: 700,
+                cursor: linkingSocial ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}
+            >
+              {linkingSocial ? 'Authenticating...' : 'Authenticate Account'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Tags Modal */}
+      {isTagsModalOpen && (
+        <div
+          onClick={() => setIsTagsModalOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            padding: '24px',
+            animation: 'fadeIn 0.2s ease-out'
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: cardBg,
+              border: `1px solid ${borderColor}`,
+              borderRadius: '24px',
+              padding: '24px',
+              width: '100%',
+              maxWidth: '380px',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+              animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 800, color: primaryText, margin: 0 }}>Add Specialty Tags</h3>
+              <button
+                onClick={() => setIsTagsModalOpen(false)}
+                style={{ background: 'none', border: 'none', color: secondaryText, cursor: 'pointer', padding: '4px' }}
+              >
+                <XCircle size={18} />
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <label style={{ fontSize: '11px', fontWeight: 700, color: secondaryText, textTransform: 'uppercase' }}>Select Primary Specialty</label>
+              <select
+                value={selectedTag}
+                onChange={(e) => setSelectedTag(e.target.value)}
+                style={{
+                  height: '38px',
+                  borderRadius: '8px',
+                  border: `1px solid ${borderColor}`,
+                  backgroundColor: isLight ? '#FFFFFF' : '#141417',
+                  color: primaryText,
+                  padding: '0 10px',
+                  fontSize: '13px',
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="Fashion">Fashion & Apparel</option>
+                <option value="Skincare">Skincare & Makeup</option>
+                <option value="Tech">Tech & Gadgets Reviews</option>
+                <option value="Fitness">Fitness & Wellness</option>
+                <option value="Food">Food Recipes & Vlogs</option>
+              </select>
+            </div>
+
+            <button
+              onClick={() => {
+                setAddingTags(true);
+                setTimeout(() => {
+                  setAddingTags(false);
+                  setTagsAdded(true);
+                  setIsTagsModalOpen(false);
+                }, 1000);
+              }}
+              disabled={addingTags}
+              style={{
+                height: '38px',
+                backgroundColor: accentColor,
+                color: '#FFFFFF',
+                border: 'none',
+                borderRadius: '19px',
+                fontSize: '13px',
+                fontWeight: 700,
+                cursor: addingTags ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}
+            >
+              {addingTags ? 'Adding...' : 'Add Specialties'}
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
   );

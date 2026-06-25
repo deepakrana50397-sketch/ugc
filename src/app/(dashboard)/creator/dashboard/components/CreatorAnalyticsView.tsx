@@ -5,6 +5,7 @@ import {
   TrendingUp, Eye, Send, CheckCircle, Trophy, Info, 
   Calendar, ChevronDown, Sparkles, FolderOpen, ShieldCheck, X
 } from 'lucide-react';
+import { useDashboardStore } from '@/store/dashboard/useDashboardStore';
 
 interface AnalyticsViewProps {
   theme: 'dark' | 'light';
@@ -29,6 +30,9 @@ export default function CreatorAnalyticsView({
   accentColor,
   shadowStyle
 }: AnalyticsViewProps) {
+  const { user } = useDashboardStore();
+  const isBrand = user?.role === 'brand';
+
   const [lineChartHoverIndex, setLineChartHoverIndex] = useState<number | null>(null);
   const [barChartHoverIndex, setBarChartHoverIndex] = useState<number | null>(null);
 
@@ -86,7 +90,7 @@ export default function CreatorAnalyticsView({
             Analytics
           </h1>
           <p style={{ color: secondaryText, fontSize: '14.5px', marginTop: '6px', fontWeight: 400 }}>
-            Track your performance and growth on igigster
+            {isBrand ? 'Track your campaign metrics and creator engagements on igigster' : 'Track your performance and growth on igigster'}
           </p>
         </div>
 
@@ -115,19 +119,19 @@ export default function CreatorAnalyticsView({
       {/* Grid: 5 Metrics Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', overflowX: 'auto' }} className="inner-scroller">
         
-        {/* Metric 1: Profile Views */}
+        {/* Metric 1: Profile/Brief Views */}
         <div style={{ backgroundColor: cardBg, border: `1px solid ${borderColor}`, borderRadius: '16px', padding: '16px', boxShadow: shadowStyle, display: 'flex', flexDirection: 'column', minWidth: '160px', flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: isLight ? '#F3E8FF' : 'rgba(139,92,246,0.1)', color: '#8B5CF6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <FolderOpen size={16} />
             </div>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: secondaryText }}>Profile Views</span>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: secondaryText }}>{isBrand ? 'Brief Views' : 'Profile Views'}</span>
           </div>
           <div style={{ fontSize: '20px', fontWeight: 800, color: primaryText, marginTop: '12px' }}>
-            2,543
+            {isBrand ? '4,280' : '2,543'}
           </div>
           <div style={{ fontSize: '10.5px', color: '#22C55E', fontWeight: 750, marginTop: '4px' }}>
-            ▲ 18.6% <span style={{ color: mutedText, fontWeight: 500 }}>vs last 30 days</span>
+            ▲ {isBrand ? '12.4%' : '18.6%'} <span style={{ color: mutedText, fontWeight: 500 }}>vs last 30 days</span>
           </div>
           {/* Mini Sparkline Chart */}
           <div style={{ height: '24px', marginTop: '12px' }}>
@@ -137,19 +141,19 @@ export default function CreatorAnalyticsView({
           </div>
         </div>
 
-        {/* Metric 2: Gig Views */}
+        {/* Metric 2: Gig Views / Applications */}
         <div style={{ backgroundColor: cardBg, border: `1px solid ${borderColor}`, borderRadius: '16px', padding: '16px', boxShadow: shadowStyle, display: 'flex', flexDirection: 'column', minWidth: '160px', flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: isLight ? '#FCE7F3' : 'rgba(236,72,153,0.1)', color: '#EC4899', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Eye size={16} />
             </div>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: secondaryText }}>Gig Views</span>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: secondaryText }}>{isBrand ? 'Total Applications' : 'Gig Views'}</span>
           </div>
           <div style={{ fontSize: '20px', fontWeight: 800, color: primaryText, marginTop: '12px' }}>
-            8,921
+            {isBrand ? '184' : '8,921'}
           </div>
           <div style={{ fontSize: '10.5px', color: '#22C55E', fontWeight: 750, marginTop: '4px' }}>
-            ▲ 24.8% <span style={{ color: mutedText, fontWeight: 500 }}>vs last 30 days</span>
+            ▲ {isBrand ? '8.6%' : '24.8%'} <span style={{ color: mutedText, fontWeight: 500 }}>vs last 30 days</span>
           </div>
           {/* Mini Sparkline Chart */}
           <div style={{ height: '24px', marginTop: '12px' }}>
@@ -159,19 +163,19 @@ export default function CreatorAnalyticsView({
           </div>
         </div>
 
-        {/* Metric 3: Applications */}
+        {/* Metric 3: Applications / Shortlisted */}
         <div style={{ backgroundColor: cardBg, border: `1px solid ${borderColor}`, borderRadius: '16px', padding: '16px', boxShadow: shadowStyle, display: 'flex', flexDirection: 'column', minWidth: '160px', flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: isLight ? '#FFEDD5' : 'rgba(249,115,22,0.1)', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Send size={16} />
             </div>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: secondaryText }}>Applications</span>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: secondaryText }}>{isBrand ? 'Shortlisted' : 'Applications'}</span>
           </div>
           <div style={{ fontSize: '20px', fontWeight: 800, color: primaryText, marginTop: '12px' }}>
-            147
+            {isBrand ? '56' : '147'}
           </div>
           <div style={{ fontSize: '10.5px', color: '#22C55E', fontWeight: 750, marginTop: '4px' }}>
-            ▲ 12.8% <span style={{ color: mutedText, fontWeight: 500 }}>vs last 30 days</span>
+            ▲ {isBrand ? '15.2%' : '12.8%'} <span style={{ color: mutedText, fontWeight: 500 }}>vs last 30 days</span>
           </div>
           {/* Mini Sparkline Chart */}
           <div style={{ height: '24px', marginTop: '12px' }}>
@@ -181,19 +185,19 @@ export default function CreatorAnalyticsView({
           </div>
         </div>
 
-        {/* Metric 4: Shortlisted */}
+        {/* Metric 4: Shortlisted / Hired Creators */}
         <div style={{ backgroundColor: cardBg, border: `1px solid ${borderColor}`, borderRadius: '16px', padding: '16px', boxShadow: shadowStyle, display: 'flex', flexDirection: 'column', minWidth: '160px', flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: isLight ? '#DCFCE7' : 'rgba(34,197,94,0.1)', color: '#22C55E', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <CheckCircle size={16} />
             </div>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: secondaryText }}>Shortlisted</span>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: secondaryText }}>{isBrand ? 'Hired Creators' : 'Shortlisted'}</span>
           </div>
           <div style={{ fontSize: '20px', fontWeight: 800, color: primaryText, marginTop: '12px' }}>
-            38
+            {isBrand ? '34' : '38'}
           </div>
           <div style={{ fontSize: '10.5px', color: '#22C55E', fontWeight: 750, marginTop: '4px' }}>
-            ▲ 26.7% <span style={{ color: mutedText, fontWeight: 500 }}>vs last 30 days</span>
+            ▲ {isBrand ? '21.4%' : '26.7%'} <span style={{ color: mutedText, fontWeight: 500 }}>vs last 30 days</span>
           </div>
           {/* Mini Sparkline Chart */}
           <div style={{ height: '24px', marginTop: '12px' }}>
@@ -203,19 +207,19 @@ export default function CreatorAnalyticsView({
           </div>
         </div>
 
-        {/* Metric 5: Projects Won */}
+        {/* Metric 5: Projects Won / Active Campaigns */}
         <div style={{ backgroundColor: cardBg, border: `1px solid ${borderColor}`, borderRadius: '16px', padding: '16px', boxShadow: shadowStyle, display: 'flex', flexDirection: 'column', minWidth: '160px', flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: isLight ? '#DBEAFE' : 'rgba(59,130,246,0.1)', color: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Trophy size={16} />
             </div>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: secondaryText }}>Projects Won</span>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: secondaryText }}>{isBrand ? 'Active Campaigns' : 'Projects Won'}</span>
           </div>
           <div style={{ fontSize: '20px', fontWeight: 800, color: primaryText, marginTop: '12px' }}>
-            12
+            {isBrand ? '12' : '12'}
           </div>
           <div style={{ fontSize: '10.5px', color: '#22C55E', fontWeight: 750, marginTop: '4px' }}>
-            ▲ 33.3% <span style={{ color: mutedText, fontWeight: 500 }}>vs last 30 days</span>
+            ▲ {isBrand ? '33.3%' : '33.3%'} <span style={{ color: mutedText, fontWeight: 500 }}>vs last 30 days</span>
           </div>
           {/* Mini Sparkline Chart */}
           <div style={{ height: '24px', marginTop: '12px' }}>
@@ -239,7 +243,7 @@ export default function CreatorAnalyticsView({
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <h3 style={{ fontSize: '15px', fontWeight: 800, color: primaryText, margin: 0 }}>
-                  Profile Views
+                  {isBrand ? 'Campaign Brief Views' : 'Profile Views'}
                 </h3>
                 <Info size={13} style={{ color: mutedText, opacity: 0.6 }} />
               </div>
@@ -254,10 +258,10 @@ export default function CreatorAnalyticsView({
             <div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
                 <span style={{ fontSize: '26px', fontWeight: 850, color: primaryText }}>
-                  2,543
+                  {isBrand ? '4,280' : '2,543'}
                 </span>
                 <span style={{ fontSize: '11.5px', color: '#22C55E', fontWeight: 750 }}>
-                  ▲ 18.6% <span style={{ color: mutedText, fontWeight: 500 }}>vs previous 30 days</span>
+                  ▲ {isBrand ? '12.4%' : '18.6%'} <span style={{ color: mutedText, fontWeight: 500 }}>vs previous 30 days</span>
                 </span>
               </div>
             </div>
@@ -396,7 +400,7 @@ export default function CreatorAnalyticsView({
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <h3 style={{ fontSize: '14.5px', fontWeight: 800, color: primaryText, margin: 0 }}>
-                    Applications Trend
+                    {isBrand ? 'Submissions Trend' : 'Applications Trend'}
                   </h3>
                   <Info size={13} style={{ color: mutedText, opacity: 0.6 }} />
                 </div>
@@ -411,10 +415,10 @@ export default function CreatorAnalyticsView({
               <div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
                   <span style={{ fontSize: '24px', fontWeight: 850, color: primaryText }}>
-                    147
+                    {isBrand ? '184' : '147'}
                   </span>
-                  <span style={{ fontSize: '11px', color: '#22C55E', fontWeight: 750 }}>
-                    ▲ 12.8% <span style={{ color: mutedText, fontWeight: 500 }}>vs previous 30 days</span>
+                  <span style={{ fontSize: '11.5px', color: '#22C55E', fontWeight: 750 }}>
+                    ▲ {isBrand ? '8.6%' : '12.8%'} <span style={{ color: mutedText, fontWeight: 500 }}>vs previous 30 days</span>
                   </span>
                 </div>
               </div>
@@ -579,7 +583,7 @@ export default function CreatorAnalyticsView({
               </p>
             </div>
             <button
-              onClick={() => window.location.href = '/creator/profile'}
+              onClick={() => window.location.href = '/creator/dashboard?view=profile-strength'}
               style={{
                 backgroundColor: 'transparent',
                 color: '#3B82F6',
@@ -603,10 +607,10 @@ export default function CreatorAnalyticsView({
         <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           {/* Card 4: Profile Views by Source Donut */}
-          <div style={{ backgroundColor: cardBg, border: `1px solid ${borderColor}`, borderRadius: '16px', padding: '24px', boxShadow: shadowStyle, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+           <div style={{ backgroundColor: cardBg, border: `1px solid ${borderColor}`, borderRadius: '16px', padding: '24px', boxShadow: shadowStyle, display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <h3 style={{ fontSize: '14.5px', fontWeight: 800, color: primaryText, margin: 0 }}>
-                Profile Views by Source
+                {isBrand ? 'Applications by Niche' : 'Profile Views by Source'}
               </h3>
               <Info size={13} style={{ color: mutedText, opacity: 0.6 }} />
             </div>
@@ -637,20 +641,26 @@ export default function CreatorAnalyticsView({
                 
                 {/* Inside Text */}
                 <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translateY(-50%) translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <span style={{ fontSize: '18px', fontWeight: 850, color: primaryText }}>2,543</span>
-                  <span style={{ fontSize: '9px', color: mutedText, fontWeight: 700, textTransform: 'uppercase', marginTop: '2px' }}>Total</span>
+                  <span style={{ fontSize: '18px', fontWeight: 850, color: primaryText }}>{isBrand ? '184' : '2,543'}</span>
+                  <span style={{ fontSize: '9px', color: mutedText, fontWeight: 700, textTransform: 'uppercase', marginTop: '2px' }}>{isBrand ? 'Applicants' : 'Total'}</span>
                 </div>
               </div>
 
               {/* Legend List */}
               <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {[
+                {(isBrand ? [
+                  { label: 'Beauty & Skincare', val: '90', percent: '48.9%', color: '#8B5CF6' },
+                  { label: 'Tech & Gadgets', val: '50', percent: '27.0%', color: '#EC4899' },
+                  { label: 'Fashion & Try-on', val: '30', percent: '16.2%', color: '#F97316' },
+                  { label: 'Food & Beverage', val: '10', percent: '5.6%', color: '#10B981' },
+                  { label: 'Other', val: '4', percent: '2.3%', color: '#3B82F6' }
+                ] : [
                   { label: 'igigster Search', val: '1,243', percent: '48.9%', color: '#8B5CF6' },
                   { label: 'Direct / Profile Link', val: '687', percent: '27.0%', color: '#EC4899' },
                   { label: 'Gig Page', val: '412', percent: '16.2%', color: '#F97316' },
                   { label: 'External Search', val: '141', percent: '5.6%', color: '#10B981' },
                   { label: 'Other', val: '60', percent: '2.3%', color: '#3B82F6' }
-                ].map((item, index) => (
+                ]).map((item, index) => (
                   <div key={index} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11.5px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
                       <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: item.color, flexShrink: 0 }} />
@@ -666,12 +676,12 @@ export default function CreatorAnalyticsView({
             </div>
           </div>
 
-          {/* Card 5: Top Performing Gigs */}
+          {/* Card 5: Top Performing Gigs / Campaigns */}
           <div style={{ backgroundColor: cardBg, border: `1px solid ${borderColor}`, borderRadius: '16px', padding: '20px', boxShadow: shadowStyle, display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <h3 style={{ fontSize: '14px', fontWeight: 800, color: primaryText, margin: 0 }}>
-                  Top Performing Gigs
+                  {isBrand ? 'Top Campaign Briefs' : 'Top Performing Gigs'}
                 </h3>
                 <Info size={13} style={{ color: mutedText, opacity: 0.6 }} />
               </div>
@@ -687,7 +697,7 @@ export default function CreatorAnalyticsView({
             {/* Performance List table */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ display: 'flex', borderBottom: `1px solid ${borderColor}`, paddingBottom: '6px', fontSize: '10.5px', fontWeight: 700, color: mutedText, textTransform: 'uppercase' }}>
-                <span style={{ flex: 1 }}>Gig Details</span>
+                <span style={{ flex: 1 }}>{isBrand ? 'Campaign Brief' : 'Gig Details'}</span>
                 <span style={{ width: '60px', textAlign: 'right' }}>Views</span>
                 <span style={{ width: '80px', textAlign: 'right' }}>Applications</span>
               </div>

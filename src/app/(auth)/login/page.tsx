@@ -59,9 +59,9 @@ export default function LoginPage() {
 
     const targetRole = simulatedRole || (targetEmail.includes('admin') ? 'admin' : targetEmail.includes('brand') ? 'brand' : 'creator');
 
-    setTimeout(() => {
+    setTimeout(async () => {
       try {
-        const loggedUser = loginMockUser(targetEmail, targetRole);
+        const loggedUser = await loginMockUser(targetEmail, targetRole);
         window.dispatchEvent(new Event('auth-change'));
         setUser(loggedUser);
 

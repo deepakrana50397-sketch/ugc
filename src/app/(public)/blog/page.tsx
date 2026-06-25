@@ -35,7 +35,7 @@ export default function BlogPage() {
         <p><em>Example: Applying an orange peel with foundation to demonstrate pore filling.</em></p>
         <p>Show, don't tell. A bizarre or extreme product demo proves efficacy instantly without needing a script.</p>
       `,
-      author: 'Neha Kapoor',
+      author: 'Ananya Sharma',
       date: 'June 02, 2026',
       readTime: '4 min read',
       category: 'Growth Hacks',
@@ -98,7 +98,7 @@ export default function BlogPage() {
   return (
     <div style={{ backgroundColor: '#f8fafc', color: '#0f172a', minHeight: '100vh', padding: '80px 24px 100px 24px' }}>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        
+
         {selectedArticle !== null ? (
           // Single Article View
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -139,7 +139,7 @@ export default function BlogPage() {
             <hr style={{ borderColor: 'var(--border)' }} />
 
             {/* Article Content Body */}
-            <div 
+            <div
               className="blog-content-body"
               style={{ color: '#475569', fontSize: '16px', lineHeight: 1.8 }}
               dangerouslySetInnerHTML={{ __html: articles.find(a => a.id === selectedArticle)?.content || '' }}
@@ -177,9 +177,9 @@ export default function BlogPage() {
                   onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
                   onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                 >
-                  <img 
-                    src={article.image} 
-                    alt={article.title} 
+                  <img
+                    src={article.image}
+                    alt={article.title}
                     style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '10px' }}
                   />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

@@ -5,14 +5,19 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentUser, logoutUser } from '@/lib/services';
 import { User } from '@/types/common';
+import { useDashboardStore } from '@/store/dashboard/useDashboardStore';
+import { useMessageStore } from '@/store/messages/useMessageStore';
 import {
   Home, LayoutDashboard, Users, Compass, Megaphone, FolderOpen, MessageSquare,
   BarChart2, Wallet, Bookmark, FileText, Image, Sparkles, PenTool,
-  Calendar, Palette, Bell, Settings, Moon, Sun, HelpCircle, LogOut, PanelLeft, ChevronDown, ChevronUp,
+  Calendar, Palette, Bell, Settings, Moon, Sun, HelpCircle, LogOut, PanelLeft, ChevronDown, ChevronUp, CheckCircle2,
   X, Maximize, Smile, Scissors, Film, Camera, Layers, Search, Pin,
-  Star, Crown, CreditCard, Briefcase, Calculator, Activity, User as UserIcon
+  Star, Crown, CreditCard, Briefcase, Calculator, Activity, User as UserIcon,
+  Shield, AlertTriangle
 } from 'lucide-react';
 import CurrencyToggle from '@/components/ui/CurrencyToggle';
+import SupportHelpModal from '@/components/dashboard/SupportHelpModal';
+import { useTheme } from '@/components/providers/ThemeProvider';
 
 export default function DashboardLayout({
   children,
@@ -21,48 +26,65 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, creator, isLoading, loadDashboard } = useDashboardStore();
+  const profile = creator.profile;
+  const { getUnreadCount } = useMessageStore();
+  const unreadMessagesCount = getUnreadCount();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const { theme, toggleTheme } = useTheme();
   const [showAnnouncement, setShowAnnouncement] = useState(true);
 
   // Tools Modal States
   const [isToolsModalOpen, setIsToolsModalOpen] = useState(false);
+  const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'Image' | 'Video' | 'Audio' | 'Spaces' | 'Design' | '3D' | 'Flows' | 'Connections'>('Image');
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
+
+  // Set notification lists based on roles
+  useEffect(() => {
+    if (user) {
+      if (user.role === 'brand') {
+        setNotifications([
+          { id: 'b1', title: 'New Application Received', message: 'Ananya Sharma applied to your "UGC Creator for Skincare Brand" brief.', time: '30 mins ago', read: false, type: 'invitation', href: '/brand/applicants?view=applicants' },
+          { id: 'b2', title: 'Creator Shortlist Unlocked', message: 'You unlocked the contact info for creator Ananya Sharma.', time: '4 hours ago', read: false, type: 'status', href: '/brand/dashboard?view=saved' },
+          { id: 'b3', title: 'Message from Creator', message: 'Hi team, I would love to align on the visual reels brief...', time: '2 days ago', read: false, type: 'message', href: '/brand/dashboard?view=messages' }
+        ]);
+      } else {
+        setNotifications([
+          { id: 'c1', title: 'New Campaign Invitation', message: 'Mamaearth invited you to apply for their Skincare Reel campaign.', time: '1 hour ago', read: false, type: 'invitation', href: '/creator/gigs' },
+          { id: 'c2', title: 'Application Shortlisted', message: 'LunaCare shortlisted your application for "Skincare Night Routine Showcase".', time: '5 hours ago', read: false, type: 'status', href: '/creator/applications' },
+          { id: 'c3', title: 'Message from boAt', message: 'We loved your pitch. Are you available for a quick briefing call?', time: '1 day ago', read: false, type: 'message', href: '/creator/dashboard?view=messages' }
+        ]);
+      }
+    }
+  }, [user]);
+
+  const unreadNotificationsCount = notifications.filter(n => !n.read).length;
+  const [activeTab, setActiveTab] = useState<'Tools' | 'Navigation'>('Tools');
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     setMounted(true);
-    const activeUser = getCurrentUser();
-    if (!activeUser) {
-      router.push('/login');
-    } else {
-      setUser(activeUser);
-      setLoading(false);
-    }
+    loadDashboard();
 
-    // Sync theme
-    const savedTheme = localStorage.getItem('igigster_theme') as 'dark' | 'light';
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
+    const handleProfileUpdate = () => {
+      loadDashboard();
+    };
+    window.addEventListener('creator-profile-updated', handleProfileUpdate);
+    window.addEventListener('brand-profile-updated', handleProfileUpdate);
 
     const handleOpenModal = () => setIsToolsModalOpen(true);
     window.addEventListener('open-tools-modal', handleOpenModal);
     return () => {
       window.removeEventListener('open-tools-modal', handleOpenModal);
+      window.removeEventListener('creator-profile-updated', handleProfileUpdate);
+      window.removeEventListener('brand-profile-updated', handleProfileUpdate);
     };
   }, [pathname]);
 
-  const toggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(nextTheme);
-    localStorage.setItem('igigster_theme', nextTheme);
-    window.dispatchEvent(new Event('igigster-theme-change'));
-  };
+
 
   const handleLogout = () => {
     logoutUser();
@@ -70,21 +92,8 @@ export default function DashboardLayout({
     router.push('/login');
   };
 
-  if (loading || !user) {
-    const isLightLoader = mounted && theme === 'light';
-    return (
-      <div style={{
-        backgroundColor: isLightLoader ? '#F8F8FA' : '#09090B',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: isLightLoader ? '#09090B' : '#ffffff',
-        fontFamily: 'var(--font-sans)'
-      }}>
-        <span>Loading secure dashboard...</span>
-      </div>
-    );
+  if (isLoading || !user) {
+    return null;
   }
 
   // Generate sidebar items based on role
@@ -96,7 +105,7 @@ export default function DashboardLayout({
         { href: '/creator/applications', label: 'My Applications', icon: <FolderOpen size={16} /> },
         { href: '/creator/applications?view=my-projects', label: 'My Projects', icon: <Briefcase size={16} /> },
         { href: '/creator/dashboard?view=earnings', label: 'Earnings', icon: <Wallet size={16} /> },
-        { href: '/creator/dashboard?view=messages', label: 'Messages', icon: <MessageSquare size={16} />, badge: 5 },
+        { href: '/creator/dashboard?view=messages', label: 'Messages', icon: <MessageSquare size={16} />, badge: unreadMessagesCount > 0 ? unreadMessagesCount : undefined },
         { href: '/creator/dashboard?view=analytics', label: 'Analytics', icon: <BarChart2 size={16} /> },
         { href: '/creator/profile', label: 'Portfolio', icon: <Image size={16} /> },
         { href: '/creator/dashboard?view=reviews', label: 'Reviews', icon: <Star size={16} /> },
@@ -109,9 +118,10 @@ export default function DashboardLayout({
         { href: '/brand/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={16} /> },
         { href: '/brand/applicants', label: 'Find Talent', icon: <Users size={16} /> },
         { href: '/brand/applicants?view=agencies', label: 'Find Agencies', icon: <Compass size={16} /> },
+        { href: '/brand/applicants?view=applicants', label: 'Campaign Applicants', icon: <Briefcase size={16} /> },
         { href: '/brand/post-gig', label: 'Post a Campaign', icon: <PlusCircleIconWrapper size={16} /> },
         { href: '/brand/gigs', label: 'My Campaigns', icon: <FolderOpen size={16} /> },
-        { href: '/brand/dashboard?view=messages', label: 'Messages', icon: <MessageSquare size={16} /> },
+        { href: '/brand/dashboard?view=messages', label: 'Messages', icon: <MessageSquare size={16} />, badge: unreadMessagesCount > 0 ? unreadMessagesCount : undefined },
         { href: '/brand/dashboard?view=analytics', label: 'Analytics', icon: <BarChart2 size={16} /> },
         { href: '/brand/dashboard?view=payments', label: 'Payments', icon: <Wallet size={16} /> },
         { href: '/brand/dashboard?view=saved', label: 'Saved', icon: <Bookmark size={16} /> },
@@ -121,11 +131,25 @@ export default function DashboardLayout({
       ];
     } else {
       return [
-        { href: '/', label: 'Home', icon: <Home size={16} /> },
-        { href: '/admin/dashboard', label: 'Platform Metrics', icon: <LayoutDashboard size={16} /> },
-        { href: '/admin/gigs', label: 'Gig Vetting Queue', icon: <FolderOpen size={16} /> },
-        { href: '/admin/users', label: 'Users Manager', icon: <Users size={16} /> },
-        { href: '/admin/applications', label: 'All Applications', icon: <FolderOpen size={16} /> },
+        { href: '/admin/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={16} /> },
+        { href: '/admin/users', label: 'Users', icon: <Users size={16} /> },
+        { href: '/admin/dashboard?view=brands', label: 'Brands', icon: <Crown size={16} /> },
+        { href: '/admin/dashboard?view=creators', label: 'Creators', icon: <UserIcon size={16} /> },
+        { href: '/admin/dashboard?view=agencies', label: 'Agencies', icon: <Compass size={16} /> },
+        { href: '/admin/gigs', label: 'Gigs', icon: <Layers size={16} /> },
+        { href: '/admin/dashboard?view=campaigns', label: 'Campaigns', icon: <Megaphone size={16} /> },
+        { href: '/admin/dashboard?view=deals', label: 'Deals', icon: <Activity size={16} />, badge: 12 },
+        { href: '/admin/dashboard?view=projects', label: 'Projects', icon: <Briefcase size={16} /> },
+        { href: '/admin/applications', label: 'Applications', icon: <FolderOpen size={16} />, badge: 23 },
+        { href: '/admin/dashboard?view=escrow', label: 'Escrow', icon: <Wallet size={16} /> },
+        { href: '/admin/dashboard?view=contracts', label: 'Contracts', icon: <FileText size={16} /> },
+        { href: '/admin/dashboard?view=payments', label: 'Payments', icon: <CreditCard size={16} /> },
+        { href: '/admin/dashboard?view=payouts', label: 'Payouts', icon: <Wallet size={16} /> },
+        { href: '/admin/dashboard?view=disputes', label: 'Disputes', icon: <AlertTriangle size={16} />, badge: 7 },
+        { href: '/admin/dashboard?view=analytics', label: 'Analytics', icon: <BarChart2 size={16} /> },
+        { href: '/admin/dashboard?view=reports', label: 'Reports', icon: <Image size={16} /> },
+        { href: '/admin/dashboard?view=risk', label: 'Risk & Compliance', icon: <Shield size={16} />, badge: 5 },
+        { href: '/admin/dashboard?view=settings', label: 'Settings', icon: <Settings size={16} /> },
       ];
     }
   };
@@ -133,9 +157,9 @@ export default function DashboardLayout({
   const getToolLinks = () => {
     if (user.role === 'creator') {
       return [
-        { href: '/creator/profile', label: 'Profile Strength', icon: <Activity size={16} />, badge: '85%' },
-        { href: '/creator/gigs?view=brief-match', label: 'AI Content Assistant', icon: <Sparkles size={16} /> },
-        { href: '/creator/profile?view=pitch-builder', label: 'Rate Calculator', icon: <Calculator size={16} /> },
+        { href: '/creator/dashboard?view=profile-strength', label: 'Profile Strength', icon: <Activity size={16} />, badge: '85%' },
+        { href: '/creator/dashboard?view=ai-assistant', label: 'AI Content Assistant', icon: <Sparkles size={16} /> },
+        { href: '/creator/dashboard?view=rate-calculator', label: 'Rate Calculator', icon: <Calculator size={16} /> },
         { href: '/creator/applications?view=collabs', label: 'Brand Collaboration', icon: <Users size={16} /> },
       ];
     } else if (user.role === 'brand') {
@@ -152,6 +176,34 @@ export default function DashboardLayout({
 
   const menuItems = getNavLinks();
   const toolItems = getToolLinks();
+
+  const modalToolsList: ToolItem[] = [
+    ...toolItems.map(item => ({
+      name: item.label,
+      desc: item.label === 'Profile Strength' ? 'Manage your portfolio, details, and visibility.' :
+        item.label === 'AI Content Assistant' ? 'Draft creative concepts and captions using AI.' :
+          item.label === 'Rate Calculator' ? 'Formulate correct pay rates for content work.' :
+            item.label === 'Brand Collaboration' ? 'Manage joint projects and review active deals.' :
+              item.label === 'Talent Match' ? 'AI creator pairings and profile matches.' :
+                item.label === 'Campaign Brief AI' ? 'Optimize your brief templates with AI.' :
+                  item.label === 'Content Planner' ? 'Schedule requirements and submission milestones.' :
+                    item.label === 'Brand Kit' ? 'Maintain style templates and official assets.' :
+                      item.label === 'Reports' ? 'Export campaign engagement metrics and stats.' :
+                        'Access features.',
+      href: item.href,
+      icon: item.icon,
+      category: 'Tools' as const,
+      pinned: true
+    })),
+    ...menuItems.map(item => ({
+      name: item.label,
+      desc: `Navigate to ${item.label} dashboard module.`,
+      href: item.href,
+      icon: item.icon,
+      category: 'Navigation' as const,
+      pinned: false
+    }))
+  ];
 
   const getCreateHref = () => {
     if (user.role === 'brand') return '/brand/post-gig';
@@ -194,6 +246,7 @@ export default function DashboardLayout({
           handleLogout={handleLogout}
           menuItems={menuItems}
           toolItems={toolItems}
+          onOpenSupport={() => setIsSupportModalOpen(true)}
         />
       </Suspense>
 
@@ -291,32 +344,27 @@ export default function DashboardLayout({
 
           {/* Right Header Row */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginLeft: 'auto', flex: 1, justifyContent: 'flex-end' }}>
-            <Link href="/pricing" style={{ color: '#EC4899', fontSize: '13px', fontWeight: 600, textDecoration: 'none', marginRight: '6px' }} className="hover-underline">
+            <button
+              onClick={() => setIsSupportModalOpen(true)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#EC4899',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                marginRight: '6px',
+                padding: 0,
+                fontFamily: 'inherit'
+              }}
+              className="hover-underline"
+            >
               Need help?
-            </Link>
+            </button>
 
             {/* Message button (Chat square) */}
             <button
-              style={{
-                background: theme === 'light' ? '#FFFFFF' : '#131316',
-                border: `1px solid ${theme === 'light' ? '#E5E7EB' : 'rgba(255,255,255,0.08)'}`,
-                color: theme === 'light' ? '#374151' : '#E4E4E7',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '38px',
-                height: '38px',
-                borderRadius: '10px',
-                transition: 'all 0.2s'
-              }}
-              className="hover-bg-white-002"
-            >
-              <MessageSquare size={17} />
-            </button>
-
-            {/* Bell button */}
-            <button
+              onClick={() => router.push(user.role === 'creator' ? '/creator/dashboard?view=messages' : '/brand/dashboard?view=messages')}
               style={{
                 background: theme === 'light' ? '#FFFFFF' : '#131316',
                 border: `1px solid ${theme === 'light' ? '#E5E7EB' : 'rgba(255,255,255,0.08)'}`,
@@ -333,24 +381,223 @@ export default function DashboardLayout({
               }}
               className="hover-bg-white-002"
             >
-              <Bell size={17} />
-              <span style={{
-                position: 'absolute',
-                top: '-4px',
-                right: '-4px',
-                backgroundColor: '#EC4899',
-                color: '#ffffff',
-                borderRadius: '50%',
-                fontSize: '9px',
-                fontWeight: 700,
-                width: '15px',
-                height: '15px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                lineHeight: 1
-              }}>3</span>
+              <MessageSquare size={17} />
+              {unreadMessagesCount > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: '-4px',
+                  right: '-4px',
+                  backgroundColor: '#EC4899',
+                  color: '#ffffff',
+                  borderRadius: '50%',
+                  fontSize: '9px',
+                  fontWeight: 700,
+                  width: '15px',
+                  height: '15px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  lineHeight: 1
+                }}>{unreadMessagesCount}</span>
+              )}
             </button>
+
+            {/* Bell button with Notification Dropdown */}
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => {
+                  setIsNotificationsOpen(!isNotificationsOpen);
+                  setIsAvatarDropdownOpen(false);
+                }}
+                style={{
+                  background: theme === 'light' ? '#FFFFFF' : '#131316',
+                  border: `1px solid ${theme === 'light' ? '#E5E7EB' : 'rgba(255,255,255,0.08)'}`,
+                  color: theme === 'light' ? '#374151' : '#E4E4E7',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '10px',
+                  position: 'relative',
+                  transition: 'all 0.2s'
+                }}
+                className="hover-bg-white-002"
+              >
+                <Bell size={17} />
+                {unreadNotificationsCount > 0 && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '-4px',
+                    right: '-4px',
+                    backgroundColor: '#EC4899',
+                    color: '#ffffff',
+                    borderRadius: '50%',
+                    fontSize: '9px',
+                    fontWeight: 700,
+                    width: '15px',
+                    height: '15px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    lineHeight: 1
+                  }}>{unreadNotificationsCount}</span>
+                )}
+              </button>
+
+              {/* Backdrop overlay to click-away close dropdown */}
+              {isNotificationsOpen && (
+                <div
+                  onClick={() => setIsNotificationsOpen(false)}
+                  style={{
+                    position: 'fixed',
+                    inset: 0,
+                    zIndex: 99
+                  }}
+                />
+              )}
+
+              {/* Notifications Dropdown Card */}
+              {isNotificationsOpen && (
+                <div style={{
+                  position: 'absolute',
+                  right: 0,
+                  top: '46px',
+                  width: '320px',
+                  backgroundColor: theme === 'light' ? '#FFFFFF' : '#1C1C1F',
+                  border: `1px solid ${theme === 'light' ? '#E5E7EB' : 'rgba(255,255,255,0.08)'}`,
+                  borderRadius: '14px',
+                  boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+                  zIndex: 100,
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                  {/* Dropdown Header */}
+                  <div style={{
+                    padding: '12px 16px',
+                    borderBottom: `1px solid ${theme === 'light' ? '#E5E7EB' : 'rgba(255,255,255,0.08)'}`,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    backgroundColor: theme === 'light' ? '#F9FAFB' : '#18181B'
+                  }}>
+                    <span style={{ fontSize: '13px', fontWeight: 750, color: theme === 'light' ? '#111827' : '#FFFFFF' }}>
+                      Notifications
+                    </span>
+                    {unreadNotificationsCount > 0 && (
+                      <button
+                        onClick={() => {
+                          setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+                        }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#EC4899',
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          padding: 0
+                        }}
+                      >
+                        Mark all read
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Notifications List */}
+                  <div style={{ maxHeight: '280px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                    {notifications.length === 0 ? (
+                      <div style={{ padding: '24px', textAlign: 'center', color: theme === 'light' ? '#6B7280' : '#A1A1AA', fontSize: '12.5px' }}>
+                        No new notifications
+                      </div>
+                    ) : (
+                      notifications.map(notif => (
+                        <div
+                          key={notif.id}
+                          onClick={() => {
+                            // mark as read
+                            setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, read: true } : n));
+                            setIsNotificationsOpen(false);
+                            router.push(notif.href);
+                          }}
+                          style={{
+                            padding: '12px 16px',
+                            borderBottom: `1px solid ${theme === 'light' ? '#F3F4F6' : 'rgba(255,255,255,0.04)'}`,
+                            cursor: 'pointer',
+                            backgroundColor: notif.read
+                              ? 'transparent'
+                              : (theme === 'light' ? '#FDF2F8' : 'rgba(236,72,153,0.02)'),
+                            display: 'flex',
+                            gap: '12px',
+                            transition: 'background-color 0.2s'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = theme === 'light' ? '#F9FAFB' : 'rgba(255,255,255,0.04)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = notif.read
+                              ? 'transparent'
+                              : (theme === 'light' ? '#FDF2F8' : 'rgba(236,72,153,0.02)');
+                          }}
+                        >
+                          {/* Left Icon Badge */}
+                          <div style={{
+                            width: '28px',
+                            height: '28px',
+                            borderRadius: '8px',
+                            backgroundColor: notif.type === 'invitation' ? 'rgba(249,115,22,0.08)' : notif.type === 'status' ? 'rgba(16,185,129,0.08)' : 'rgba(139,92,246,0.08)',
+                            color: notif.type === 'invitation' ? '#F97316' : notif.type === 'status' ? '#10B981' : '#8B5CF6',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
+                            marginTop: '2px'
+                          }}>
+                            {notif.type === 'invitation' ? <Sparkles size={13} /> : notif.type === 'status' ? <CheckCircle2 size={13} /> : <MessageSquare size={13} />}
+                          </div>
+
+                          {/* Message Body */}
+                          <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '6px' }}>
+                              <span style={{ fontSize: '12px', fontWeight: 700, color: theme === 'light' ? '#111827' : '#FFFFFF', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                                {notif.title}
+                              </span>
+                              <span style={{ fontSize: '10px', color: theme === 'light' ? '#9CA3AF' : '#71717A', flexShrink: 0 }}>
+                                {notif.time}
+                              </span>
+                            </div>
+                            <span style={{ fontSize: '11.5px', color: theme === 'light' ? '#4B5563' : '#A1A1AA', lineHeight: '1.4' }}>
+                              {notif.message}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  <div
+                    onClick={() => {
+                      setNotifications([]);
+                      setIsNotificationsOpen(false);
+                    }}
+                    style={{
+                      padding: '8px 12px',
+                      textAlign: 'center',
+                      borderTop: `1px solid ${theme === 'light' ? '#E5E7EB' : 'rgba(255,255,255,0.08)'}`,
+                      backgroundColor: theme === 'light' ? '#FAF9FB' : '#18181B',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <span style={{ fontSize: '11px', fontWeight: 650, color: theme === 'light' ? '#6B7280' : '#A1A1AA' }}>
+                      Clear All Notifications
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Pink circular text avatar & Dropdown */}
             <div style={{ position: 'relative' }}>
@@ -373,10 +620,19 @@ export default function DashboardLayout({
                   userSelect: 'none',
                   border: isAvatarDropdownOpen ? '2px solid #ffffff' : '2px solid transparent',
                   boxShadow: isAvatarDropdownOpen ? '0 0 0 2px #EC4899' : 'none',
-                  transition: 'all 0.2s'
+                  transition: 'all 0.2s',
+                  overflow: 'hidden'
                 }}
               >
-                {user.role === 'brand' ? 'B' : user.role === 'creator' ? 'C' : 'A'}
+                {profile?.avatar || user.avatar ? (
+                  <img
+                    src={profile?.avatar || user.avatar}
+                    alt={profile?.name || user.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  (profile?.name || user.name || 'U').charAt(0).toUpperCase()
+                )}
               </div>
 
               {isAvatarDropdownOpen && (
@@ -414,7 +670,7 @@ export default function DashboardLayout({
                         Logged in as
                       </span>
                       <span style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--primary-text)', display: 'block', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {user.name || (user.role === 'creator' ? 'Ananya Sharma' : 'Brand Client')}
+                        {profile?.name || user.name || 'User'}
                       </span>
                       <span style={{ fontSize: '10.5px', color: 'var(--secondary-text)', display: 'block', textTransform: 'capitalize', marginTop: '1px' }}>
                         Role: {user.role}
@@ -561,7 +817,7 @@ export default function DashboardLayout({
             >
               {/* Header */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--primary-text)', margin: 0 }}>Create new</h2>
+                <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--primary-text)', margin: 0 }}>Explore</h2>
                 <button
                   onClick={() => setIsToolsModalOpen(false)}
                   style={{ background: 'none', border: 'none', color: 'var(--secondary-text)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}
@@ -575,7 +831,7 @@ export default function DashboardLayout({
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '4px', gap: '16px', flexWrap: 'wrap' }}>
                 {/* Tabs */}
                 <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', flex: 1, paddingBottom: '4px' }} className="inner-scroller">
-                  {Object.keys(modalTools).map((tab) => {
+                  {['Tools', 'Navigation'].map((tab) => {
                     const isActive = activeTab === tab;
                     return (
                       <button
@@ -644,10 +900,10 @@ export default function DashboardLayout({
                 className="inner-scroller"
               >
                 {(() => {
-                  const currentTabTools = modalTools[activeTab] || [];
-                  const filteredTools = currentTabTools.filter(tool =>
-                    tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    tool.desc.toLowerCase().includes(searchQuery.toLowerCase())
+                  const filteredTools = modalToolsList.filter(tool =>
+                    tool.category === activeTab &&
+                    (tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      tool.desc.toLowerCase().includes(searchQuery.toLowerCase()))
                   );
 
                   return (
@@ -655,6 +911,10 @@ export default function DashboardLayout({
                       {filteredTools.map((tool) => (
                         <div
                           key={tool.name}
+                          onClick={() => {
+                            setIsToolsModalOpen(false);
+                            router.push(tool.href);
+                          }}
                           style={{
                             display: 'flex',
                             alignItems: 'flex-start',
@@ -714,6 +974,22 @@ export default function DashboardLayout({
             </div>
           </div>
         )}
+
+        {/* Support & Help Modal */}
+        <SupportHelpModal
+          isOpen={isSupportModalOpen}
+          onClose={() => setIsSupportModalOpen(false)}
+          theme={theme}
+          isLight={theme === 'light'}
+          cardBg="var(--card-bg)"
+          borderColor="var(--border-color)"
+          primaryText="var(--primary-text)"
+          secondaryText="var(--secondary-text)"
+          mutedText="var(--muted-text)"
+          accentColor="#EC4899"
+          shadowStyle="var(--shadow-style)"
+          userRole={user?.role || 'creator'}
+        />
       </div>
 
       <style jsx global>{`
@@ -857,6 +1133,7 @@ interface SidebarNavProps {
   handleLogout: () => void;
   menuItems: Array<{ href: string; label: string; icon: React.ReactNode; badge?: string | number }>;
   toolItems: Array<{ href: string; label: string; icon: React.ReactNode; badge?: string | number }>;
+  onOpenSupport: () => void;
 }
 
 function SidebarNav({
@@ -869,7 +1146,10 @@ function SidebarNav({
   handleLogout,
   menuItems,
   toolItems,
+  onOpenSupport,
 }: SidebarNavProps) {
+  const { creator } = useDashboardStore();
+  const profile = creator.profile;
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const [isUtilityExpanded, setIsUtilityExpanded] = useState(false);
@@ -1185,6 +1465,8 @@ function SidebarNav({
             </button>
           </div>
         )}
+
+
       </div>
 
       {/* Bottom Sidebar Panel */}
@@ -1239,7 +1521,12 @@ function SidebarNav({
             >
               {theme === 'light' ? <Sun size={18} /> : <Moon size={18} />}
             </div>
-            <div title="Help" className="sidebar-bottom-icon" style={{ cursor: 'pointer', transition: 'all 0.2s' }}>
+            <div
+              onClick={onOpenSupport}
+              title="Help"
+              className="sidebar-bottom-icon"
+              style={{ cursor: 'pointer', transition: 'all 0.2s' }}
+            >
               <HelpCircleIconWrapper />
             </div>
           </div>
@@ -1274,9 +1561,18 @@ function SidebarNav({
               fontWeight: 700,
               fontSize: '16px',
               fontFamily: 'var(--font-sans)',
-              flexShrink: 0
+              flexShrink: 0,
+              overflow: 'hidden'
             }}>
-              {user.role === 'brand' ? 'B' : user.role === 'creator' ? 'C' : 'A'}
+              {profile?.avatar || user.avatar ? (
+                <img
+                  src={profile?.avatar || user.avatar}
+                  alt={profile?.name || user.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              ) : (
+                (profile?.name || user.name || 'U').charAt(0).toUpperCase()
+              )}
             </div>
             {!isSidebarCollapsed && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -1284,7 +1580,7 @@ function SidebarNav({
                   {user.role === 'brand' ? 'Brand Account' : 'Creator Account'}
                 </span>
                 <span style={{ fontSize: '11px', color: '#71717A', display: 'flex', alignItems: 'center', gap: '2px', marginTop: '2px' }}>
-                  {user.role === 'brand' ? 'Growth Labs' : user.name}
+                  {user.role === 'brand' ? 'Growth Labs' : (profile?.name || user.name)}
                 </span>
               </div>
             )}
@@ -1338,44 +1634,6 @@ interface ToolItem {
   desc: string;
   icon: React.ReactNode;
   pinned: boolean;
+  href: string;
+  category: 'Tools' | 'Navigation';
 }
-
-const modalTools: Record<string, ToolItem[]> = {
-  Image: [
-    { name: 'Image Generator', desc: 'Create images from text prompts', icon: <Sparkles size={16} />, pinned: true },
-    { name: 'Assistant', desc: 'Chat, create, and edit with AI', icon: <MessageSquare size={16} />, pinned: true },
-    { name: 'Image Editor', desc: 'Edit and modify existing images', icon: <PenTool size={16} />, pinned: false },
-    { name: 'Image Upscaler', desc: 'Enhance resolution and detail', icon: <Maximize size={16} />, pinned: false },
-    { name: 'Cinematic Shot', desc: 'Generate cinematic compositions', icon: <Film size={16} />, pinned: false },
-    { name: 'Variations', desc: 'Create variations of an image', icon: <Layers size={16} />, pinned: false },
-    { name: 'Skin Enhancer', desc: 'Retouch and enhance skin details', icon: <Smile size={16} />, pinned: false },
-    { name: 'Change Camera', desc: 'Adjust camera angle and lens', icon: <Camera size={16} />, pinned: false },
-    { name: 'Mockup Generator', desc: 'Place designs on product mockups', icon: <LayoutDashboard size={16} />, pinned: false },
-    { name: 'Remove Background', desc: 'Isolate subjects from backgrounds', icon: <Scissors size={16} />, pinned: false },
-    { name: 'Relight', desc: 'Change lighting and atmosphere', icon: <Sun size={16} />, pinned: false },
-  ],
-  Video: [
-    { name: 'Video Generator', desc: 'Create videos from text prompts', icon: <Film size={16} />, pinned: true },
-    { name: 'Video Editor', desc: 'Trim, merge, and edit raw footage', icon: <PenTool size={16} />, pinned: false },
-    { name: 'Auto Subtitles', desc: 'Add AI captions to your videos', icon: <FileText size={16} />, pinned: false },
-  ],
-  Audio: [
-    { name: 'Voiceover AI', desc: 'Synthesize natural voiceovers', icon: <MessageSquare size={16} />, pinned: false },
-    { name: 'Sound FX Generator', desc: 'Generate custom audio effects', icon: <Sparkles size={16} />, pinned: false },
-  ],
-  Spaces: [
-    { name: 'Virtual Studio', desc: 'Collaborative real-time canvas', icon: <LayoutDashboard size={16} />, pinned: false },
-  ],
-  Design: [
-    { name: 'Brand Kit Creator', desc: 'Export consistent color assets', icon: <Palette size={16} />, pinned: false },
-  ],
-  '3D': [
-    { name: '3D Asset Renderer', desc: 'Convert concepts into 3D models', icon: <Layers size={16} />, pinned: false },
-  ],
-  Flows: [
-    { name: 'Campaign Brief Workflow', desc: 'Generate end-to-end briefs', icon: <Megaphone size={16} />, pinned: false },
-  ],
-  Connections: [
-    { name: 'Social Publisher', desc: 'Connect channels for scheduling', icon: <Home size={16} />, pinned: false },
-  ]
-};

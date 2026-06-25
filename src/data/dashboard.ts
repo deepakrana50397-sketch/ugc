@@ -93,9 +93,9 @@ export const brandDashboardData = {
   applicants: [
     {
       id: 'appl-1',
-      creatorName: 'Neha Kapoor',
+      creatorName: 'Ananya Sharma',
       creatorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100',
-      creatorTitle: 'Beauty & Lifestyle UGC Creator',
+      creatorTitle: 'UGC Creator & Content Strategist',
       gigTitle: 'UGC Creator for Organic Skincare Brand (Reel/TikTok)',
       gigId: 'gig-1',
       pitch: 'Hey! I love SkinGlow and already use your sunscreen. I can create an aesthetic, natural 30-second reel showcasing the hydrating effect and glow on camera. I have a professional softbox setup.',

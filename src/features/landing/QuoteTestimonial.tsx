@@ -103,7 +103,7 @@ export default function QuoteTestimonial() {
                 They took social media off our plate completely and our audience has never been{' '}
                 <span 
                   style={{ 
-                    fontFamily: "'Playfair Display', serif", 
+                    fontFamily: "var(--font-playfair)", 
                     fontStyle: 'italic', 
                     fontWeight: 500,
                   }}

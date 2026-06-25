@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { getCreators, registerCreatorProfile } from '@/lib/services';
 import { Creator, PortfolioItem } from '@/types/creator';
+import { useDashboardStore } from '@/store/dashboard/useDashboardStore';
 import { 
   Save, CheckCircle2, Video, Plus, Trash2, Edit, Eye, 
   MapPin, Star, HelpCircle, X, Calendar, Heart, FileText, 
@@ -113,6 +114,8 @@ const DEFAULT_PORTFOLIO_ITEMS: PremiumPortfolioItem[] = [
 
 export default function CreatorProfilePage() {
   const { currency } = useCurrency();
+  const { creator, user, loadDashboard, updateCreatorProfile } = useDashboardStore();
+  const storeProfile = creator.profile;
   const [profile, setProfile] = useState<Creator | null>(null);
   
   // Tabs & filter states
@@ -131,27 +134,27 @@ export default function CreatorProfilePage() {
 
   // Edit settings form fields
   const [editForm, setEditForm] = useState({
-    name: 'Ananya Sharma',
-    title: 'UGC Creator & Content Strategist',
-    location: 'Mumbai, India',
-    bio: 'Professional UGC content creator specializing in lifestyle, beauty, and wellness short-form videos. Over 3 years of experience writing hooks that stop the scroll and filming highly relatable aesthetic content.',
-    projectsCompleted: '24',
-    collaboratedBrands: '18',
+    name: '',
+    title: '',
+    location: '',
+    bio: '',
+    projectsCompleted: '28',
+    collaboratedBrands: '21',
     avgRating: '4.8',
     totalReviews: '32',
     responseRate: '95',
     responseRateText: 'Very Responsive',
     rateINR: '5000',
     rateUSD: '70',
-    instagram: 'https://instagram.com/ananyasharma_ugc',
-    youtube: 'https://youtube.com/@ananyasharma',
-    tiktok: 'https://tiktok.com/@ananyacreates',
-    linkedin: 'https://linkedin.com/in/ananyasharma',
-    behance: 'https://behance.net/ananyasharma',
-    dribbble: 'https://dribbble.com/ananyasharma',
-    website: 'https://ananyasharma.com',
+    instagram: '',
+    youtube: '',
+    tiktok: '',
+    linkedin: '',
+    behance: '',
+    dribbble: '',
+    website: '',
     category: 'video_creator',
-    skills: 'Directing, Scriptwriting, Color Grading, Product Styling'
+    skills: ''
   });
 
   // Add work item form fields
@@ -174,53 +177,47 @@ export default function CreatorProfilePage() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    const creators = getCreators();
-    const p = creators[0] || null;
-    if (p) {
+    loadDashboard();
+  }, []);
+
+  useEffect(() => {
+    if (storeProfile) {
       // Seed default mockup portfolio items if empty
-      let updatedPortfolio = p.portfolio;
-      if (!p.portfolio || p.portfolio.length === 0) {
+      let updatedPortfolio = storeProfile.portfolio;
+      if (!storeProfile.portfolio || storeProfile.portfolio.length === 0) {
         updatedPortfolio = DEFAULT_PORTFOLIO_ITEMS;
-        // Save initial seed to localStorage
-        registerCreatorProfile({
-          ...p,
+        updateCreatorProfile({
           portfolio: DEFAULT_PORTFOLIO_ITEMS
         });
       }
 
-      // Add default mock ratings/stats inside creator or set locally
-      setProfile({
-        ...p,
-        portfolio: updatedPortfolio
-      });
+      setProfile(storeProfile);
 
-      // Match details with mockup by default if creator-1 details look unmodified
-      const isDefaultMockName = p.name === 'Neha Kapoor' || p.name === 'New Creator';
       setEditForm({
-        name: isDefaultMockName ? 'Ananya Sharma' : p.name,
-        title: isDefaultMockName ? 'UGC Creator & Content Strategist' : p.title,
-        location: isDefaultMockName ? 'Mumbai, India' : p.location,
-        bio: isDefaultMockName ? 'Professional UGC content creator specializing in lifestyle, beauty, and wellness short-form videos. Over 3 years of experience writing hooks that stop the scroll and filming highly relatable aesthetic content.' : p.bio,
-        projectsCompleted: isDefaultMockName ? '24' : (p.completedJobs || 24).toString(),
-        collaboratedBrands: isDefaultMockName ? '18' : Math.round((p.completedJobs || 24) * 0.75).toString(),
-        avgRating: isDefaultMockName ? '4.8' : (p.rating || 4.8).toString(),
-        totalReviews: isDefaultMockName ? '32' : '32',
+        name: storeProfile.name || '',
+        title: storeProfile.title || '',
+        location: storeProfile.location || '',
+        bio: storeProfile.bio || '',
+        projectsCompleted: (storeProfile.completedJobs || 28).toString(),
+        collaboratedBrands: Math.round((storeProfile.completedJobs || 28) * 0.75).toString(),
+        avgRating: (storeProfile.rating || 4.8).toString(),
+        totalReviews: '32',
         responseRate: '95',
         responseRateText: 'Very Responsive',
-        rateINR: p.startingRate?.INR?.toString() || '5000',
-        rateUSD: p.startingRate?.USD?.toString() || '70',
-        instagram: p.socials?.instagram || 'https://instagram.com/ananyasharma_ugc',
-        youtube: p.socials?.youtube || 'https://youtube.com/@ananyasharma',
-        tiktok: p.socials?.tiktok || 'https://tiktok.com/@ananyacreates',
-        linkedin: p.socials?.linkedin || 'https://linkedin.com/in/ananyasharma',
-        behance: p.socials?.behance || 'https://behance.net/ananyasharma',
-        dribbble: p.socials?.dribbble || 'https://dribbble.com/ananyasharma',
-        website: p.socials?.website || 'https://ananyasharma.com',
-        category: p.category || 'video_creator',
-        skills: p.skills?.join(', ') || 'Directing, Scriptwriting, Color Grading, Product Styling'
+        rateINR: storeProfile.startingRate?.INR?.toString() || '5000',
+        rateUSD: storeProfile.startingRate?.USD?.toString() || '70',
+        instagram: storeProfile.socials?.instagram || '',
+        youtube: storeProfile.socials?.youtube || '',
+        tiktok: storeProfile.socials?.tiktok || '',
+        linkedin: storeProfile.socials?.linkedin || '',
+        behance: storeProfile.socials?.behance || '',
+        dribbble: storeProfile.socials?.dribbble || '',
+        website: storeProfile.socials?.website || '',
+        category: storeProfile.category || 'video_creator',
+        skills: storeProfile.skills?.join(', ') || ''
       });
     }
-  }, []);
+  }, [storeProfile]);
 
   if (!profile) {
     return (
@@ -237,8 +234,7 @@ export default function CreatorProfilePage() {
     setSuccess(false);
 
     setTimeout(() => {
-      const updated = registerCreatorProfile({
-        ...profile,
+      updateCreatorProfile({
         name: editForm.name,
         title: editForm.title,
         location: editForm.location,
@@ -262,7 +258,6 @@ export default function CreatorProfilePage() {
         }
       });
 
-      setProfile(updated);
       setSaving(false);
       setSuccess(true);
       setIsEditModalOpen(false);
@@ -296,13 +291,10 @@ export default function CreatorProfilePage() {
       } : undefined
     };
 
-    const updatedPortfolio = [...profile.portfolio, newItem];
-    const updated = registerCreatorProfile({
-      ...profile,
+    const updatedPortfolio = [...(profile?.portfolio || []), newItem];
+    updateCreatorProfile({
       portfolio: updatedPortfolio
     });
-
-    setProfile(updated);
     setIsAddModalOpen(false);
     
     // Reset add form
@@ -327,13 +319,10 @@ export default function CreatorProfilePage() {
     e.stopPropagation();
     if (!confirm('Are you sure you want to delete this portfolio item?')) return;
 
-    const updatedPortfolio = profile.portfolio.filter(item => item.id !== id);
-    const updated = registerCreatorProfile({
-      ...profile,
+    const updatedPortfolio = (profile?.portfolio || []).filter(item => item.id !== id);
+    updateCreatorProfile({
       portfolio: updatedPortfolio
     });
-
-    setProfile(updated);
   };
 
   // Cast portfolio array to PremiumPortfolioItem type safely

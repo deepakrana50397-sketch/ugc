@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Bookmark, BookmarkCheck, Search, ChevronDown, Trash2, ExternalLink, 
   Sparkles, Plus, Play, Music, Video, FileText, CheckCircle2, ArrowUpRight, 
@@ -165,8 +165,47 @@ export default function CreatorSavedView({
   // State for items
   const [savedGigs, setSavedGigs] = useState(INITIAL_SAVED_GIGS);
   const [savedBrands, setSavedBrands] = useState(INITIAL_SAVED_BRANDS);
-  const [savedInspirations, setSavedInspirations] = useState(INITIAL_SAVED_INSPIRATIONS);
+  const [savedInspirations, setSavedInspirations] = useState<any[]>(INITIAL_SAVED_INSPIRATIONS);
   
+  // Load and sync inspirations from localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('igigster_saved_inspirations');
+      if (stored) {
+        try {
+          setSavedInspirations(JSON.parse(stored));
+        } catch (e) {
+          console.error(e);
+        }
+      } else {
+        localStorage.setItem('igigster_saved_inspirations', JSON.stringify(INITIAL_SAVED_INSPIRATIONS));
+      }
+
+      const handleUpdate = () => {
+        const updated = localStorage.getItem('igigster_saved_inspirations');
+        if (updated) {
+          try {
+            setSavedInspirations(JSON.parse(updated));
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      };
+      window.addEventListener('saved-inspirations-updated', handleUpdate);
+      return () => {
+        window.removeEventListener('saved-inspirations-updated', handleUpdate);
+      };
+    }
+  }, []);
+
+  const saveInspirations = (list: any[]) => {
+    setSavedInspirations(list);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('igigster_saved_inspirations', JSON.stringify(list));
+      window.dispatchEvent(new Event('saved-inspirations-updated'));
+    }
+  };
+
   // Toast notifications
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [lastRemovedItem, setLastRemovedItem] = useState<{
@@ -211,7 +250,7 @@ export default function CreatorSavedView({
     const inspToUnsave = savedInspirations.find(i => i.id === id);
     if (inspToUnsave) {
       setLastRemovedItem({ type: 'inspiration', item: inspToUnsave });
-      setSavedInspirations(savedInspirations.filter(i => i.id !== id));
+      saveInspirations(savedInspirations.filter(i => i.id !== id));
       triggerToast(`Deleted inspiration card: "${inspToUnsave.title}".`);
     }
   };
@@ -227,7 +266,7 @@ export default function CreatorSavedView({
       setSavedBrands(prev => [...prev, item]);
       triggerToast(`Restored ${item.name}`);
     } else if (type === 'inspiration') {
-      setSavedInspirations(prev => [...prev, item]);
+      saveInspirations([...savedInspirations, item]);
       triggerToast(`Restored inspiration: "${item.title}"`);
     }
     setLastRemovedItem(null);
@@ -256,7 +295,7 @@ export default function CreatorSavedView({
       iconType
     };
 
-    setSavedInspirations([newItem, ...savedInspirations]);
+    saveInspirations([newItem, ...savedInspirations]);
     triggerToast(`Added inspiration: "${newInspTitle}"`);
     
     // Reset Form
@@ -1012,6 +1051,10 @@ export default function CreatorSavedView({
                     icon = <Play size={16} />;
                     iconBg = 'rgba(59, 130, 246, 0.08)';
                     iconColor = '#3B82F6';
+                  } else if (insp.iconType === 'idea') {
+                    icon = <Sparkles size={16} />;
+                    iconBg = 'rgba(236, 72, 153, 0.08)';
+                    iconColor = '#EC4899';
                   }
 
                   return (
