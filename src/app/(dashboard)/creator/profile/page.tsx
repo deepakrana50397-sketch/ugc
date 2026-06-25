@@ -6,7 +6,8 @@ import { Creator, PortfolioItem } from '@/types/creator';
 import { 
   Save, CheckCircle2, Video, Plus, Trash2, Edit, Eye, 
   MapPin, Star, HelpCircle, X, Calendar, Heart, FileText, 
-  Globe, Layers, ArrowUpRight, Play, Check, ChevronDown
+  Globe, Layers, ArrowUpRight, Play, Check, ChevronDown,
+  User, DollarSign
 } from 'lucide-react';
 import { useCurrency } from '@/hooks/useCurrency';
 
@@ -126,6 +127,7 @@ export default function CreatorProfilePage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [activeVideoUrl, setActiveVideoUrl] = useState<string | null>(null);
+  const [editModalTab, setEditModalTab] = useState<'general' | 'rates' | 'socials'>('general');
 
   // Edit settings form fields
   const [editForm, setEditForm] = useState({
@@ -1317,8 +1319,8 @@ export default function CreatorProfilePage() {
         <div style={{
           position: 'fixed',
           top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          backdropFilter: 'blur(5px)',
+          backgroundColor: 'rgba(0, 0, 0, 0.65)',
+          backdropFilter: 'blur(8px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -1328,268 +1330,390 @@ export default function CreatorProfilePage() {
           <div style={{
             backgroundColor: 'var(--card-bg)',
             border: '1px solid var(--border-color)',
-            borderRadius: '24px',
-            padding: '30px',
+            borderRadius: '28px',
+            padding: '28px',
             width: '90%',
-            maxWidth: '650px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            maxHeight: '90vh',
-            overflowY: 'auto'
+            maxWidth: '620px',
+            boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.35)',
+            maxHeight: '85vh',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px'
           }} onClick={(e) => e.stopPropagation()}>
             
             {/* Modal Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--primary-text)', margin: 0 }}>
-                Edit Creator Profile Settings
-              </h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--primary-text)', margin: 0, letterSpacing: '-0.02em' }}>
+                  Edit Profile Settings
+                </h2>
+                <p style={{ color: 'var(--secondary-text)', fontSize: '12.5px', marginTop: '4px', opacity: 0.85 }}>
+                  Customize your credentials, social handles, and starting rates.
+                </p>
+              </div>
               <button 
                 onClick={() => setIsEditModalOpen(false)}
-                style={{ background: 'none', border: 'none', color: 'var(--secondary-text)', cursor: 'pointer', display: 'flex', padding: '4px' }}
+                style={{ 
+                  background: 'var(--hover-bg)', 
+                  border: `1px solid var(--border-color)`, 
+                  color: 'var(--secondary-text)', 
+                  cursor: 'pointer', 
+                  display: 'flex', 
+                  padding: '6px',
+                  borderRadius: '50%',
+                  transition: 'all 0.2s'
+                }}
+                className="hover-white-bg"
               >
-                <X size={20} />
+                <X size={16} />
               </button>
             </div>
 
-            {/* Form */}
-            <form onSubmit={handleSaveProfile} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--secondary-text)' }}>Display Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={editForm.name}
-                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                    className="modal-input"
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--secondary-text)' }}>Professional Title</label>
-                  <input
-                    type="text"
-                    required
-                    value={editForm.title}
-                    onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                    className="modal-input"
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--secondary-text)' }}>Location (City, Country)</label>
-                  <input
-                    type="text"
-                    required
-                    value={editForm.location}
-                    onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
-                    className="modal-input"
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--secondary-text)' }}>Creator Category</label>
-                  <select
-                    value={editForm.category}
-                    onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
-                    className="modal-input select-styled"
-                  >
-                    <option value="video_creator">Video Creator</option>
-                    <option value="editor">Video Editor</option>
-                    <option value="motion_designer">Motion Designer</option>
-                    <option value="voiceover">Voiceover Artist</option>
-                    <option value="actor">UGC Actor</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Bio Stats row fields */}
-              <h3 style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--primary-text)', margin: '10px 0 0 0', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px' }}>
-                Dashboard Stats (Displays on profile card)
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--secondary-text)' }}>Completed Projects</label>
-                  <input
-                    type="number"
-                    value={editForm.projectsCompleted}
-                    onChange={(e) => setEditForm({ ...editForm, projectsCompleted: e.target.value })}
-                    className="modal-input"
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--secondary-text)' }}>Collaborated Brands</label>
-                  <input
-                    type="number"
-                    value={editForm.collaboratedBrands}
-                    onChange={(e) => setEditForm({ ...editForm, collaboratedBrands: e.target.value })}
-                    className="modal-input"
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--secondary-text)' }}>Rating Value</label>
-                  <input
-                    type="text"
-                    value={editForm.avgRating}
-                    onChange={(e) => setEditForm({ ...editForm, avgRating: e.target.value })}
-                    className="modal-input"
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--secondary-text)' }}>Response Rate %</label>
-                  <input
-                    type="number"
-                    value={editForm.responseRate}
-                    onChange={(e) => setEditForm({ ...editForm, responseRate: e.target.value })}
-                    className="modal-input"
-                  />
-                </div>
-              </div>
-
-              {/* Social Channels URL */}
-              <h3 style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--primary-text)', margin: '10px 0 0 0', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px' }}>
-                Social Profile Handles
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '11px', fontWeight: 650, color: 'var(--secondary-text)' }}>Instagram Link</label>
-                  <input
-                    type="url"
-                    value={editForm.instagram}
-                    onChange={(e) => setEditForm({ ...editForm, instagram: e.target.value })}
-                    className="modal-input"
-                    placeholder="https://instagram.com/..."
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '11px', fontWeight: 650, color: 'var(--secondary-text)' }}>YouTube Link</label>
-                  <input
-                    type="url"
-                    value={editForm.youtube}
-                    onChange={(e) => setEditForm({ ...editForm, youtube: e.target.value })}
-                    className="modal-input"
-                    placeholder="https://youtube.com/..."
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '11px', fontWeight: 650, color: 'var(--secondary-text)' }}>TikTok Link</label>
-                  <input
-                    type="url"
-                    value={editForm.tiktok}
-                    onChange={(e) => setEditForm({ ...editForm, tiktok: e.target.value })}
-                    className="modal-input"
-                    placeholder="https://tiktok.com/..."
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '11px', fontWeight: 650, color: 'var(--secondary-text)' }}>LinkedIn Link</label>
-                  <input
-                    type="url"
-                    value={editForm.linkedin}
-                    onChange={(e) => setEditForm({ ...editForm, linkedin: e.target.value })}
-                    className="modal-input"
-                    placeholder="https://linkedin.com/in/..."
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '11px', fontWeight: 650, color: 'var(--secondary-text)' }}>Behance Link</label>
-                  <input
-                    type="url"
-                    value={editForm.behance}
-                    onChange={(e) => setEditForm({ ...editForm, behance: e.target.value })}
-                    className="modal-input"
-                    placeholder="https://behance.net/..."
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '11px', fontWeight: 650, color: 'var(--secondary-text)' }}>Dribbble Link</label>
-                  <input
-                    type="url"
-                    value={editForm.dribbble}
-                    onChange={(e) => setEditForm({ ...editForm, dribbble: e.target.value })}
-                    className="modal-input"
-                    placeholder="https://dribbble.com/..."
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', gridColumn: 'span 2' }}>
-                  <label style={{ fontSize: '11px', fontWeight: 650, color: 'var(--secondary-text)' }}>Personal Website Link</label>
-                  <input
-                    type="url"
-                    value={editForm.website}
-                    onChange={(e) => setEditForm({ ...editForm, website: e.target.value })}
-                    className="modal-input"
-                    placeholder="https://yourwebsite.com"
-                  />
-                </div>
-              </div>
-
-              {/* Skills and Rates */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--secondary-text)' }}>Starting Rate (INR)</label>
-                  <input
-                    type="number"
-                    value={editForm.rateINR}
-                    onChange={(e) => setEditForm({ ...editForm, rateINR: e.target.value })}
-                    className="modal-input"
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--secondary-text)' }}>Starting Rate (USD)</label>
-                  <input
-                    type="number"
-                    value={editForm.rateUSD}
-                    onChange={(e) => setEditForm({ ...editForm, rateUSD: e.target.value })}
-                    className="modal-input"
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--secondary-text)' }}>Skills (comma separated)</label>
-                <input
-                  type="text"
-                  value={editForm.skills}
-                  onChange={(e) => setEditForm({ ...editForm, skills: e.target.value })}
-                  className="modal-input"
-                />
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--secondary-text)' }}>Professional Biography</label>
-                <textarea
-                  rows={3}
-                  value={editForm.bio}
-                  onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
+            {/* Redesigned Tab Switcher */}
+            <div style={{
+              display: 'flex',
+              gap: '4px',
+              backgroundColor: 'var(--hover-bg)',
+              padding: '4px',
+              borderRadius: '12px',
+              border: '1px solid var(--border-color)',
+              width: '100%'
+            }}>
+              {[
+                { id: 'general', label: 'General Info', icon: <User size={14} /> },
+                { id: 'rates', label: 'Rates & Skills', icon: <DollarSign size={14} /> },
+                { id: 'socials', label: 'Social Handles', icon: <Globe size={14} /> }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setEditModalTab(tab.id as any)}
                   style={{
-                    padding: '10px 14px',
-                    borderRadius: '12px',
-                    border: '1px solid var(--border-color)',
-                    backgroundColor: 'rgba(0,0,0,0.02)',
-                    color: 'var(--primary-text)',
-                    outline: 'none',
-                    fontSize: '13px',
-                    fontFamily: 'inherit',
-                    resize: 'vertical'
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    height: '36px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    backgroundColor: editModalTab === tab.id ? '#EC4899' : 'transparent',
+                    color: editModalTab === tab.id ? '#FFFFFF' : 'var(--secondary-text)',
+                    fontSize: '12.5px',
+                    fontWeight: editModalTab === tab.id ? 700 : 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease-in-out'
                   }}
-                />
+                  className="modal-tab-btn"
+                >
+                  {tab.icon}
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Scrollable Form Content */}
+            <form onSubmit={handleSaveProfile} style={{ display: 'flex', flexDirection: 'column', flex: 1, overflowY: 'auto', gap: '16px', paddingRight: '4px' }} className="inner-scroller">
+              
+              {/* TAB 1: GENERAL INFO */}
+              <div style={{ display: editModalTab === 'general' ? 'flex' : 'none', flexDirection: 'column', gap: '14px' }}>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }} className="modal-form-grid">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>Display Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={editForm.name}
+                      onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                      className="modal-input"
+                      placeholder="Ananya Sharma"
+                    />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>Professional Title</label>
+                    <input
+                      type="text"
+                      required
+                      value={editForm.title}
+                      onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                      className="modal-input"
+                      placeholder="e.g. UGC Creator & Editor"
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }} className="modal-form-grid">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>Location (City, Country)</label>
+                    <input
+                      type="text"
+                      required
+                      value={editForm.location}
+                      onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
+                      className="modal-input"
+                      placeholder="Bangalore, India"
+                    />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>Creator Category</label>
+                    <select
+                      value={editForm.category}
+                      onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                      className="modal-input select-styled"
+                      style={{ height: '39px' }}
+                    >
+                      <option value="video_creator">Video Creator</option>
+                      <option value="editor">Video Editor</option>
+                      <option value="motion_designer">Motion Designer</option>
+                      <option value="voiceover">Voiceover Artist</option>
+                      <option value="actor">UGC Actor</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>Professional Biography</label>
+                  <textarea
+                    rows={4}
+                    required
+                    value={editForm.bio}
+                    onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
+                    style={{
+                      padding: '10px 14px',
+                      borderRadius: '12px',
+                      border: '1px solid var(--border-color)',
+                      backgroundColor: 'rgba(0,0,0,0.02)',
+                      color: 'var(--primary-text)',
+                      outline: 'none',
+                      fontSize: '13px',
+                      fontFamily: 'inherit',
+                      resize: 'none',
+                      lineHeight: '1.5'
+                    }}
+                    placeholder="Tell brands about your focus area, style, and creator experience..."
+                  />
+                </div>
+              </div>
+
+              {/* TAB 2: RATES & SKILLS */}
+              <div style={{ display: editModalTab === 'rates' ? 'flex' : 'none', flexDirection: 'column', gap: '14px' }}>
+                
+                {/* Rate guide info banner */}
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'flex-start', 
+                  gap: '10px', 
+                  backgroundColor: 'rgba(236, 72, 153, 0.04)', 
+                  border: '1px dashed rgba(236, 72, 153, 0.25)', 
+                  borderRadius: '12px', 
+                  padding: '12px'
+                }}>
+                  <HelpCircle size={16} color="#EC4899" style={{ marginTop: '2px', flexShrink: 0 }} />
+                  <p style={{ fontSize: '11.5px', color: 'var(--secondary-text)', margin: 0, lineHeight: '1.4' }}>
+                    <strong>Starting Rates Tip:</strong> Set realistic starting rates to guide brands on your services pricing. Display stats like completed projects, brands, reviews, and response rates are updated automatically.
+                  </p>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }} className="modal-form-grid">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>Starting Rate (INR)</label>
+                      <span style={{ fontSize: '10px', color: 'var(--muted-text)', fontWeight: 600 }}>Default</span>
+                    </div>
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ position: 'absolute', left: '12px', color: 'var(--muted-text)', fontSize: '12.5px', fontWeight: 700 }}>₹</span>
+                      <input
+                        type="number"
+                        required
+                        value={editForm.rateINR}
+                        onChange={(e) => setEditForm({ ...editForm, rateINR: e.target.value })}
+                        className="modal-input"
+                        style={{ paddingLeft: '24px', width: '100%' }}
+                        placeholder="e.g. 5000"
+                      />
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>Starting Rate (USD)</label>
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ position: 'absolute', left: '12px', color: 'var(--muted-text)', fontSize: '12.5px', fontWeight: 700 }}>$</span>
+                      <input
+                        type="number"
+                        required
+                        value={editForm.rateUSD}
+                        onChange={(e) => setEditForm({ ...editForm, rateUSD: e.target.value })}
+                        className="modal-input"
+                        style={{ paddingLeft: '24px', width: '100%' }}
+                        placeholder="e.g. 70"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>Skills (comma separated)</label>
+                  <input
+                    type="text"
+                    required
+                    value={editForm.skills}
+                    onChange={(e) => setEditForm({ ...editForm, skills: e.target.value })}
+                    className="modal-input"
+                    placeholder="e.g. Video Editing, Directing, Product Styling, Copywriting"
+                  />
+                  <span style={{ fontSize: '10.5px', color: 'var(--muted-text)', marginTop: '2px' }}>
+                    Separate multiple skills using commas.
+                  </span>
+                </div>
+              </div>
+
+              {/* TAB 3: SOCIAL HANDLES */}
+              <div style={{ display: editModalTab === 'socials' ? 'flex' : 'none', flexDirection: 'column', gap: '12px' }}>
+                
+                {/* Instagram & Youtube Row */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }} className="modal-form-grid">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>Instagram Profile URL</label>
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ position: 'absolute', left: '12px', color: 'var(--muted-text)', display: 'flex', alignItems: 'center' }}>
+                        <InstagramIcon size={14} />
+                      </span>
+                      <input
+                        type="url"
+                        value={editForm.instagram}
+                        onChange={(e) => setEditForm({ ...editForm, instagram: e.target.value })}
+                        className="modal-input"
+                        style={{ paddingLeft: '34px', width: '100%' }}
+                        placeholder="https://instagram.com/yourhandle"
+                      />
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>YouTube Channel URL</label>
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ position: 'absolute', left: '12px', color: 'var(--muted-text)', display: 'flex', alignItems: 'center' }}>
+                        <YoutubeIcon size={14} />
+                      </span>
+                      <input
+                        type="url"
+                        value={editForm.youtube}
+                        onChange={(e) => setEditForm({ ...editForm, youtube: e.target.value })}
+                        className="modal-input"
+                        style={{ paddingLeft: '34px', width: '100%' }}
+                        placeholder="https://youtube.com/@channel"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* TikTok & LinkedIn Row */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }} className="modal-form-grid">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>TikTok Profile URL</label>
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ position: 'absolute', left: '12px', color: 'var(--muted-text)', display: 'flex', alignItems: 'center' }}>
+                        <TiktokIcon size={14} />
+                      </span>
+                      <input
+                        type="url"
+                        value={editForm.tiktok}
+                        onChange={(e) => setEditForm({ ...editForm, tiktok: e.target.value })}
+                        className="modal-input"
+                        style={{ paddingLeft: '34px', width: '100%' }}
+                        placeholder="https://tiktok.com/@handle"
+                      />
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>LinkedIn Profile URL</label>
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ position: 'absolute', left: '12px', color: 'var(--muted-text)', display: 'flex', alignItems: 'center' }}>
+                        <LinkedinIcon size={14} />
+                      </span>
+                      <input
+                        type="url"
+                        value={editForm.linkedin}
+                        onChange={(e) => setEditForm({ ...editForm, linkedin: e.target.value })}
+                        className="modal-input"
+                        style={{ paddingLeft: '34px', width: '100%' }}
+                        placeholder="https://linkedin.com/in/profile"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Behance & Dribbble Row */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }} className="modal-form-grid">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>Behance Portfolio URL</label>
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ position: 'absolute', left: '12px', color: 'var(--muted-text)', display: 'flex', alignItems: 'center' }}>
+                        <BehanceIcon size={14} />
+                      </span>
+                      <input
+                        type="url"
+                        value={editForm.behance}
+                        onChange={(e) => setEditForm({ ...editForm, behance: e.target.value })}
+                        className="modal-input"
+                        style={{ paddingLeft: '34px', width: '100%' }}
+                        placeholder="https://behance.net/portfolio"
+                      />
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>Dribbble Portfolio URL</label>
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                      <span style={{ position: 'absolute', left: '12px', color: 'var(--muted-text)', display: 'flex', alignItems: 'center' }}>
+                        <DribbbleIcon size={14} />
+                      </span>
+                      <input
+                        type="url"
+                        value={editForm.dribbble}
+                        onChange={(e) => setEditForm({ ...editForm, dribbble: e.target.value })}
+                        className="modal-input"
+                        style={{ paddingLeft: '34px', width: '100%' }}
+                        placeholder="https://dribbble.com/portfolio"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Website Link */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--secondary-text)' }}>Personal Website URL</label>
+                  <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                    <span style={{ position: 'absolute', left: '12px', color: 'var(--muted-text)', display: 'flex', alignItems: 'center' }}>
+                      <WebsiteIcon size={14} />
+                    </span>
+                    <input
+                      type="url"
+                      value={editForm.website}
+                      onChange={(e) => setEditForm({ ...editForm, website: e.target.value })}
+                      className="modal-input"
+                      style={{ paddingLeft: '34px', width: '100%' }}
+                      placeholder="https://yourwebsite.com"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Action Buttons */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '8px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
                 <button
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
                   style={{
-                    padding: '11px 20px',
+                    padding: '10px 20px',
                     borderRadius: '12px',
                     backgroundColor: 'transparent',
                     border: '1px solid var(--border-color)',
                     color: 'var(--primary-text)',
                     fontSize: '13px',
                     fontWeight: 600,
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
                   }}
+                  className="hover-white-bg"
                 >
                   Cancel
                 </button>
@@ -1597,7 +1721,7 @@ export default function CreatorProfilePage() {
                   type="submit"
                   disabled={saving}
                   style={{
-                    padding: '11px 24px',
+                    padding: '10px 24px',
                     borderRadius: '12px',
                     backgroundColor: '#EC4899',
                     color: '#ffffff',
@@ -1608,8 +1732,10 @@ export default function CreatorProfilePage() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    boxShadow: '0 4px 12px rgba(236,72,153,0.2)'
+                    boxShadow: '0 4px 12px rgba(236,72,153,0.2)',
+                    transition: 'all 0.2s'
                   }}
+                  className="glow-button"
                 >
                   <Save size={15} />
                   <span>{saving ? 'Saving...' : 'Save Profile'}</span>

@@ -10,7 +10,7 @@ import {
   BarChart2, Wallet, Bookmark, FileText, Image, Sparkles, PenTool,
   Calendar, Palette, Bell, Settings, Moon, Sun, HelpCircle, LogOut, PanelLeft, ChevronDown, ChevronUp,
   X, Maximize, Smile, Scissors, Film, Camera, Layers, Search, Pin,
-  Star, Crown, CreditCard, Briefcase, Calculator, Activity
+  Star, Crown, CreditCard, Briefcase, Calculator, Activity, User as UserIcon
 } from 'lucide-react';
 import CurrencyToggle from '@/components/ui/CurrencyToggle';
 
@@ -30,6 +30,7 @@ export default function DashboardLayout({
 
   // Tools Modal States
   const [isToolsModalOpen, setIsToolsModalOpen] = useState(false);
+  const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'Image' | 'Video' | 'Audio' | 'Spaces' | 'Design' | '3D' | 'Flows' | 'Connections'>('Image');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -72,14 +73,14 @@ export default function DashboardLayout({
   if (loading || !user) {
     const isLightLoader = mounted && theme === 'light';
     return (
-      <div style={{ 
-        backgroundColor: isLightLoader ? '#F8F8FA' : '#09090B', 
-        minHeight: '100vh', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        color: isLightLoader ? '#09090B' : '#ffffff', 
-        fontFamily: 'var(--font-sans)' 
+      <div style={{
+        backgroundColor: isLightLoader ? '#F8F8FA' : '#09090B',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: isLightLoader ? '#09090B' : '#ffffff',
+        fontFamily: 'var(--font-sans)'
       }}>
         <span>Loading secure dashboard...</span>
       </div>
@@ -351,22 +352,167 @@ export default function DashboardLayout({
               }}>3</span>
             </button>
 
-            {/* Pink circular text avatar */}
-            <div style={{
-              width: '38px',
-              height: '38px',
-              borderRadius: '50%',
-              backgroundColor: '#EC4899',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#ffffff',
-              fontWeight: 600,
-              fontSize: '14px',
-              fontFamily: 'var(--font-sans)',
-              flexShrink: 0
-            }}>
-              {user.role === 'brand' ? 'B' : user.role === 'creator' ? 'C' : 'A'}
+            {/* Pink circular text avatar & Dropdown */}
+            <div style={{ position: 'relative' }}>
+              <div
+                onClick={() => setIsAvatarDropdownOpen(!isAvatarDropdownOpen)}
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '50%',
+                  backgroundColor: '#EC4899',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  fontSize: '14px',
+                  fontFamily: 'var(--font-sans)',
+                  flexShrink: 0,
+                  cursor: 'pointer',
+                  userSelect: 'none',
+                  border: isAvatarDropdownOpen ? '2px solid #ffffff' : '2px solid transparent',
+                  boxShadow: isAvatarDropdownOpen ? '0 0 0 2px #EC4899' : 'none',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {user.role === 'brand' ? 'B' : user.role === 'creator' ? 'C' : 'A'}
+              </div>
+
+              {isAvatarDropdownOpen && (
+                <>
+                  {/* Invisible backdrop to close on click outside */}
+                  <div
+                    onClick={() => setIsAvatarDropdownOpen(false)}
+                    style={{
+                      position: 'fixed',
+                      top: 0, left: 0, right: 0, bottom: 0,
+                      zIndex: 9998,
+                      backgroundColor: 'transparent'
+                    }}
+                  />
+                  {/* Dropdown Menu Box */}
+                  <div style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '46px',
+                    width: '220px',
+                    backgroundColor: 'var(--card-bg)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '16px',
+                    boxShadow: '0 10px 25px -5px rgba(0,0,0,0.15), 0 8px 10px -6px rgba(0,0,0,0.15)',
+                    padding: '8px',
+                    zIndex: 9999,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
+                    animation: 'fadeIn 0.15s ease-out'
+                  }}>
+                    {/* Header info */}
+                    <div style={{ padding: '8px 12px', borderBottom: '1px solid var(--border-color)', marginBottom: '4px' }}>
+                      <span style={{ fontSize: '10px', color: 'var(--muted-text)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.04em' }}>
+                        Logged in as
+                      </span>
+                      <span style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--primary-text)', display: 'block', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {user.name || (user.role === 'creator' ? 'Ananya Sharma' : 'Brand Client')}
+                      </span>
+                      <span style={{ fontSize: '10.5px', color: 'var(--secondary-text)', display: 'block', textTransform: 'capitalize', marginTop: '1px' }}>
+                        Role: {user.role}
+                      </span>
+                    </div>
+
+                    {/* View Profile Option */}
+                    <button
+                      onClick={() => {
+                        setIsAvatarDropdownOpen(false);
+                        router.push(user.role === 'creator' ? '/creator/profile' : '/brand/dashboard');
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        border: 'none',
+                        backgroundColor: 'transparent',
+                        color: 'var(--primary-text)',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        transition: 'all 0.2s',
+                        width: '100%'
+                      }}
+                      className="hover-dropdown-item"
+                    >
+                      <UserIcon size={14} />
+                      <span>{user.role === 'creator' ? 'My Portfolio' : 'Brand Dashboard'}</span>
+                    </button>
+
+                    {/* Main Dashboard Option */}
+                    <button
+                      onClick={() => {
+                        setIsAvatarDropdownOpen(false);
+                        router.push(user.role === 'creator' ? '/creator/dashboard' : '/brand/dashboard');
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        border: 'none',
+                        backgroundColor: 'transparent',
+                        color: 'var(--primary-text)',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        transition: 'all 0.2s',
+                        width: '100%'
+                      }}
+                      className="hover-dropdown-item"
+                    >
+                      <LayoutDashboard size={14} />
+                      <span>Main Dashboard</span>
+                    </button>
+
+                    <div style={{ borderTop: '1px solid var(--border-color)', margin: '4px 0' }} />
+
+                    {/* Exit Panel (logs out user and goes to main landing page) */}
+                    <button
+                      onClick={() => {
+                        setIsAvatarDropdownOpen(false);
+                        logoutUser();
+                        window.dispatchEvent(new Event('auth-change'));
+                        router.push('/');
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        border: 'none',
+                        backgroundColor: 'transparent',
+                        color: 'var(--primary-text)',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        transition: 'all 0.2s',
+                        width: '100%'
+                      }}
+                      className="hover-dropdown-item"
+                    >
+                      <LogOut size={14} style={{ transform: 'scaleX(-1)' }} />
+                      <span>Exit Dashboard</span>
+                    </button>
+
+
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </header>
@@ -380,7 +526,7 @@ export default function DashboardLayout({
 
         {/* Tools Modal (Dialog) */}
         {isToolsModalOpen && (
-          <div 
+          <div
             onClick={() => setIsToolsModalOpen(false)}
             style={{
               position: 'fixed',
@@ -397,7 +543,7 @@ export default function DashboardLayout({
               animation: 'fadeIn 0.2s ease-out'
             }}
           >
-             <div 
+            <div
               onClick={(e) => e.stopPropagation()}
               style={{
                 backgroundColor: 'var(--card-bg)',
@@ -416,7 +562,7 @@ export default function DashboardLayout({
               {/* Header */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--primary-text)', margin: 0 }}>Create new</h2>
-                <button 
+                <button
                   onClick={() => setIsToolsModalOpen(false)}
                   style={{ background: 'none', border: 'none', color: 'var(--secondary-text)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}
                   className="hover-white-icon"
@@ -440,10 +586,10 @@ export default function DashboardLayout({
                           borderRadius: '999px',
                           fontSize: '13px',
                           fontWeight: isActive ? 600 : 500,
-                          backgroundColor: isActive 
+                          backgroundColor: isActive
                             ? (theme === 'light' ? '#E4E4E7' : '#27272A')
                             : 'transparent',
-                          color: isActive 
+                          color: isActive
                             ? 'var(--primary-text)'
                             : 'var(--secondary-text)',
                           border: 'none',
@@ -462,9 +608,9 @@ export default function DashboardLayout({
                 {/* Search Bar */}
                 <div style={{ position: 'relative', width: '240px' }}>
                   <Search size={14} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--secondary-text)' }} />
-                  <input 
-                    type="text" 
-                    placeholder="Search for tools and flows" 
+                  <input
+                    type="text"
+                    placeholder="Search for tools and flows"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     style={{
@@ -485,36 +631,36 @@ export default function DashboardLayout({
               </div>
 
               {/* Grid Content */}
-              <div 
-                style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: 'repeat(3, 1fr)', 
-                  gap: '16px 24px', 
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: '16px 24px',
                   minHeight: '260px',
                   maxHeight: '380px',
                   overflowY: 'auto',
-                  padding: '4px 0' 
+                  padding: '4px 0'
                 }}
                 className="inner-scroller"
               >
                 {(() => {
                   const currentTabTools = modalTools[activeTab] || [];
-                  const filteredTools = currentTabTools.filter(tool => 
+                  const filteredTools = currentTabTools.filter(tool =>
                     tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     tool.desc.toLowerCase().includes(searchQuery.toLowerCase())
                   );
-                  
+
                   return (
                     <>
                       {filteredTools.map((tool) => (
-                        <div 
+                        <div
                           key={tool.name}
-                          style={{ 
-                            display: 'flex', 
-                            alignItems: 'flex-start', 
-                            gap: '12px', 
-                            padding: '8px', 
-                            borderRadius: '12px', 
+                          style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '12px',
+                            padding: '8px',
+                            borderRadius: '12px',
                             cursor: 'pointer',
                             position: 'relative'
                           }}
@@ -543,15 +689,15 @@ export default function DashboardLayout({
 
                           {/* Pin Icon */}
                           {tool.pinned && (
-                            <Pin 
-                              size={12} 
-                              style={{ 
-                                position: 'absolute', 
-                                right: '8px', 
-                                top: '12px', 
-                                color: 'var(--secondary-text)', 
-                                transform: 'rotate(45deg)' 
-                              }} 
+                            <Pin
+                              size={12}
+                              style={{
+                                position: 'absolute',
+                                right: '8px',
+                                top: '12px',
+                                color: 'var(--secondary-text)',
+                                transform: 'rotate(45deg)'
+                              }}
                             />
                           )}
                         </div>
@@ -671,6 +817,15 @@ export default function DashboardLayout({
         }
         .hover-white-icon:hover {
           color: #EC4899 !important;
+        }
+        
+        .hover-dropdown-item:hover {
+          background-color: var(--hover-bg) !important;
+          color: #EC4899 !important;
+        }
+        .hover-dropdown-item-danger:hover {
+          background-color: rgba(239, 68, 68, 0.08) !important;
+          color: #EF4444 !important;
         }
         
         /* Hide scrollbars for the sidebar scroller */
@@ -883,7 +1038,7 @@ function SidebarNav({
                 }}>
                   {item.icon}
                 </span>
-                 {!isSidebarCollapsed && <span>{item.label}</span>}
+                {!isSidebarCollapsed && <span>{item.label}</span>}
                 {item.badge && !isSidebarCollapsed && (
                   <span style={{
                     marginLeft: 'auto',
@@ -915,7 +1070,7 @@ function SidebarNav({
             <div style={{ borderTop: theme === 'light' ? '1px solid #E5E7EB' : '1px solid rgba(255,255,255,0.08)', margin: '12px 0' }} />
 
             {!isSidebarCollapsed && (
-              <span 
+              <span
                 onClick={() => window.dispatchEvent(new Event('open-tools-modal'))}
                 style={{ fontSize: '10px', fontWeight: 700, color: '#71717A', textTransform: 'uppercase', letterSpacing: '0.05em', padding: '0 12px', marginBottom: '8px', display: 'block', cursor: 'pointer' }}
                 className="hover-underline"
@@ -964,7 +1119,7 @@ function SidebarNav({
                     }}>
                       {item.icon}
                     </span>
-                     {!isSidebarCollapsed && <span>{item.label}</span>}
+                    {!isSidebarCollapsed && <span>{item.label}</span>}
                     {item.badge && !isSidebarCollapsed && (
                       <span style={{
                         marginLeft: 'auto',
@@ -1072,23 +1227,7 @@ function SidebarNav({
               padding: '0 12px',
             }}
           >
-            <div title="Notifications" className="sidebar-bottom-icon" style={{ position: 'relative', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Bell size={18} />
-              <span style={{
-                position: 'absolute',
-                top: '-6px',
-                right: '-6px',
-                backgroundColor: '#EC4899',
-                color: '#ffffff',
-                borderRadius: '50%',
-                fontSize: '9px',
-                fontWeight: 700,
-                padding: '2px 4px',
-                lineHeight: '1',
-                minWidth: '14px',
-                textAlign: 'center'
-              }}>12</span>
-            </div>
+
             <div title="Settings" className="sidebar-bottom-icon" style={{ cursor: 'pointer', transition: 'all 0.2s' }}>
               <Settings size={18} />
             </div>

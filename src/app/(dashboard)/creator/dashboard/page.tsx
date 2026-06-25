@@ -14,6 +14,7 @@ import CreatorMessagesView from './components/CreatorMessagesView';
 import CreatorEarningsView from './components/CreatorEarningsView';
 import CreatorAnalyticsView from './components/CreatorAnalyticsView';
 import CreatorReviewsView from './components/CreatorReviewsView';
+import CreatorSavedView from './components/CreatorSavedView';
 
 export default function CreatorDashboardPage() {
   const { currency } = useCurrency();
@@ -98,6 +99,22 @@ export default function CreatorDashboardPage() {
   if (view === 'reviews') {
     return (
       <CreatorReviewsView
+        theme={theme}
+        isLight={isLight}
+        cardBg={cardBg}
+        borderColor={borderColor}
+        primaryText={primaryText}
+        secondaryText={secondaryText}
+        mutedText={mutedText}
+        accentColor={accentColor}
+        shadowStyle={shadowStyle}
+      />
+    );
+  }
+
+  if (view === 'saved') {
+    return (
+      <CreatorSavedView
         theme={theme}
         isLight={isLight}
         cardBg={cardBg}
