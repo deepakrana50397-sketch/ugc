@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Mail, Lock, User, Sparkles, Building2, Briefcase, ShieldAlert } from 'lucide-react';
-import { loginMockUser } from '@/lib/services';
+import { Mail, Lock, User, Sparkles, Building2, Briefcase, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { loginMockUser, signUpUser } from '@/lib/services';
 import { useSiteMode } from '@/hooks/useSiteMode';
 import { motion } from 'framer-motion';
 
@@ -30,6 +30,16 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastType, setToastType] = useState<'success' | 'error'>('success');
+
+  const triggerToast = (msg: string, type: 'success' | 'error' = 'success') => {
+    setToastMessage(msg);
+    setToastType(type);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 4000);
+  };
 
   // Handle URL role parameter safely inside browser environment
   useEffect(() => {
@@ -44,30 +54,37 @@ export default function RegisterPage() {
     }
   }, [setMode]);
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !password) return;
     setError('');
     setLoading(true);
 
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('igigster_demo_mode', 'false');
+    }
+
     const targetRole = mode === 'talent' ? 'creator' : 'brand';
 
-    setTimeout(async () => {
-      try {
-        // Create session via loginMockUser
-        const user = await loginMockUser(email, targetRole);
-        user.name = name; // Update with input name
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('igigster_user', JSON.stringify(user));
-        }
-        window.dispatchEvent(new Event('auth-change'));
-        setLoading(false);
-        router.push('/onboarding');
-      } catch (err) {
-        setError('Registration failed. Please try again.');
-        setLoading(false);
+    try {
+      // Create session via signUpUser
+      const user = await signUpUser({ email, name, role: targetRole, password });
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('igigster_user', JSON.stringify(user));
       }
-    }, 1000);
+      window.dispatchEvent(new Event('auth-change'));
+      triggerToast('Registration successful! Redirecting...', 'success');
+      setLoading(false);
+      setTimeout(() => {
+        router.push('/onboarding');
+      }, 1500);
+    } catch (err: any) {
+      console.error(err);
+      const errMsg = err.message || 'Registration failed. Please try again.';
+      setError(errMsg);
+      triggerToast(errMsg, 'error');
+      setLoading(false);
+    }
   };
 
   const ModeSwitcher = () => (
@@ -502,6 +519,34 @@ export default function RegisterPage() {
           © 2026 iGigster. All Rights Reserved.
         </div>
       </div>
+
+      {/* TOAST SYSTEM POPUPS */}
+      {toastMessage && (
+        <div style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          backgroundColor: '#09090B',
+          color: '#ffffff',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: '10px',
+          padding: '10px 16px',
+          fontSize: '12.5px',
+          fontWeight: 600,
+          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          zIndex: 99999,
+        }}>
+          {toastType === 'success' ? (
+            <CheckCircle2 size={14} style={{ color: '#10B981' }} />
+          ) : (
+            <ShieldAlert size={14} style={{ color: '#EF4444' }} />
+          )}
+          <span>{toastMessage}</span>
+        </div>
+      )}
 
       {/* Global CSS classes for splitscreen responsiveness */}
       <style jsx global>{`

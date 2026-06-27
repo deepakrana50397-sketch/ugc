@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useCurrency } from '@/hooks/useCurrency';
 import { displayPrice } from '@/lib/currency';
-import { applyToGig } from '@/lib/services';
+import { applyToGig, getGigs } from '@/lib/services';
 import { 
   Search, Calendar, Star, Compass, Filter, ChevronDown, 
   ChevronRight, Bookmark, BadgeCheck, Bell, X, Check, MoreVertical, Info
@@ -146,6 +146,8 @@ export default function CreatorBrowseGigsPage() {
 
   // Bookmark / Save state
   const [savedGigs, setSavedGigs] = useState<string[]>([]);
+  const [gigsList, setGigsList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Apply Modal state
   const [applyGig, setApplyGig] = useState<any | null>(null);
@@ -202,6 +204,17 @@ export default function CreatorBrowseGigsPage() {
       } catch (e) {}
     }
 
+    setLoading(true);
+    getGigs()
+      .then((g) => {
+        setGigsList(g);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching gigs:', err);
+        setLoading(false);
+      });
+
     return () => {
       window.removeEventListener('igigster-theme-change', handleThemeChange);
       document.removeEventListener('mousedown', handleClickOutside);
@@ -228,7 +241,7 @@ export default function CreatorBrowseGigsPage() {
 
   const handleApplyFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!pitch || !portfolioLink || !expectedRate || !applyGig) return;
+    if (!pitch || !expectedRate || !applyGig) return;
 
     setIsSubmitting(true);
     const rateNum = parseFloat(expectedRate);
@@ -242,30 +255,29 @@ export default function CreatorBrowseGigsPage() {
       rateINR = Math.round(rateNum * 85);
     }
 
-    setTimeout(() => {
-      try {
-        applyToGig({
-          gigId: applyGig.id,
-          pitch,
-          portfolioLink,
-          rate: { INR: rateINR, USD: rateUSD }
-        });
-        
-        setIsSubmitting(false);
-        setIsSuccess(true);
-        
-        setTimeout(() => {
-          setApplyGig(null);
-          setIsSuccess(false);
-          setPitch('');
-          setPortfolioLink('');
-          setExpectedRate('');
-        }, 1800);
-      } catch (err) {
-        console.error(err);
-        setIsSubmitting(false);
-      }
-    }, 1000);
+    applyToGig({
+      gigId: applyGig.id,
+      pitch,
+      portfolioLink,
+      rate: { INR: rateINR, USD: rateUSD }
+    })
+    .then(() => {
+      setIsSubmitting(false);
+      setIsSuccess(true);
+      
+      setTimeout(() => {
+        setApplyGig(null);
+        setIsSuccess(false);
+        setPitch('');
+        setPortfolioLink('');
+        setExpectedRate('');
+      }, 1500);
+    })
+    .catch((err) => {
+      console.error(err);
+      alert('Failed to submit application: ' + err.message);
+      setIsSubmitting(false);
+    });
   };
 
   const handleJobTypeChange = (type: string) => {
@@ -274,14 +286,14 @@ export default function CreatorBrowseGigsPage() {
     );
   };
 
-  // Main filter calculation over mock gigs
-  const filteredGigs = MOCK_GIGS_DATA.filter(gig => {
+  // Main filter calculation over gigs loaded from API
+  const filteredGigs = gigsList.filter(gig => {
     // 1. Search Query filter
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const matchTitle = gig.title.toLowerCase().includes(q);
       const matchBrand = gig.brandName.toLowerCase().includes(q);
-      const matchTags = gig.tags.some(t => t.toLowerCase().includes(q));
+      const matchTags = gig.tags.some((t: string) => t.toLowerCase().includes(q));
       if (!matchTitle && !matchBrand && !matchTags) return false;
     }
 
@@ -557,7 +569,7 @@ export default function CreatorBrowseGigsPage() {
       {/* Metadata Row: Count & Sort */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
         <span style={{ fontSize: '14px', fontWeight: 650, color: primaryText }}>
-          {filteredGigs.length === MOCK_GIGS_DATA.length ? '124' : filteredGigs.length} gigs found
+          {filteredGigs.length === gigsList.length ? gigsList.length : filteredGigs.length} gigs found
         </span>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -954,7 +966,7 @@ export default function CreatorBrowseGigsPage() {
                 boxShadow: `0 4px 12px ${isLight ? 'rgba(236,72,153,0.15)' : 'rgba(0,0,0,0.25)'}`
               }}
             >
-              Show {filteredGigs.length === MOCK_GIGS_DATA.length ? '124' : filteredGigs.length} Gigs
+              Show {filteredGigs.length === gigsList.length ? gigsList.length : filteredGigs.length} Gigs
             </button>
 
           </div>

@@ -11,13 +11,18 @@ export default function AdminApplicationsPage() {
   const { currency } = useCurrency();
   const [applications, setApplications] = useState<Application[]>([]);
 
+  const fetchApps = () => {
+    getApplications().then(setApplications).catch(console.error);
+  };
+
   useEffect(() => {
-    setApplications(getApplications());
+    fetchApps();
   }, []);
 
   const handleStatusChange = (appId: string, status: Application['status']) => {
-    updateApplicationStatus(appId, status);
-    setApplications(getApplications());
+    updateApplicationStatus(appId, status)
+      .then(() => fetchApps())
+      .catch(console.error);
   };
 
   const getStatusColor = (status: Application['status']) => {

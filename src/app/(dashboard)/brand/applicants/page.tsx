@@ -3,7 +3,8 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { brandDashboardData } from '@/data/dashboard';
-import { mockCreators } from '@/data/creators';
+import { getCreators } from '@/lib/services';
+import { Creator } from '@/types/creator';
 import { displayPrice } from '@/lib/currency';
 import { useCurrency } from '@/hooks/useCurrency';
 import {
@@ -161,8 +162,10 @@ function ApplicantsClient() {
 
   // State configurations
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [applicants, setApplicants] = useState<Applicant[]>([]);
-  const [activeUnlock, setActiveUnlock] = useState<Applicant | null>(null);
+  const [applicants, setApplicants] = useState<any[]>([]);
+  const [activeUnlock, setActiveUnlock] = useState<any | null>(null);
+  const [creatorsList, setCreatorsList] = useState<Creator[]>([]);
+  const [loading, setLoading] = useState(true);
   
   // Talent states
   const [searchQuery, setSearchQuery] = useState('');
@@ -211,6 +214,17 @@ function ApplicantsClient() {
     if (localShortlist) {
       setShortlistedCreators(JSON.parse(localShortlist));
     }
+
+    setLoading(true);
+    getCreators()
+      .then((list) => {
+        setCreatorsList(list);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching creators from API:', err);
+        setLoading(false);
+      });
 
     return () => window.removeEventListener('igigster-theme-change', handleThemeChange);
   }, []);
@@ -281,7 +295,7 @@ function ApplicantsClient() {
   };
 
   // Filtered Creators calculation
-  const filteredCreators = mockCreators
+  const filteredCreators = creatorsList
     .filter(creator => {
       // Search query filter
       const matchesSearch = creator.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

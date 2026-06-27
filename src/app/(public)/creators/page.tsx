@@ -10,8 +10,13 @@ export const metadata: Metadata = getPageMetadata({
   path: '/creators',
 });
 
-export default function CreatorsPage() {
-  const creators = getCreators();
+export default async function CreatorsPage() {
+  let creators: any[] = [];
+  try {
+    creators = await getCreators();
+  } catch (e) {
+    console.warn('Failed to pre-fetch creators during static sitemap build:', e);
+  }
 
   return (
     <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', paddingTop: '40px' }}>

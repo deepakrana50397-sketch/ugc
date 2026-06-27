@@ -26,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic gigs routes
   let gigUrls: Array<{ url: string; lastModified: Date; changeFrequency: 'weekly'; priority: number }> = [];
   try {
-    const gigs = getGigs();
+    const gigs = await getGigs();
     gigUrls = gigs.map((gig) => ({
       url: `${siteConfig.url}/gigs/${gig.slug}`,
       lastModified: new Date(gig.postedAt),

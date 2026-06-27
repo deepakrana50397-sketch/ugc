@@ -45,11 +45,11 @@ export default function OnboardingPage() {
 
   if (!user) return null;
 
-  const handleCreatorSubmit = (e: React.FormEvent) => {
+  const handleCreatorSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      registerCreatorProfile({
+    try {
+      await registerCreatorProfile({
         name: user.name,
         title: creatorForm.title,
         location: creatorForm.location,
@@ -65,14 +65,26 @@ export default function OnboardingPage() {
             id: `port-${Date.now()}`,
             title: `${user.name} Demo UGC Reel`,
             videoUrl: creatorForm.portfolioVideo,
-            thumbnailUrl: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&q=80&w=400',
+            thumbnailUrl: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=400',
             category: 'UGC Demo'
           }
         ] : []
       });
+      const updatedUser = {
+        ...user,
+        onboardingStatus: 'COMPLETED',
+      };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('igigster_user', JSON.stringify(updatedUser));
+      }
+      window.dispatchEvent(new Event('auth-change'));
       setLoading(false);
       router.push('/creator/dashboard');
-    }, 1200);
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+      alert('Failed to save profile. Please try again.');
+    }
   };
 
   const handleBrandSubmit = (e: React.FormEvent) => {
@@ -153,7 +165,7 @@ export default function OnboardingPage() {
                     <select
                       value={creatorForm.category}
                       onChange={(e) => setCreatorForm({ ...creatorForm, category: e.target.value })}
-                      style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--border)', backgroundColor: 'rgba(9,9,11,0.95)', color: '#0f172a', cursor: 'pointer' }}
+                      style={{ padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--border)', backgroundColor: 'rgba(0,0,0,0.02)', color: '#0f172a', cursor: 'pointer', outline: 'none' }}
                     >
                       <option value="video_creator">UGC Creator</option>
                       <option value="editor">Video Editor</option>

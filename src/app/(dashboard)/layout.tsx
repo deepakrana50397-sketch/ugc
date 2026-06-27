@@ -92,7 +92,7 @@ export default function DashboardLayout({
     router.push('/login');
   };
 
-  if (isLoading || !user) {
+  if (!user) {
     return null;
   }
 
@@ -681,7 +681,7 @@ export default function DashboardLayout({
                     <button
                       onClick={() => {
                         setIsAvatarDropdownOpen(false);
-                        router.push(user.role === 'creator' ? '/creator/profile' : '/brand/dashboard');
+                        router.push(user.role === 'creator' ? '/creator/my-profile' : '/brand/dashboard');
                       }}
                       style={{
                         display: 'flex',
@@ -702,7 +702,7 @@ export default function DashboardLayout({
                       className="hover-dropdown-item"
                     >
                       <UserIcon size={14} />
-                      <span>{user.role === 'creator' ? 'My Portfolio' : 'Brand Dashboard'}</span>
+                      <span>My Profile</span>
                     </button>
 
                     {/* Main Dashboard Option */}
@@ -774,7 +774,20 @@ export default function DashboardLayout({
         </header>
 
         {/* Content Box */}
-        <main data-lenis-prevent style={{ padding: '12px 24px 24px 24px', backgroundColor: theme === 'light' ? '#F8F8FA' : '#09090B', flex: 1, overflowY: 'auto', transition: 'all 0.3s' }}>
+        <main data-lenis-prevent style={{ padding: '12px 24px 24px 24px', backgroundColor: theme === 'light' ? '#F8F8FA' : '#09090B', flex: 1, overflowY: 'auto', transition: 'all 0.3s', position: 'relative' }}>
+          {isLoading && (
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '3px',
+              background: 'linear-gradient(90deg, #ec4899 0%, #8b5cf6 50%, #ec4899 100%)',
+              backgroundSize: '200% 100%',
+              animation: 'shimmer 1.5s infinite linear',
+              zIndex: 9999,
+            }} />
+          )}
           <div style={{ maxWidth: '1600px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {children}
           </div>
@@ -993,6 +1006,10 @@ export default function DashboardLayout({
       </div>
 
       <style jsx global>{`
+        @keyframes shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
         /* Global theme resets inside dashboard */
         .dark-theme {
           --card-bg: #131316;

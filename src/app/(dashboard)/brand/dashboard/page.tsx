@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { brandDashboardData } from '@/data/dashboard';
 import { displayPrice } from '@/lib/currency';
 import { useCurrency } from '@/hooks/useCurrency';
-import { getGigs } from '@/lib/services';
+import { getGigs, isDemoMode } from '@/lib/services';
 import { Gig } from '@/types/gig';
 import { useTheme } from '@/components/providers/ThemeProvider';
 import {
@@ -53,7 +53,30 @@ export default function BrandDashboardPage() {
   const [greeting, setGreeting] = useState("Good evening, let's create real impact!");
 
   useEffect(() => {
-    setActiveGigs(getGigs().filter(g => g.brandId === 'brand-skinglow' || g.brandId === 'brand-generic').slice(0, 4));
+    if (isDemoMode()) {
+      const mockGigs: Gig[] = brandDashboardData.gigs.map(g => ({
+        id: g.id,
+        title: g.title,
+        slug: g.id,
+        description: 'Mock campaign brief',
+        category: 'ugc_creator',
+        tags: ['Mock'],
+        price: { INR: g.budget.INR, USD: g.budget.USD },
+        paymentType: 'fixed',
+        brandName: 'Mock Brand',
+        brandId: 'mock-id-brand',
+        postedAt: new Date(g.postedDate).toISOString(),
+        applicantsCount: g.applicantsCount,
+        status: g.status as any,
+      }));
+      setActiveGigs(mockGigs);
+    } else {
+      getGigs()
+        .then((gigs) => {
+          setActiveGigs(gigs.slice(0, 4));
+        })
+        .catch(console.error);
+    }
 
     // Sync greeting on client side
     const hour = new Date().getHours();
@@ -67,8 +90,16 @@ export default function BrandDashboardPage() {
 
   }, []);
 
-  const stats = brandDashboardData.stats;
-  const getStatValue = (stat: typeof stats[0]) => {
+  const stats = isDemoMode()
+    ? brandDashboardData.stats
+    : [
+        { label: 'Total Budget Spent', value: { INR: '₹0', USD: '$0' }, change: '0 hires', type: 'info' },
+        { label: 'Active Gig Posts', value: `${activeGigs.length}`, change: 'Vetted & live', type: 'info' },
+        { label: 'Total Applicants', value: `${activeGigs.reduce((sum, g) => sum + (g.applicantsCount || 0), 0)}`, change: '0 new today', type: 'increase' },
+        { label: 'Unlocking Fees Paid', value: { INR: '₹0', USD: '$0' }, change: '0 contacts unlocked', type: 'info' },
+      ];
+
+  const getStatValue = (stat: any) => {
     if (typeof stat.value === 'object') {
       return stat.value[currency as keyof typeof stat.value];
     }

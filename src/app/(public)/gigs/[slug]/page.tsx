@@ -13,7 +13,12 @@ interface GigPageProps {
 
 export async function generateMetadata({ params }: GigPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const gig = getGigBySlug(slug);
+  let gig: any = null;
+  try {
+    gig = await getGigBySlug(slug);
+  } catch (e) {
+    // catch auth or connection errors during compilation
+  }
 
   if (!gig) {
     return getPageMetadata({
@@ -32,15 +37,25 @@ export async function generateMetadata({ params }: GigPageProps): Promise<Metada
 
 // Support Static Site Generation if required, by listing default paths
 export async function generateStaticParams() {
-  const gigs = getGigs();
-  return gigs.map((gig) => ({
-    slug: gig.slug,
-  }));
+  try {
+    const gigs = await getGigs();
+    return gigs.map((gig) => ({
+      slug: gig.slug,
+    }));
+  } catch (e) {
+    console.warn('Skipping generateStaticParams during build compile:', e);
+    return [];
+  }
 }
 
 export default async function GigDetailPage({ params }: GigPageProps) {
   const { slug } = await params;
-  const gig = getGigBySlug(slug);
+  let gig: any = null;
+  try {
+    gig = await getGigBySlug(slug);
+  } catch (e) {
+    console.warn('Failed to pre-fetch gig details during build:', e);
+  }
 
   if (!gig) {
     notFound();

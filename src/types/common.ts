@@ -15,6 +15,7 @@ export interface User {
   companyName?: string;
   title?: string;
   joinedAt: string;
+  onboardingStatus?: string;
 }
 
 export interface Application {

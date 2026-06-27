@@ -36,7 +36,11 @@ export default function AdminDealsView({
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    setDeals(getApplications().filter(a => a.status === 'accepted' || a.status === 'unlocked' || a.status === 'shortlisted'));
+    getApplications()
+      .then((apps) => {
+        setDeals(apps.filter(a => a.status === 'accepted' || a.status === 'unlocked' || a.status === 'shortlisted'));
+      })
+      .catch(console.error);
   }, []);
 
   const getStatusColor = (status: Application['status']) => {

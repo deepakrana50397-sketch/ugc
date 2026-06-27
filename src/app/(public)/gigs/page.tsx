@@ -10,8 +10,13 @@ export const metadata: Metadata = getPageMetadata({
   path: '/gigs',
 });
 
-export default function GigsPage() {
-  const gigs = getGigs();
+export default async function GigsPage() {
+  let gigs: any[] = [];
+  try {
+    gigs = await getGigs();
+  } catch (e) {
+    console.warn('Failed to pre-fetch gigs during static sitemap build:', e);
+  }
 
   return (
     <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', paddingTop: '40px' }}>

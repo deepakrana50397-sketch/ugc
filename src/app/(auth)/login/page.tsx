@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, Lock, UserCheck, ShieldAlert, Sparkles, Building2, Briefcase, LayoutDashboard } from 'lucide-react';
-import { loginMockUser, getCurrentUser, logoutUser } from '@/lib/services';
+import { loginMockUser, getCurrentUser, logoutUser, signInUser } from '@/lib/services';
 import { User } from '@/types/common';
 import { useSiteMode } from '@/hooks/useSiteMode';
 import { motion } from 'framer-motion';
@@ -32,9 +32,12 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
-  // Monitor user state inside browser
+  // Monitor user state inside browser & default demo mode to false
   useEffect(() => {
     setUser(getCurrentUser());
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('igigster_demo_mode', 'false');
+    }
   }, []);
 
   const handleLogout = () => {
@@ -47,6 +50,14 @@ export default function LoginPage() {
     if (e) e.preventDefault();
     setError('');
     setLoading(true);
+
+    if (typeof window !== 'undefined') {
+      if (simulatedRole) {
+        localStorage.setItem('igigster_demo_mode', 'true');
+      } else {
+        localStorage.setItem('igigster_demo_mode', 'false');
+      }
+    }
 
     // Determine target details based on mode or override
     let targetEmail = email;
@@ -61,7 +72,12 @@ export default function LoginPage() {
 
     setTimeout(async () => {
       try {
-        const loggedUser = await loginMockUser(targetEmail, targetRole);
+        let loggedUser;
+        if (simulatedRole) {
+          loggedUser = await loginMockUser(targetEmail, targetRole);
+        } else {
+          loggedUser = await signInUser({ email, password });
+        }
         window.dispatchEvent(new Event('auth-change'));
         setUser(loggedUser);
 

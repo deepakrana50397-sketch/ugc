@@ -1,8 +1,8 @@
 import { Gig } from '@/types/gig';
 import { Creator } from '@/types/creator';
 import { Application, User } from '@/types/common';
-import { mockGigs } from '@/data/gigs';
-import { mockCreators } from '@/data/creators';
+
+const API_BASE = 'http://localhost:3001/api/v1';
 
 const isClient = typeof window !== 'undefined';
 
@@ -26,195 +26,401 @@ function setLocalStorageItem<T>(key: string, value: T): void {
   }
 }
 
-// Background sync function connecting local storage cache with server-side Next.js mock API routes
-export async function syncDatabaseWithApi() {
-  if (!isClient) return;
-  try {
-    // 1. Sync auth user
-    const resAuth = await fetch('/api/auth/me');
-    const authData = await resAuth.json();
-    if (authData.success && authData.user) {
-      setLocalStorageItem('igigster_user', authData.user);
-    }
-
-    // 2. Sync gigs
-    const resGigs = await fetch('/api/gigs');
-    const gigsData = await resGigs.json();
-    if (gigsData.success && gigsData.gigs) {
-      setLocalStorageItem('igigster_gigs', gigsData.gigs);
-    }
-
-    // 3. Sync creators
-    const resCreators = await fetch('/api/creators');
-    const creatorsData = await resCreators.json();
-    if (creatorsData.success && creatorsData.creators) {
-      setLocalStorageItem('igigster_creators', creatorsData.creators);
-    }
-
-    // 4. Sync applications
-    const resApps = await fetch('/api/applications');
-    const appsData = await resApps.json();
-    if (appsData.success && appsData.applications) {
-      setLocalStorageItem('igigster_applications', appsData.applications);
-    }
-
-    // 5. Sync escrow audits
-    const resEscrow = await fetch('/api/escrow');
-    const escrowData = await resEscrow.json();
-    if (escrowData.success && escrowData.escrow) {
-      setLocalStorageItem('igigster_admin_escrow', escrowData.escrow);
-    }
-
-    // 6. Sync payouts queue
-    const resPayouts = await fetch('/api/payouts');
-    const payoutsData = await resPayouts.json();
-    if (payoutsData.success && payoutsData.payouts) {
-      setLocalStorageItem('igigster_admin_payouts', payoutsData.payouts);
-    }
-
-    // 7. Sync risk moderation
-    const resRisk = await fetch('/api/risk');
-    const riskData = await resRisk.json();
-    if (riskData.success && riskData.risk) {
-      setLocalStorageItem('igigster_admin_risk', riskData.risk);
-    }
-  } catch (err) {
-    console.warn('API Sync unavailable, relying on local cache:', err);
-  }
+export function isDemoMode(): boolean {
+  if (!isClient) return false;
+  return localStorage.getItem('igigster_demo_mode') === 'true';
 }
 
-export function seedMockDatabase() {
-  if (!isClient) return;
-
-  // Initialize synchronous cache values if empty
-  if (!localStorage.getItem('igigster_gigs')) {
-    setLocalStorageItem('igigster_gigs', mockGigs);
+// Helpers for headers
+function getHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (isClient) {
+    const token = localStorage.getItem('igigster_token');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
   }
-  if (!localStorage.getItem('igigster_creators')) {
-    setLocalStorageItem('igigster_creators', mockCreators);
-  }
-
-  // Trigger background sync with Next.js route endpoints
-  syncDatabaseWithApi();
+  return headers;
 }
+
+async function apiFetch(url: string, options: RequestInit = {}): Promise<Response> {
+  const fullUrl = url.startsWith('http') ? url : `${API_BASE}${url}`;
+  return fetch(fullUrl, {
+    ...options,
+    headers: {
+      ...getHeaders(),
+      ...options.headers,
+    },
+    credentials: 'include',
+  });
+}
+
+// Model Mappers
+function mapBackendGigToFrontend(g: any): Gig {
+  return {
+    id: g.id,
+    title: g.title,
+    slug: g.slug,
+    description: g.description,
+    category: g.category || 'ugc_creator',
+    tags: g.tags || [],
+    price: {
+      INR: g.budget,
+      USD: Math.round(g.budget / 80),
+    },
+    paymentType: g.paymentType || 'fixed',
+    brandName: g.brand?.companyName || g.brandName || 'Brand Partner',
+    brandLogo: g.brand?.user?.avatarUrl || g.brandLogo || 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80&w=100',
+    brandId: g.brandId,
+    postedAt: g.createdAt || new Date().toISOString(),
+    deadline: g.deadline ? new Date(g.deadline).toISOString().split('T')[0] : undefined,
+    applicantsCount: g.applicantsCount || 0,
+    status: g.status ? g.status.toLowerCase() as any : 'active',
+    requirements: g.requirements || [],
+    deliverables: g.deliverables || [],
+  };
+}
+
+function mapBackendCreatorToFrontend(c: any): Creator {
+  return {
+    id: c.id,
+    name: c.user?.name || 'Content Creator',
+    avatar: c.user?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+    bio: c.bio || 'Welcome to my creator profile!',
+    title: c.title || 'UGC Creator & Content Specialist',
+    category: c.category || 'video_creator',
+    location: c.location || 'Mumbai, India',
+    rating: c.rating || 5.0,
+    completedJobs: c.completedJobs || 0,
+    skills: c.skills || [],
+    startingRate: {
+      INR: c.startingRateINR || 5000,
+      USD: c.startingRateUSD || 70,
+      period: c.startingRatePeriod || 'gig',
+    },
+    portfolio: (c.portfolio || []).map((p: any) => ({
+      id: p.id,
+      title: p.title,
+      videoUrl: p.videoUrl,
+      thumbnailUrl: p.thumbnailUrl || 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&q=80&w=400',
+      category: p.category,
+    })),
+    socials: {
+      instagram: c.socials?.instagram || '',
+      tiktok: c.socials?.tiktok || '',
+      youtube: c.socials?.youtube || '',
+      linkedin: c.socials?.linkedin || '',
+    },
+    isFeatured: c.isFeatured || false,
+    isVerified: c.isVerified || false,
+  };
+}
+
+function mapBackendApplicationToFrontend(app: any): Application {
+  return {
+    id: app.id,
+    gigId: app.gigId,
+    gigTitle: app.gig?.title || 'Gig Opportunity',
+    brandId: app.gig?.brandId || '',
+    brandName: app.gig?.brand?.companyName || app.brandName || 'Brand Partner',
+    creatorId: app.creatorId,
+    creatorName: app.creator?.user?.name || 'Creator',
+    creatorAvatar: app.creator?.user?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+    creatorTitle: app.creator?.title || 'Content Creator',
+    pitch: app.pitch,
+    portfolioLink: app.portfolioLink || '',
+    rate: {
+      INR: app.proposedRate,
+      USD: Math.round(app.proposedRate / 80),
+    },
+    appliedAt: app.appliedAt || new Date().toISOString(),
+    status: app.status ? (app.status.toLowerCase() as any) : 'pending',
+    brandCategory: app.gig?.category || 'General',
+    gigCategory: app.gig?.category || 'General',
+    rateRange: {
+      INR: `₹${app.proposedRate}`,
+      USD: `$${Math.round(app.proposedRate / 80)}`,
+    },
+    relativeDate: 'Recent',
+    thumbnailUrl: app.gig?.brand?.user?.avatarUrl || '',
+    brandLogoBg: '#FDF2F8',
+    brandLogoColor: '#EC4899',
+    brandLogoText: app.gig?.brand?.companyName ? app.gig.brand.companyName[0] : 'B',
+  } as any;
+}
+
+// Dummy sync function to keep page components compilation intact
+export async function syncDatabaseWithApi() {}
+export function seedMockDatabase() {}
 
 // ----------------------
-// AUTH SIMULATION SERVICE
+// AUTH SERVICE
 // ----------------------
 export function getCurrentUser(): User | null {
-  seedMockDatabase();
   return getLocalStorageItem<User | null>('igigster_user', null);
 }
 
-export async function loginMockUser(email: string, role: 'creator' | 'brand' | 'admin'): Promise<User> {
-  const response = await fetch('/api/auth/me', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, role })
-  });
-  const data = await response.json();
-  if (data.success && data.user) {
-    setLocalStorageItem('igigster_user', data.user);
-    return data.user;
+export async function getMe(): Promise<User | null> {
+  const token = localStorage.getItem('igigster_token');
+  const cachedUser = getCurrentUser();
+  if (!token && !cachedUser) return null;
+
+  try {
+    const res = await apiFetch('/auth/me');
+    if (!res.ok) {
+      if (res.status === 401) {
+        localStorage.removeItem('igigster_user');
+        localStorage.removeItem('igigster_token');
+      }
+      return null;
+    }
+    const data = await res.json();
+    if (data.success && data.user) {
+      const user = {
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        role: data.user.role.toLowerCase() as any,
+        avatar: data.user.avatarUrl || '',
+        companyName: data.user.brand?.companyName,
+        title: data.user.creator?.title,
+        joinedAt: data.user.createdAt,
+        onboardingStatus: data.user.onboardingStatus,
+      };
+      setLocalStorageItem('igigster_user', user);
+      return user;
+    }
+  } catch (err) {
+    console.error('Error fetching auth state:', err);
   }
-  throw new Error('Login API failed');
+  return null;
+}
+
+export async function loginMockUser(email: string, role: 'creator' | 'brand' | 'admin', name?: string): Promise<User> {
+  if (isClient) {
+    const formattedName = name ? encodeURIComponent(name) : '';
+    localStorage.setItem('igigster_token', `mock-jwt-${role}|${email}|${formattedName}`);
+  }
+  const user = await getMe();
+  if (user) {
+    return user;
+  }
+  throw new Error('Simulation authentication failed');
+}
+
+export async function signUpUser(payload: {
+  email: string;
+  name: string;
+  role: 'creator' | 'brand' | 'admin';
+  password?: string;
+}): Promise<User> {
+  const response = await apiFetch('/auth/signup', {
+    method: 'POST',
+    body: JSON.stringify({
+      email: payload.email,
+      name: payload.name,
+      role: payload.role.toUpperCase(),
+      password: payload.password || 'password123',
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Failed to sign up');
+  }
+
+  const result = await response.json();
+  
+  if (result.session?.access_token) {
+    if (isClient) {
+      localStorage.setItem('igigster_token', result.session.access_token);
+    }
+  }
+
+  const user: User = {
+    id: result.user.id,
+    name: result.user.name,
+    email: result.user.email,
+    role: result.user.role.toLowerCase() as any,
+    avatar: result.user.avatarUrl || '',
+    companyName: result.user.brand?.companyName,
+    title: result.user.creator?.title,
+    joinedAt: result.user.createdAt,
+    onboardingStatus: result.user.onboardingStatus,
+  };
+
+  setLocalStorageItem('igigster_user', user);
+  return user;
+}
+
+export async function signInUser(payload: {
+  email: string;
+  password?: string;
+}): Promise<User> {
+  const response = await apiFetch('/auth/signin', {
+    method: 'POST',
+    body: JSON.stringify({
+      email: payload.email,
+      password: payload.password || 'password123',
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Failed to sign in');
+  }
+
+  const result = await response.json();
+
+  if (result.session?.access_token) {
+    if (isClient) {
+      localStorage.setItem('igigster_token', result.session.access_token);
+    }
+  }
+
+  const user: User = {
+    id: result.user.id,
+    name: result.user.name,
+    email: result.user.email,
+    role: result.user.role.toLowerCase() as any,
+    avatar: result.user.avatarUrl || '',
+    companyName: result.user.brand?.companyName,
+    title: result.user.creator?.title,
+    joinedAt: result.user.createdAt,
+    onboardingStatus: result.user.onboardingStatus,
+  };
+
+  setLocalStorageItem('igigster_user', user);
+  return user;
 }
 
 export async function logoutUser(): Promise<void> {
+  try {
+    await apiFetch('/auth/logout', {
+      method: 'POST',
+    });
+  } catch (e) {
+    console.warn('API logout skipped or failed:', e);
+  }
   if (isClient) {
     localStorage.removeItem('igigster_user');
+    localStorage.removeItem('igigster_token');
+    localStorage.removeItem('igigster_demo_mode');
   }
-  await fetch('/api/auth/me', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: '', role: '' })
-  });
 }
 
 // ----------------------
 // GIG SERVICE
 // ----------------------
-export function getGigs(): Gig[] {
-  seedMockDatabase();
-  return getLocalStorageItem<Gig[]>('igigster_gigs', mockGigs);
-}
+export async function getGigs(): Promise<Gig[]> {
+  const user = getCurrentUser();
+  const endpoint = user?.role === 'brand' ? '/brand/gigs' : '/creator/gigs';
 
-export function getGigBySlug(slug: string): Gig | undefined {
-  const gigs = getGigs();
-  return gigs.find(g => g.slug === slug);
-}
-
-export async function createGig(gig: Omit<Gig, 'id' | 'postedAt' | 'applicantsCount' | 'status' | 'brandId' | 'brandName' | 'brandLogo'>): Promise<Gig> {
-  const response = await fetch('/api/gigs', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(gig)
-  });
-  const data = await response.json();
-  if (data.success && data.gig) {
-    // Sync cache locally
-    const gigs = getGigs();
-    setLocalStorageItem('igigster_gigs', [data.gig, ...gigs]);
-    return data.gig;
+  const response = await apiFetch(endpoint);
+  if (!response.ok) {
+    throw new Error('Failed to fetch gigs from API');
   }
-  throw new Error('Create Gig brief API failed');
+  const result = await response.json();
+  return (result.data || []).map(mapBackendGigToFrontend);
+}
+
+export async function getGigBySlug(slug: string): Promise<Gig | undefined> {
+  const gigs = await getGigs();
+  return gigs.find((g) => g.slug === slug);
+}
+
+export async function createGig(
+  gig: Omit<Gig, 'id' | 'postedAt' | 'applicantsCount' | 'status' | 'brandId' | 'brandName' | 'brandLogo'>,
+): Promise<Gig> {
+  const deadlineDate = gig.deadline ? new Date(gig.deadline).toISOString() : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  const response = await apiFetch('/brand/gigs', {
+    method: 'POST',
+    body: JSON.stringify({
+      title: gig.title,
+      description: gig.description,
+      category: gig.category,
+      budget: gig.price?.INR || 10000,
+      deadline: deadlineDate,
+      status: 'ACTIVE',
+    }),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to create gig on API');
+  }
+  const result = await response.json();
+  return mapBackendGigToFrontend(result.data);
 }
 
 export async function updateGigStatus(gigId: string, status: Gig['status']): Promise<void> {
-  const gigs = getGigs();
-  const updated = gigs.map(g => g.id === gigId ? { ...g, status } : g);
-  setLocalStorageItem('igigster_gigs', updated);
-
-  // Sync to database
-  await fetch('/api/gigs', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id: gigId, status })
+  const response = await apiFetch(`/brand/gigs/${gigId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({
+      status: status.toUpperCase() === 'ACTIVE' ? 'ACTIVE' : 'CLOSED',
+    }),
   });
+  if (!response.ok) {
+    throw new Error('Failed to update gig status on API');
+  }
 }
 
 // ----------------------
 // CREATOR SERVICE
 // ----------------------
-export function getCreators(): Creator[] {
-  seedMockDatabase();
-  return getLocalStorageItem<Creator[]>('igigster_creators', mockCreators);
+export async function getCreators(): Promise<Creator[]> {
+  const response = await apiFetch('/creators');
+  if (!response.ok) {
+    throw new Error('Failed to fetch creators from API');
+  }
+  const result = await response.json();
+  return (result.data?.creators || []).map(mapBackendCreatorToFrontend);
 }
 
-export function getCreatorById(id: string): Creator | undefined {
-  const creators = getCreators();
-  return creators.find(c => c.id === id);
+export async function getCreatorById(id: string): Promise<Creator | undefined> {
+  const response = await apiFetch(`/creators/${id}`);
+  if (!response.ok) {
+    return undefined;
+  }
+  const result = await response.json();
+  return mapBackendCreatorToFrontend(result.data);
 }
 
 export async function registerCreatorProfile(creatorData: Partial<Creator>): Promise<Creator> {
-  const response = await fetch('/api/creators', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(creatorData)
+  const response = await apiFetch('/creator/profile', {
+    method: 'PATCH',
+    body: JSON.stringify({
+      title: creatorData.title,
+      bio: creatorData.bio,
+      location: creatorData.location,
+      skills: creatorData.skills || [],
+      startingRateINR: creatorData.startingRate?.INR || 0,
+      startingRateUSD: creatorData.startingRate?.USD || 0,
+      startingRatePeriod: creatorData.startingRate?.period || 'gig',
+      socials: creatorData.socials,
+      portfolio: creatorData.portfolio,
+    }),
   });
-  const data = await response.json();
-  if (data.success && data.creator) {
-    const creators = getCreators();
-    const exists = creators.some(c => c.id === data.creator.id);
-    const updatedCreators = exists
-      ? creators.map(c => c.id === data.creator.id ? data.creator : c)
-      : [data.creator, ...creators];
-
-    setLocalStorageItem('igigster_creators', updatedCreators);
-    if (data.user) {
-      setLocalStorageItem('igigster_user', data.user);
-    }
-    return data.creator;
+  if (!response.ok) {
+    throw new Error('Failed to register/update creator profile on API');
   }
-  throw new Error('Register Creator profile API failed');
+  const result = await response.json();
+  return mapBackendCreatorToFrontend(result.data);
 }
 
 // ----------------------
 // APPLICATIONS SERVICE
 // ----------------------
-export function getApplications(): Application[] {
-  seedMockDatabase();
-  return getLocalStorageItem<Application[]>('igigster_applications', []);
+export async function getApplications(): Promise<Application[]> {
+  const user = getCurrentUser();
+  const endpoint = user?.role === 'brand' ? '/brand/applications' : '/creator/applications';
+
+  const response = await apiFetch(endpoint);
+  if (!response.ok) {
+    throw new Error('Failed to fetch applications from API');
+  }
+  const result = await response.json();
+  return (result.data || []).map(mapBackendApplicationToFrontend);
 }
 
 export async function applyToGig(applicationData: {
@@ -223,39 +429,49 @@ export async function applyToGig(applicationData: {
   portfolioLink: string;
   rate: { INR: number; USD: number };
 }): Promise<Application> {
-  const response = await fetch('/api/applications', {
+  const response = await apiFetch('/creator/applications', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(applicationData)
+    body: JSON.stringify({
+      gigId: applicationData.gigId,
+      pitch: applicationData.pitch,
+      proposedRate: applicationData.rate?.INR || 10000,
+      portfolioLink: applicationData.portfolioLink,
+    }),
   });
-  const data = await response.json();
-  if (data.success && data.application) {
-    // Update count in gigs locally
-    const gigs = getGigs();
-    const updatedGigs = gigs.map(g => {
-      if (g.id === applicationData.gigId) {
-        return { ...g, applicantsCount: g.applicantsCount + 1 };
-      }
-      return g;
-    });
-    setLocalStorageItem('igigster_gigs', updatedGigs);
-
-    // Sync app locally
-    const applications = getApplications();
-    setLocalStorageItem('igigster_applications', [data.application, ...applications]);
-    return data.application;
+  if (!response.ok) {
+    throw new Error('Failed to submit application to API');
   }
-  throw new Error('Apply pitch to Gig API failed');
+  const result = await response.json();
+  return mapBackendApplicationToFrontend(result.data);
 }
 
 export async function updateApplicationStatus(appId: string, status: Application['status']): Promise<void> {
-  const applications = getApplications();
-  const updated = applications.map(app => app.id === appId ? { ...app, status } : app);
-  setLocalStorageItem('igigster_applications', updated);
-
-  await fetch('/api/applications', {
+  const response = await apiFetch(`/brand/applications/${appId}/status`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id: appId, status })
+    body: JSON.stringify({
+      status: status.toUpperCase(),
+    }),
   });
+  if (!response.ok) {
+    throw new Error('Failed to update application status on API');
+  }
 }
+
+export async function updateBrandProfile(brandData: Partial<User>): Promise<User> {
+  const response = await apiFetch('/brand/profile', {
+    method: 'PATCH',
+    body: JSON.stringify({
+      companyName: brandData.companyName,
+    }),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update brand profile on API');
+  }
+  // Retrieve the updated user object from auth state
+  const updatedUser = await getMe();
+  if (updatedUser) {
+    return updatedUser;
+  }
+  throw new Error('Failed to fetch updated brand user info');
+}
+

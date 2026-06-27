@@ -51,8 +51,22 @@ export default function AdminGigsPage() {
   const mutedText = 'var(--muted-text)';
   const shadowStyle = 'var(--shadow-style)';
 
+  const fetchGigs = (selectGigId?: string) => {
+    getGigs()
+      .then((freshGigs) => {
+        setGigs(freshGigs);
+        if (selectGigId) {
+          const updatedSelected = freshGigs.find(g => g.id === selectGigId);
+          if (updatedSelected) {
+            setSelectedGig(updatedSelected);
+          }
+        }
+      })
+      .catch(console.error);
+  };
+
   useEffect(() => {
-    setGigs(getGigs());
+    fetchGigs();
   }, []);
 
   useEffect(() => {
@@ -62,18 +76,12 @@ export default function AdminGigsPage() {
   }, [gigs]);
 
   const handleStatusChange = (gigId: string, status: Gig['status'], reasonText?: string) => {
-    updateGigStatus(gigId, status);
-    // Sync with updated mock DB
-    const freshGigs = getGigs();
-    setGigs(freshGigs);
-    
-    // Maintain selections
-    const updatedSelected = freshGigs.find(g => g.id === gigId);
-    if (updatedSelected) {
-      setSelectedGig(updatedSelected);
-    }
-    
-    setShowRejectModal(false);
+    updateGigStatus(gigId, status)
+      .then(() => {
+        fetchGigs(gigId);
+        setShowRejectModal(false);
+      })
+      .catch(console.error);
   };
 
   // Vetting checks

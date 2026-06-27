@@ -73,87 +73,92 @@ export default function AdminUsersPage() {
   const shadowStyle = 'var(--shadow-style)';
 
   useEffect(() => {
-    // Merge existing default creators with some mock brands and agencies for the admin list
-    const originalCreators = getCreators();
-    const extendedList: ExtendedUser[] = [
-      ...originalCreators.map((c, i) => ({
-        id: c.id,
-        name: c.name,
-        avatar: c.avatar,
-        title: c.title,
-        email: `${c.name.toLowerCase().replace(' ', '')}@igigster.com`,
-        role: 'creator' as const,
-        isVerified: c.isVerified || false,
-        startingRate: c.startingRate,
-        completedJobs: c.completedJobs,
-        location: c.location,
-        tier: i === 0 ? ('elite' as const) : ('rising' as const),
-        docStatus: i === 0 ? ('approved' as const) : ('submitted' as const),
-        taxId: `TX-CR-${1000 + i}`,
-        socialsConnected: {
-          instagram: true,
-          tiktok: i % 2 === 0,
-          youtube: false
-        }
-      })),
-      {
-        id: 'brand-u1',
-        name: 'Mamaearth Cosmetics',
-        avatar: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=80&auto=format&fit=crop&q=60',
-        title: 'Brand Manager',
-        email: 'campaigns@mamaearth.in',
-        role: 'brand' as const,
-        isVerified: true,
-        startingRate: { INR: 0, USD: 0 },
-        completedJobs: 14,
-        location: 'Gurugram, India',
-        tier: 'enterprise' as const,
-        docStatus: 'approved' as const,
-        taxId: 'GST-ME-9022A',
-        socialsConnected: { instagram: true, tiktok: false, youtube: true }
-      },
-      {
-        id: 'brand-u2',
-        name: 'FitLife Wellness',
-        avatar: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=80&auto=format&fit=crop&q=60',
-        title: 'Influencer Coordinator',
-        email: 'collabs@fitlife.co',
-        role: 'brand' as const,
-        isVerified: false,
-        startingRate: { INR: 0, USD: 0 },
-        completedJobs: 8,
-        location: 'Mumbai, India',
-        tier: 'enterprise' as const,
-        docStatus: 'submitted' as const,
-        taxId: 'GST-FL-7033B',
-        socialsConnected: { instagram: true, tiktok: true, youtube: false }
-      },
-      {
-        id: 'agency-u1',
-        name: 'Alpha UGC Talent Agency',
-        avatar: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=80&auto=format&fit=crop&q=60',
-        title: 'Agency Principal',
-        email: 'partners@alphaugc.com',
-        role: 'agency' as const,
-        isVerified: true,
-        startingRate: { INR: 0, USD: 0 },
-        completedJobs: 42,
-        location: 'New Delhi, India',
-        tier: 'elite' as const,
-        docStatus: 'approved' as const,
-        taxId: 'PAN-AL-3921Z',
-        socialsConnected: { instagram: true, tiktok: true, youtube: true }
-      }
-    ];
+    getCreators()
+      .then((originalCreators) => {
+        const extendedList: ExtendedUser[] = [
+          ...originalCreators.map((c, i) => ({
+            id: c.id,
+            name: c.name,
+            avatar: c.avatar,
+            title: c.title,
+            email: `${c.name.toLowerCase().replace(' ', '')}@igigster.com`,
+            role: 'creator' as const,
+            isVerified: c.isVerified || false,
+            startingRate: c.startingRate,
+            completedJobs: c.completedJobs,
+            location: c.location,
+            tier: i === 0 ? ('elite' as const) : ('rising' as const),
+            docStatus: i === 0 ? ('approved' as const) : ('submitted' as const),
+            taxId: `TX-CR-${1000 + i}`,
+            socialsConnected: {
+              instagram: true,
+              tiktok: i % 2 === 0,
+              youtube: false
+            }
+          })),
+          {
+            id: 'brand-u1',
+            name: 'Mamaearth Cosmetics',
+            avatar: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=80&auto=format&fit=crop&q=60',
+            title: 'Brand Manager',
+            email: 'campaigns@mamaearth.in',
+            role: 'brand' as const,
+            isVerified: true,
+            startingRate: { INR: 0, USD: 0 },
+            completedJobs: 14,
+            location: 'Gurugram, India',
+            tier: 'enterprise' as const,
+            docStatus: 'approved' as const,
+            taxId: 'GST-ME-9022A',
+            socialsConnected: { instagram: true, tiktok: false, youtube: true }
+          },
+          {
+            id: 'brand-u2',
+            name: 'FitLife Wellness',
+            avatar: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=80&auto=format&fit=crop&q=60',
+            title: 'Influencer Coordinator',
+            email: 'collabs@fitlife.co',
+            role: 'brand' as const,
+            isVerified: false,
+            startingRate: { INR: 0, USD: 0 },
+            completedJobs: 8,
+            location: 'Mumbai, India',
+            tier: 'enterprise' as const,
+            docStatus: 'submitted' as const,
+            taxId: 'GST-FL-7033B',
+            socialsConnected: { instagram: true, tiktok: true, youtube: false }
+          },
+          {
+            id: 'agency-u1',
+            name: 'Alpha UGC Talent Agency',
+            avatar: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=80&auto=format&fit=crop&q=60',
+            title: 'Agency Principal',
+            email: 'partners@alphaugc.com',
+            role: 'agency' as const,
+            isVerified: true,
+            startingRate: { INR: 0, USD: 0 },
+            completedJobs: 42,
+            location: 'New Delhi, India',
+            tier: 'elite' as const,
+            docStatus: 'approved' as const,
+            taxId: 'PAN-AL-3921Z',
+            socialsConnected: { instagram: true, tiktok: true, youtube: true }
+          }
+        ];
 
-    const cached = localStorage.getItem('igigster_admin_users');
-    if (cached) {
-      setUsers(JSON.parse(cached));
-    } else {
-      setUsers(extendedList);
-      localStorage.setItem('igigster_admin_users', JSON.stringify(extendedList));
-    }
-    setLoading(false);
+        const cached = localStorage.getItem('igigster_admin_users');
+        if (cached) {
+          setUsers(JSON.parse(cached));
+        } else {
+          setUsers(extendedList);
+          localStorage.setItem('igigster_admin_users', JSON.stringify(extendedList));
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching creators for admin users:', err);
+        setLoading(false);
+      });
   }, []);
 
   useEffect(() => {

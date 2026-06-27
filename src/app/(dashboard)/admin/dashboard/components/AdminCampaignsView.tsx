@@ -36,7 +36,7 @@ export default function AdminCampaignsView({
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    setCampaigns(getGigs());
+    getGigs().then(setCampaigns).catch(console.error);
   }, []);
 
   const filteredCampaigns = campaigns.filter(c => 

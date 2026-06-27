@@ -5,10 +5,13 @@ import Link from 'next/link';
 import { useCurrency } from '@/hooks/useCurrency';
 import { useDashboardStore } from '@/store/dashboard/useDashboardStore';
 import { useTheme } from '@/components/providers/ThemeProvider';
+import { getApplications, getGigs, isDemoMode } from '@/lib/services';
+import { Application } from '@/types/common';
+import { Gig } from '@/types/gig';
 import {
   Search, Send, FolderOpen, DollarSign, Star, Users, Heart, Sparkles,
   TrendingUp, Clock, CheckCircle2, XCircle, Gift, MapPin, BadgeCheck,
-  Bookmark, ChevronDown
+  Bookmark, ChevronDown, Briefcase
 } from 'lucide-react';
 
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -35,6 +38,78 @@ const CreatorAiAssistantView = dynamic(() => import('./components/CreatorAiAssis
 const CreatorRateCalculatorView = dynamic(() => import('./components/CreatorRateCalculatorView'), {
   loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
 });
+const MOCK_APPLICATIONS: Application[] = [
+  {
+    id: 'app-1',
+    gigId: 'gig-1',
+    gigTitle: 'Skincare UGC Campaign',
+    brandId: 'brand-1',
+    brandName: 'Glow & Co.',
+    creatorId: 'creator-1',
+    creatorName: 'Neha K.',
+    creatorAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+    creatorTitle: 'Content Creator',
+    pitch: 'Hey! I would love to make an Instagram reel highlighting your moisturizer.',
+    portfolioLink: '',
+    rate: { INR: 2500, USD: 30 },
+    appliedAt: new Date().toISOString(),
+    status: 'accepted',
+    brandCategory: 'Skincare',
+    gigCategory: 'Skincare',
+  },
+  {
+    id: 'app-2',
+    gigId: 'gig-2',
+    gigTitle: 'Derma Serum Review',
+    brandId: 'brand-2',
+    brandName: 'Derma Lab',
+    creatorId: 'creator-1',
+    creatorName: 'Neha K.',
+    creatorAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+    creatorTitle: 'Content Creator',
+    pitch: 'Hey! I can shoot high quality skincare review videos.',
+    portfolioLink: '',
+    rate: { INR: 4000, USD: 50 },
+    appliedAt: new Date().toISOString(),
+    status: 'pending',
+    brandCategory: 'Skincare',
+    gigCategory: 'Skincare',
+  }
+] as any;
+
+const MOCK_GIGS: Gig[] = [
+  {
+    id: 'gig-1',
+    title: 'Mamaearth UGC Face Wash Reel',
+    slug: 'mamaearth-ugc-face-wash-reel',
+    description: 'Create an engaging video review.',
+    category: 'ugc_creator',
+    tags: ['Skincare', 'Reels'],
+    price: { INR: 5000, USD: 60 },
+    paymentType: 'fixed',
+    brandName: 'Mamaearth',
+    brandId: 'brand-1',
+    postedAt: new Date().toISOString(),
+    applicantsCount: 12,
+    status: 'active',
+  },
+  {
+    id: 'gig-2',
+    title: 'Minimalist Sunscreen Unboxing',
+    slug: 'minimalist-sunscreen-unboxing',
+    description: 'Unbox and review.',
+    category: 'ugc_creator',
+    tags: ['Sunscreen', 'Unboxing'],
+    price: { INR: 3500, USD: 45 },
+    paymentType: 'fixed',
+    brandName: 'Minimalist',
+    brandId: 'brand-2',
+    postedAt: new Date().toISOString(),
+    applicantsCount: 8,
+    status: 'active',
+  }
+] as any;
+
 const CreatorProfileStrengthView = dynamic(() => import('./components/CreatorProfileStrengthView'), {
   loading: () => <div className="animate-pulse h-[500px] rounded-2xl bg-stone-100 dark:bg-stone-900/40" />,
 });
@@ -63,12 +138,33 @@ export default function CreatorDashboardPage() {
   const [isTagsModalOpen, setIsTagsModalOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState('Fashion');
 
+  const [myApplications, setMyApplications] = useState<Application[]>([]);
+  const [recommendedGigsList, setRecommendedGigsList] = useState<Gig[]>([]);
+  const [loadingRealData, setLoadingRealData] = useState(true);
+
   let strengthPercent = 85;
   if (socialLinked) strengthPercent += 10;
   if (tagsAdded) strengthPercent += 5;
 
   useEffect(() => {
     loadDashboard();
+
+    if (isDemoMode()) {
+      setMyApplications(MOCK_APPLICATIONS);
+      setRecommendedGigsList(MOCK_GIGS.slice(0, 3));
+      setLoadingRealData(false);
+    } else {
+      Promise.all([getApplications(), getGigs()])
+        .then(([apps, gigs]) => {
+          setMyApplications(apps);
+          setRecommendedGigsList(gigs.slice(0, 3));
+          setLoadingRealData(false);
+        })
+        .catch((err) => {
+          console.error('Error loading dashboard real data:', err);
+          setLoadingRealData(false);
+        });
+    }
 
     const handleProfileUpdate = () => {
       loadDashboard();
@@ -910,10 +1006,10 @@ export default function CreatorDashboardPage() {
             {/* Stats Grid (2x2) */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               {[
-                { label: 'Rating', val: `${profile?.rating || '4.8'} ★`, color: '#EAB308' },
-                { label: 'Reviews', val: '32', color: primaryText },
-                { label: 'Projects', val: `${profile?.completedJobs || '28'}`, color: primaryText },
-                { label: 'Response Rate', val: '96%', color: primaryText }
+                { label: 'Rating', val: profile?.rating ? `${profile.rating} ★` : 'New', color: '#EAB308' },
+                { label: 'Reviews', val: '0', color: primaryText },
+                { label: 'Projects', val: `${myApplications.filter(a => a.status === 'accepted' || a.status === 'unlocked').length}`, color: primaryText },
+                { label: 'Response Rate', val: '-', color: primaryText }
               ].map((item, idx) => (
                 <div
                   key={idx}
@@ -946,28 +1042,49 @@ export default function CreatorDashboardPage() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', overflowY: 'auto', flex: 1 }} className="inner-scroller">
-              {recentProjects.map((proj, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 0' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <img src={proj.image} alt={proj.title} style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover', border: `1px solid ${borderColor}` }} />
-                    <div>
-                      <span style={{ fontSize: '12px', fontWeight: 700, color: primaryText, display: 'block', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{proj.title}</span>
-                      <span style={{ fontSize: '10.5px', color: secondaryText, display: 'block', marginTop: '2px' }}>{proj.brand}</span>
-                    </div>
-                  </div>
-                  <span style={{
-                    fontSize: '10px',
-                    fontWeight: 700,
-                    color: proj.statusColor,
-                    backgroundColor: `${proj.statusColor}10`,
-                    padding: '3px 8px',
-                    borderRadius: '999px',
-                    border: `1px solid ${proj.statusColor}20`
-                  }}>
-                    {proj.status}
-                  </span>
+              {myApplications.length === 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: mutedText, fontSize: '12px', gap: '8px' }}>
+                  <Briefcase size={20} style={{ opacity: 0.5 }} />
+                  <span>No active projects yet.</span>
                 </div>
-              ))}
+              ) : (
+                myApplications.slice(0, 3).map((proj, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '8px',
+                        backgroundColor: '#FDF2F8',
+                        color: '#EC4899',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 700,
+                        fontSize: '15px',
+                        border: `1px solid ${borderColor}`
+                      }}>
+                        {proj.brandName ? proj.brandName[0] : 'B'}
+                      </div>
+                      <div>
+                        <span style={{ fontSize: '12px', fontWeight: 700, color: primaryText, display: 'block', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{proj.gigTitle}</span>
+                        <span style={{ fontSize: '10.5px', color: secondaryText, display: 'block', marginTop: '2px' }}>{proj.brandName}</span>
+                      </div>
+                    </div>
+                    <span style={{
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      color: proj.status === 'accepted' ? '#10B981' : '#F59E0B',
+                      backgroundColor: proj.status === 'accepted' ? 'rgba(16, 185, 129, 0.08)' : 'rgba(245, 158, 11, 0.08)',
+                      padding: '3px 8px',
+                      borderRadius: '999px',
+                      border: proj.status === 'accepted' ? '1px solid rgba(16, 185, 129, 0.16)' : '1px solid rgba(245, 158, 11, 0.16)'
+                    }}>
+                      {proj.status.toUpperCase()}
+                    </span>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
@@ -981,51 +1098,45 @@ export default function CreatorDashboardPage() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', flex: 1 }}>
-              {recommendedGigs.map((gig, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '4px 0' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{
-                      width: '36px',
-                      height: '36px',
-                      borderRadius: '8px',
-                      backgroundColor: gig.initialBg,
-                      color: gig.initialColor,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 700,
-                      fontSize: '14px',
-                      border: `1px solid ${borderColor}`
-                    }}>
-                      {gig.initial}
+              {recommendedGigsList.length === 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '120px', color: mutedText, fontSize: '12px', gap: '8px' }}>
+                  <span>No open campaigns found.</span>
+                </div>
+              ) : (
+                recommendedGigsList.map((gig, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '4px 0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '8px',
+                        backgroundColor: '#F3F4F6',
+                        color: '#4B5563',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 700,
+                        fontSize: '14px',
+                        border: `1px solid ${borderColor}`
+                      }}>
+                        {gig.brandName ? gig.brandName[0] : 'B'}
+                      </div>
+                      <div>
+                        <span style={{ fontSize: '12px', fontWeight: 700, color: primaryText, display: 'block', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{gig.title}</span>
+                        <span style={{ fontSize: '10.5px', color: secondaryText, display: 'block', marginTop: '2px' }}>{gig.brandName}</span>
+                      </div>
                     </div>
-                    <div>
-                      <span style={{ fontSize: '12px', fontWeight: 700, color: primaryText, display: 'block', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{gig.title}</span>
-                      <span style={{ fontSize: '10px', color: secondaryText, display: 'block', marginTop: '2px' }}>{gig.brand}</span>
-                      <span style={{ fontSize: '11px', color: primaryText, display: 'block', marginTop: '4px', fontWeight: 650 }}>
-                        {isINR ? `₹${gig.budgetINR}` : `$${gig.budgetUSD}`}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: primaryText }}>
+                        {isINR ? `₹${gig.price.INR.toLocaleString('en-IN')}` : `$${gig.price.USD}`}
+                      </span>
+                      <span style={{ fontSize: '9px', color: mutedText, marginTop: '2px' }}>
+                        {gig.paymentType.toUpperCase()}
                       </span>
                     </div>
                   </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{
-                      fontSize: '9.5px',
-                      fontWeight: 700,
-                      color: gig.badgeColor,
-                      backgroundColor: gig.badgeBg,
-                      padding: '2px 6px',
-                      borderRadius: '4px',
-                      border: `1px solid ${gig.badgeColor}20`
-                    }}>
-                      {gig.badge}
-                    </span>
-                    <button style={{ background: 'none', border: `1px solid ${borderColor}`, padding: '4px', borderRadius: '6px', cursor: 'pointer', display: 'flex', color: secondaryText }}>
-                      <Bookmark size={12} />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
 
             <button

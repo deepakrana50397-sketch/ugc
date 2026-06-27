@@ -35,7 +35,7 @@ export default function AdminCreatorsView({
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    setCreators(getCreators());
+    getCreators().then(setCreators).catch(console.error);
   }, []);
 
   const handleToggleVerify = (id: string) => {

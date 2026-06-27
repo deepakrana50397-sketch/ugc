@@ -600,25 +600,15 @@ export default function CreatorApplicationsPage() {
     };
     document.addEventListener('mousedown', handleClickOutside);
 
-    // Initial applications seeding / fetching
-    const stored = localStorage.getItem('igigster_applications');
-    let parsed: Application[] = [];
-    try {
-      parsed = stored ? JSON.parse(stored) : [];
-    } catch (e) {
-      parsed = [];
-    }
-
-    // Checking for v3 seeding (to support 24 items with swiggy/boat/zomato)
-    const hasMock = parsed.some(app => app.id === 'app-mock-1' && app.brandName === 'Mamaearth');
-    if (parsed.length === 0 || !hasMock) {
-      localStorage.setItem('igigster_applications', JSON.stringify(DEFAULT_24_APPLICATIONS));
-      setApplications(DEFAULT_24_APPLICATIONS);
-      setSelectedAppId('app-mock-1');
-    } else {
-      setApplications(parsed);
-      setSelectedAppId(parsed[0]?.id || null);
-    }
+    // Fetch applications from backend API
+    getApplications()
+      .then((apps) => {
+        setApplications(apps);
+        setSelectedAppId(apps[0]?.id || null);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch applications from API:', err);
+      });
 
     // Bookmarks fetch
     const storedBookmarks = localStorage.getItem('igigster_app_bookmarks');

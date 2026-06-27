@@ -29,17 +29,21 @@ export default function BrandGigsManagementPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'pending' | 'completed'>('all');
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
-  const loadGigs = () => {
-    const list = getGigs().filter(g => g.brandId === 'brand-skinglow' || g.brandId === 'brand-generic');
-    setGigs(list);
-    return list;
+  const loadGigs = (selectFirst: boolean = false) => {
+    getGigs()
+      .then((list) => {
+        setGigs(list);
+        if (list.length > 0 && (selectFirst || !selectedGigId)) {
+          setSelectedGigId(list[0].id);
+        } else if (list.length === 0) {
+          setSelectedGigId(null);
+        }
+      })
+      .catch(console.error);
   };
 
   useEffect(() => {
-    const list = loadGigs();
-    if (list.length > 0) {
-      setSelectedGigId(list[0].id);
-    }
+    loadGigs(true);
 
     // Theme subscription
     const savedTheme = localStorage.getItem('igigster_theme') as 'dark' | 'light';
@@ -55,20 +59,17 @@ export default function BrandGigsManagementPage() {
   }, []);
 
   const handleToggleStatus = (gigId: string, currentStatus: Gig['status']) => {
-    const nextStatus = currentStatus === 'active' ? 'rejected' : 'active';
-    updateGigStatus(gigId, nextStatus);
-    loadGigs();
+    const nextStatus: Gig['status'] = currentStatus === 'active' ? 'rejected' : 'active';
+    updateGigStatus(gigId, nextStatus)
+      .then(() => loadGigs())
+      .catch(console.error);
   };
 
   const handleDeleteGig = (gigId: string) => {
-    if (confirm('Are you sure you want to delete this campaign brief?')) {
-      const stored = JSON.parse(localStorage.getItem('igigster_gigs') || '[]');
-      const filtered = stored.filter((g: Gig) => g.id !== gigId);
-      localStorage.setItem('igigster_gigs', JSON.stringify(filtered));
-      const list = loadGigs();
-      if (selectedGigId === gigId) {
-        setSelectedGigId(list.length > 0 ? list[0].id : null);
-      }
+    if (confirm('Are you sure you want to close this campaign brief?')) {
+      updateGigStatus(gigId, 'rejected')
+        .then(() => loadGigs(true))
+        .catch(console.error);
     }
   };
 

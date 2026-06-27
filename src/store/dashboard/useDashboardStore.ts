@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import { Creator } from '@/types/creator';
 import { User } from '@/types/common';
-import { getCurrentUser, getCreators, registerCreatorProfile } from '@/lib/services';
+import { getCurrentUser, getMe, getCreatorById, registerCreatorProfile, updateBrandProfile } from '@/lib/services';
 
 interface CreatorDashboardData {
   profile: Creator | null;
@@ -22,9 +22,9 @@ interface DashboardState {
   creator: CreatorDashboardData;
   brand: BrandDashboardData;
   
-  loadDashboard: () => void;
-  updateCreatorProfile: (profileData: Partial<Creator>) => void;
-  updateBrandProfile: (profileData: Partial<User>) => void;
+  loadDashboard: () => Promise<void>;
+  updateCreatorProfile: (profileData: Partial<Creator>) => Promise<void>;
+  updateBrandProfile: (profileData: Partial<User>) => Promise<void>;
 }
 
 export const useDashboardStore = create<DashboardState>((set, get) => ({
@@ -37,41 +37,56 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     companyName: '',
     avatar: '',
   },
-  loadDashboard: () => {
+  loadDashboard: async () => {
     if (typeof window === 'undefined') return;
-    const activeUser = getCurrentUser();
-    if (activeUser) {
-      if (activeUser.role === 'creator') {
-        const creators = getCreators();
-        let p = creators.find(c => c.id === activeUser.id);
-        if (!p) {
-          p = creators.find(c => c.name.toLowerCase() === activeUser.name.toLowerCase()) || creators[0];
+    
+    const localUser = localStorage.getItem('igigster_user')
+      ? JSON.parse(localStorage.getItem('igigster_user')!)
+      : null;
+    if (localUser) {
+      set({ user: localUser });
+    }
+
+    set({ isLoading: true });
+    try {
+      const activeUser = await getMe();
+      if (activeUser) {
+        if (activeUser.role === 'creator') {
+          const profile = await getCreatorById(activeUser.id);
+          set({
+            user: activeUser,
+            isLoading: false,
+            creator: { profile: profile || null },
+            brand: { companyName: '', avatar: '' }
+          });
+        } else if (activeUser.role === 'brand') {
+          set({
+            user: activeUser,
+            isLoading: false,
+            creator: { profile: null },
+            brand: {
+              companyName: activeUser.companyName || activeUser.name || 'SkinGlow India',
+              avatar: activeUser.avatar || ''
+            }
+          });
+        } else {
+          set({
+            user: activeUser,
+            isLoading: false,
+            creator: { profile: null },
+            brand: { companyName: '', avatar: '' }
+          });
         }
-        set({
-          user: activeUser,
-          isLoading: false,
-          creator: { profile: p || null },
-          brand: { companyName: '', avatar: '' }
-        });
-      } else if (activeUser.role === 'brand') {
-        set({
-          user: activeUser,
-          isLoading: false,
-          creator: { profile: null },
-          brand: {
-            companyName: activeUser.companyName || activeUser.name || 'SkinGlow India',
-            avatar: activeUser.avatar || ''
-          }
-        });
       } else {
         set({
-          user: activeUser,
+          user: null,
           isLoading: false,
           creator: { profile: null },
           brand: { companyName: '', avatar: '' }
         });
       }
-    } else {
+    } catch (error) {
+      console.error('Error loading dashboard:', error);
       set({
         user: null,
         isLoading: false,
@@ -99,16 +114,15 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       window.dispatchEvent(new Event('creator-profile-updated'));
     }
   },
-  updateBrandProfile: (profileData) => {
+  updateBrandProfile: async (profileData) => {
     if (typeof window === 'undefined') return;
     const activeUser = getCurrentUser();
     if (!activeUser || activeUser.role !== 'brand') return;
     
-    const updatedUser = {
+    const updatedUser = await updateBrandProfile({
       ...activeUser,
       ...profileData,
-    };
-    localStorage.setItem('igigster_user', JSON.stringify(updatedUser));
+    });
     
     set({
       user: updatedUser,
